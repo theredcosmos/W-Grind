@@ -1,0 +1,146 @@
+[
+  {
+    "id": "first_flame",
+    "name": "First Flame",
+    "description": "Complete your first problem and ignite your journey",
+    "xp": 25,
+    "rarity": "common",
+    "icon": "🔥"
+  },
+  {
+    "id": "spark_dedication",
+    "name": "Spark of Dedication",
+    "description": "Maintain a 3-day practice streak",
+    "xp": 50,
+    "rarity": "common",
+    "icon": "⚡"
+  },
+  {
+    "id": "daily_warrior",
+    "name": "Daily Warrior",
+    "description": "Complete at least one practice session every day for 5 days",
+    "xp": 75,
+    "rarity": "common",
+    "icon": "⚔️"
+  },
+  {
+    "id": "lucky_seven",
+    "name": "Lucky Seven",
+    "description": "Maintain a 7-day practice streak",
+    "xp": 77,
+    "rarity": "common",
+    "icon": "🍀"
+  },
+  {
+    "id": "infernal_focus",
+    "name": "Infernal Focus",
+    "description": "Burn bright with a 14-day streak",
+    "xp": 200,
+    "rarity": "rare",
+    "icon": "🔥"
+  },
+  {
+    "id": "stellar_commitment",
+    "name": "Stellar Commitment",
+    "description": "Achieve a 30-day streak of consistent practice",
+    "xp": 400,
+    "rarity": "epic",
+    "icon": "🌟"
+  },
+  {
+    "id": "rocket_launch",
+    "name": "Rocket Launch",
+    "description": "Solve 25 total problems",
+    "xp": 200,
+    "rarity": "rare",
+    "icon": "🚀"
+  },
+  {
+    "id": "dimension_hopper",
+    "name": "Dimension Hopper",
+    "description": "Solve 50 total problems",
+    "xp": 300,
+    "rarity": "epic",
+    "icon": "🌌"
+  },
+  {
+    "id": "flawless_execution",
+    "name": "Flawless Execution",
+    "description": "Master 100 total problems",
+    "xp": 350,
+    "rarity": "epic",
+    "icon": "💎"
+  },
+  {
+    "id": "difficulty_climber",
+    "name": "Difficulty Climber",
+    "description": "Solve at least one Easy, one Medium, and one Hard problem",
+    "xp": 150,
+    "rarity": "rare",
+    "icon": "🏔️"
+  },
+  {
+    "id": "competitive_spirit",
+    "name": "Competitive Spirit",
+    "description": "Complete 5 Hard problems",
+    "xp": 400,
+    "rarity": "epic",
+    "icon": "🏆"
+  },
+  {
+    "id": "system_architect",
+    "name": "System Architect",
+    "description": "Master 15 Hard problems",
+    "xp": 200,
+    "rarity": "epic",
+    "icon": "🏗️"
+  },
+  {
+    "id": "array_alchemist",
+    "name": "Array Alchemist",
+    "description": "Master 10 Array problems",
+    "xp": 150,
+    "rarity": "rare",
+    "icon": "🧮"
+  },
+  {
+    "id": "graph_master",
+    "name": "Graph Master",
+    "description": "Master 10 Graph problems",
+    "xp": 200,
+    "rarity": "rare",
+    "icon": "🕸️"
+  },
+  {
+    "id": "tree_master",
+    "name": "Tree Master",
+    "description": "Master 10 Tree problems",
+    "xp": 200,
+    "rarity": "rare",
+    "icon": "🌲"
+  },
+  {
+    "id": "dynamic_programmer",
+    "name": "Dynamic Programmer",
+    "description": "Master 10 Dynamic Programming problems",
+    "xp": 200,
+    "rarity": "rare",
+    "icon": "🧠"
+  },
+  {
+    "id": "pattern_discoverer",
+    "name": "Pattern Discoverer",
+    "description": "Solve problems from 10 different algorithm patterns",
+    "xp": 300,
+    "rarity": "epic",
+    "icon": "🔍"
+  },
+  {
+    "id": "resurrection",
+    "name": "Resurrection",
+    "description": "Come back after 10+ days of inactivity and solve a problem",
+    "xp": 200,
+    "rarity": "rare",
+    "icon": "🔄"
+  }
+]

@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+  --color-glass-panel: var(--glass-panel);
+  --color-glass-text: var(--glass-text);
+  --color-glass-muted: var(--glass-muted);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-light: var(--brand-primary-light);
+  --color-brand-secondary: var(--brand-secondary);
+}
+
+@layer base {
+  :root {
+    --brand-primary: #8b5cf6; /* violet-500 */
+    --brand-primary-light: #a78bfa; /* violet-400 */
+    --brand-secondary: #0ea5e9; /* sky-500 */
+    --accent-success: #10b981;
+    --accent-warning: #f59e0b;
+    --accent-danger: #ef4444;
+  }
+
+  body.light {
+    --glass-bg: #fdfbf7;
+    --glass-panel: rgba(253, 251, 247, 0.85);
+    --glass-border: rgba(0, 0, 0, 0.15);
+    --glass-text: #1c1917;
+    --glass-muted: #78716c;
+  }
+
+  body.dark, body {
+    --glass-bg: #030712; /* very dark blue/black */
+    --glass-panel: rgba(17, 24, 39, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-text: #f8fafc;
+    --glass-muted: #94a3b8;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-glass-panel backdrop-blur-xl border border-glass-border rounded-2xl shadow-lg transition-all duration-300;
+  }
+  
+  .glass-card:hover {
+    @apply border-white/20 shadow-[0_8px_30px_rgba(139,92,246,0.1)];
+  }
+
+  .premium-btn {
+    @apply relative overflow-hidden bg-white/5 backdrop-blur-md text-glass-text font-medium py-2.5 px-6 border border-glass-border rounded-xl transition-all hover:bg-white/10 hover:border-white/20 active:scale-95;
+  }
+
+  .premium-btn-primary {
+    @apply relative overflow-hidden bg-brand-primary text-white font-medium py-2.5 px-6 rounded-xl shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all hover:shadow-[0_0_25px_rgba(139,92,246,0.7)] hover:bg-brand-primary-light active:scale-95 border border-white/10;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary-light to-brand-secondary;
+  }
+}
+
+body {
+  background-color: var(--glass-bg);
+  color: var(--glass-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  /* Add a subtle radial gradient background for that premium feel */
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.08) 0%, transparent 40%);
+  background-attachment: fixed;
+}
