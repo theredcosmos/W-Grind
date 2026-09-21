@@ -142,12 +142,24 @@ const QuestBoard = ({ quests, completedData, toggleCompletion }) => {
 const SubMetrics = ({ timeStats, monthlyCompleted, pickRandomProblem, addTrackedTime, dailyQuests, completedData, toggleCompletion }) => {
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [sessionSeconds, setSessionSeconds] = useState(0);
+  const [dailyLink, setDailyLink] = useState('https://leetcode.com/problemset/');
   const timerRef = useRef(null);
+  const startTimeRef = useRef(null);
+
+  useEffect(() => {
+    fetch('https://alfa-leetcode-api.onrender.com/daily')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.questionLink) setDailyLink(data.questionLink);
+      })
+      .catch(console.error);
+  }, []);
 
   useEffect(() => {
     if (isFocusMode) {
+      startTimeRef.current = Date.now();
       timerRef.current = setInterval(() => {
-        setSessionSeconds(s => s + 1);
+        setSessionSeconds(Math.floor((Date.now() - startTimeRef.current) / 1000));
       }, 1000);
     } else {
       clearInterval(timerRef.current);
@@ -157,7 +169,8 @@ const SubMetrics = ({ timeStats, monthlyCompleted, pickRandomProblem, addTracked
 
   const toggleFocusMode = () => {
     if (isFocusMode) {
-      addTrackedTime(sessionSeconds);
+      const finalSeconds = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      addTrackedTime(finalSeconds);
       setSessionSeconds(0);
     }
     setIsFocusMode(!isFocusMode);
@@ -210,18 +223,25 @@ const SubMetrics = ({ timeStats, monthlyCompleted, pickRandomProblem, addTracked
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex flex-col gap-3"
+                className="flex flex-col gap-2"
               >
                 <button 
-                  onClick={pickRandomProblem}
-                  className="premium-btn-primary flex justify-center items-center gap-2"
+                  onClick={() => window.open(dailyLink, '_blank', 'noopener,noreferrer')}
+                  className="premium-btn-primary flex justify-center items-center gap-2 py-2 text-sm"
                 >
-                  <Shuffle size={18} />
+                  <Target size={16} />
+                  Problem of the Day
+                </button>
+                <button 
+                  onClick={pickRandomProblem}
+                  className="premium-btn flex justify-center items-center gap-2 py-2 text-sm"
+                >
+                  <Shuffle size={16} />
                   Pick Random Problem
                 </button>
                 <button 
                   onClick={toggleFocusMode}
-                  className="premium-btn flex justify-center items-center gap-2 text-sm text-accent-success hover:border-accent-success/50"
+                  className="premium-btn flex justify-center items-center gap-2 py-2 text-sm text-accent-success hover:border-accent-success/50"
                 >
                   <Play size={16} fill="currentColor" /> Start Focus Mode
                 </button>

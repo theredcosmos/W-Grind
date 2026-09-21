@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import PatternDetailModal from './PatternDetailModal';
 
-const NATURE_IMAGES = [
-  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1447752809811-92572b947f63?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1475924156734-497f1f9e28f1?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1426604966841-8eb837be7f3e?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1418065460487-3e414ee1a9f3?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1470071131384-001b85755b36?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1421081395995-17d1217e5842?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1437651025703-2858c944e353?auto=format&fit=crop&w=400&q=80',
-  'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?auto=format&fit=crop&w=400&q=80'
+const ABSTRACT_IMAGES = [
+  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1604871000636-074fa5117945?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1557672172-298e090bd0f1?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1505909182942-e2f09aee3e89?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1604147706283-d7119b5b822c?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1574169208507-84376144848b?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1573155993874-d5d48af29775?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&w=600&q=80'
 ];
 
 const PatternCard = ({ pattern, onClick, delay, index }) => {
@@ -37,8 +37,8 @@ const PatternCard = ({ pattern, onClick, delay, index }) => {
     gradient = 'from-accent-warning/20 to-transparent';
   }
 
-  // Pick a nature image based on index without repeating (until index > 14)
-  const bgImage = NATURE_IMAGES[index % NATURE_IMAGES.length];
+  // Pick an abstract image based on index without repeating (until index > 14)
+  const bgImage = ABSTRACT_IMAGES[index % ABSTRACT_IMAGES.length];
 
   return (
     <motion.div 
@@ -54,8 +54,8 @@ const PatternCard = ({ pattern, onClick, delay, index }) => {
         style={{ backgroundImage: `url('${bgImage}')` }}
       />
       
-      {/* Glass Overlay Layer to maintain text readability */}
-      <div className="absolute inset-0 z-0 bg-black/40 backdrop-blur-[2px]" />
+      {/* Dark Overlay Layer to maintain text readability without expensive nested blurs */}
+      <div className="absolute inset-0 z-0 bg-black/60" />
       
       {/* Existing Gradient Layer */}
       <div className={`absolute top-0 right-0 w-full h-32 bg-gradient-to-bl ${gradient} opacity-80 z-0`}></div>
@@ -74,7 +74,7 @@ const PatternCard = ({ pattern, onClick, delay, index }) => {
             <div className="text-sm font-bold text-white drop-shadow-sm">{Math.round(progress)}%</div>
           </div>
           
-          <div className="w-full h-1.5 bg-black/40 backdrop-blur-md rounded-full overflow-hidden mb-3 border border-white/10">
+          <div className="w-full h-1.5 bg-black/50 rounded-full overflow-hidden mb-3 border border-white/10">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
