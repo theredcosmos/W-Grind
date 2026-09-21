@@ -82,8 +82,9 @@ const SkillNode = ({ node, data, onClick, isHovered, onHover }) => {
       onClick={() => onClick(data)}
       style={{ cursor: data ? 'pointer' : 'not-allowed' }}
     >
-      {/* Background glow */}
-      <circle r={radius + 15} fill={glowColor} className="transition-all duration-300" opacity={isHovered ? 0.8 : 0.3} filter="blur(8px)" />
+      {/* Background glow (simulated with layered circles for performance instead of SVG blur) */}
+      <circle r={radius + 12} fill={glowColor} className="transition-opacity duration-300" opacity={isHovered ? 0.2 : 0.05} />
+      <circle r={radius + 6} fill={glowColor} className="transition-opacity duration-300" opacity={isHovered ? 0.4 : 0.15} />
       
       {/* Node Background */}
       <circle r={radius} fill="var(--glass-bg)" stroke="var(--glass-muted)" strokeOpacity={0.3} strokeWidth={3} />

@@ -102,7 +102,7 @@ const StreakActivity = ({ streak, heatmapData, completedCount, achievements = []
       case 1: return 'bg-brand-primary/40 border-brand-primary/20';
       case 2: return 'bg-brand-primary/70 border-brand-primary/40';
       case 3: return 'bg-brand-primary border-brand-primary shadow-[0_0_8px_rgba(139,92,246,0.8)]';
-      default: return 'bg-white/5 border-white/5';
+      default: return 'bg-[var(--glass-border)] border-[var(--glass-border)] opacity-50';
     }
   };
 
