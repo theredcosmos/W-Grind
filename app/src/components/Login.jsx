@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../firebase';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const Login = ({ onLogin }) => {
   const [view, setView] = useState('main'); // 'main', 'signin', 'signup', 'google-username'

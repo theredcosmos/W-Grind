@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, Suspense, lazy } from 'react';
 import questionsData from './data/questions.json';
 import TopNav from './components/TopNav';
 import HeroSection from './components/HeroSection';
 import SubMetrics from './components/SubMetrics';
-import SkillTree from './components/SkillTree';
-import AlgorithmMastery from './components/AlgorithmMastery';
-import StreakActivity from './components/StreakActivity';
 import Login from './components/Login';
-import SettingsModal from './components/SettingsModal';
 import './index.css';
 import achievementsData from './data/achievements.json';
 import { calculateStreak, getDailyCounts, getPeriodicStats, getTimeStats, calculateXP, calculateLevel, getDailyQuests, getUnlockedAchievements } from './utils';
 
-const API_URL = 'http://localhost:5000/api';
+const SkillTree = lazy(() => import('./components/SkillTree'));
+const AlgorithmMastery = lazy(() => import('./components/AlgorithmMastery'));
+const StreakActivity = lazy(() => import('./components/StreakActivity'));
+const SettingsModal = lazy(() => import('./components/SettingsModal'));
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 function App() {
   const [questions] = useState(questionsData);
@@ -171,13 +172,15 @@ function App() {
 
   return (
     <div className="min-h-screen bg-glass-bg text-glass-text p-4 md:p-8 font-sans selection:bg-brand-primary/30 relative">
-      {isSettingsOpen && (
-        <SettingsModal 
-          onClose={() => setIsSettingsOpen(false)}
-          achievements={achievementsData}
-          unlockedAchievements={unlockedAchievements}
-        />
-      )}
+      <Suspense fallback={null}>
+        {isSettingsOpen && (
+          <SettingsModal 
+            onClose={() => setIsSettingsOpen(false)}
+            achievements={achievementsData}
+            unlockedAchievements={unlockedAchievements}
+          />
+        )}
+      </Suspense>
       
       <div className="max-w-[1400px] mx-auto space-y-8">
         <TopNav 
@@ -234,19 +237,21 @@ function App() {
             </div>
           </div>
           
-          {forgeView === 'tree' ? (
-            <SkillTree 
-              patterns={patternsData} 
-              completed={completed} 
-              toggleCompletion={toggleCompletion} 
-            />
-          ) : (
-            <AlgorithmMastery
-              patterns={patternsData}
-              completed={completed}
-              toggleCompletion={toggleCompletion}
-            />
-          )}
+          <Suspense fallback={<div className="h-64 flex items-center justify-center text-glass-muted">Loading...</div>}>
+            {forgeView === 'tree' ? (
+              <SkillTree 
+                patterns={patternsData} 
+                completed={completed} 
+                toggleCompletion={toggleCompletion} 
+              />
+            ) : (
+              <AlgorithmMastery
+                patterns={patternsData}
+                completed={completed}
+                toggleCompletion={toggleCompletion}
+              />
+            )}
+          </Suspense>
         </div>
 
         <div>
@@ -254,11 +259,13 @@ function App() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Activity Log</h2>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
           </div>
-          <StreakActivity 
-            streak={currentStreak} 
-            heatmapData={heatmapData} 
-            completedCount={completedQuestionsCount}
-          />
+          <Suspense fallback={<div className="h-48 flex items-center justify-center text-glass-muted">Loading...</div>}>
+            <StreakActivity 
+              streak={currentStreak} 
+              heatmapData={heatmapData} 
+              completedCount={completedQuestionsCount}
+            />
+          </Suspense>
         </div>
       </div>
     </div>
