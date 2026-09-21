@@ -54,7 +54,7 @@ app.post('/api/register', async (req, res) => {
     res.json({ id: result.insertId, username });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error during registration" });
+    res.status(500).json({ error: "Server error during registration", details: error.message });
   }
 });
 
@@ -84,7 +84,7 @@ app.post('/api/login', async (req, res) => {
     res.json({ id: user.id, username: user.username });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error during login" });
+    res.status(500).json({ error: "Server error during login", details: error.message });
   }
 });
 
@@ -118,7 +118,7 @@ app.post('/api/google-auth', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error during Google auth" });
+    res.status(500).json({ error: "Server error during Google auth", details: error.message });
   }
 });
 
