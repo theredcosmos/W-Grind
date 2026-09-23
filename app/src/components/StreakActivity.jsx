@@ -1,74 +1,29 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { Flame } from 'lucide-react';
 
-const StreakActivity = ({ streak, heatmapData, completedCount, achievements = [], unlockedAchievements = [] }) => {
+const StreakActivity = ({ streak, heatmapData }) => {
+  // Generate the last 14 days
   const days = useMemo(() => {
     const result = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    for (let i = 364; i >= 0; i--) {
+    // We want days from left to right (oldest to newest)
+    for (let i = 13; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(today.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
-      
       const count = heatmapData[dateStr] || 0;
-      let level = 0;
-      if (count === 1) level = 1;
-      else if (count === 2) level = 2;
-      else if (count >= 3) level = 3;
       
       result.push({
         date: dateStr,
         count,
-        level,
-        dayOfWeek: d.getDay(),
-        monthYear: `${d.toLocaleString('default', { month: 'short' })} ${d.getFullYear()}`,
-        month: d.toLocaleString('default', { month: 'short' }),
-        year: d.getFullYear()
+        label: d.toLocaleDateString('en-US', { weekday: 'short' })
       });
     }
     return result;
   }, [heatmapData]);
-
-  const weeks = useMemo(() => {
-    const wks = [];
-    let currentWeek = [];
-    
-    if (days.length > 0 && days[0].dayOfWeek !== 0) {
-      for (let i = 0; i < days[0].dayOfWeek; i++) {
-        currentWeek.push(null);
-      }
-    }
-    
-    days.forEach(day => {
-      currentWeek.push(day);
-      if (currentWeek.length === 7) {
-        wks.push(currentWeek);
-        currentWeek = [];
-      }
-    });
-    
-    if (currentWeek.length > 0) {
-      while (currentWeek.length < 7) currentWeek.push(null);
-      wks.push(currentWeek);
-    }
-    
-    return wks;
-  }, [days]);
-
-  const monthLabels = useMemo(() => {
-    const labels = [];
-    let lastMonthYear = null;
-    weeks.forEach((week, i) => {
-      const firstValidDay = week.find(d => d !== null);
-      if (firstValidDay && firstValidDay.monthYear !== lastMonthYear) {
-        labels.push({ label: `${firstValidDay.month} '${firstValidDay.year.toString().slice(-2)}`, index: i });
-        lastMonthYear = firstValidDay.monthYear;
-      }
-    });
-    return labels;
-  }, [weeks]);
 
   const stats = useMemo(() => {
     let totalSubmissions = 0;
@@ -84,104 +39,102 @@ const StreakActivity = ({ streak, heatmapData, completedCount, achievements = []
       }
     });
 
-    // Compute max streak roughly from the days array since it's sequential
-    for (const d of days) {
-      if (d.count > 0) {
-        currentTempStreak++;
+    const sortedDates = Object.keys(heatmapData).sort();
+    for (let i = 0; i < sortedDates.length; i++) {
+      if (heatmapData[sortedDates[i]] > 0) {
+        if (i === 0) {
+          currentTempStreak = 1;
+        } else {
+          const curr = new Date(sortedDates[i]);
+          const prev = new Date(sortedDates[i-1]);
+          const diffDays = Math.round(Math.abs(curr - prev) / (1000 * 60 * 60 * 24));
+          
+          if (diffDays === 1) {
+            currentTempStreak++;
+          } else {
+            currentTempStreak = 1;
+          }
+        }
         if (currentTempStreak > maxStreak) maxStreak = currentTempStreak;
-      } else {
-        currentTempStreak = 0;
       }
     }
 
     return { totalSubmissions, activeDays, maxStreak: Math.max(maxStreak, streak) };
-  }, [heatmapData, days, streak]);
-
-  const getColorClass = (level) => {
-    switch(level) {
-      case 1: return 'bg-brand-primary/40 border-brand-primary/20';
-      case 2: return 'bg-brand-primary/70 border-brand-primary/40';
-      case 3: return 'bg-brand-primary border-brand-primary shadow-[0_0_8px_rgba(139,92,246,0.8)]';
-      default: return 'bg-[var(--glass-border)] border-[var(--glass-border)] opacity-50';
-    }
-  };
-
-  const getRarityClass = (rarity) => {
-    switch (rarity) {
-      case 'epic': return 'text-purple-400 bg-purple-400/10 border-purple-400/30';
-      case 'rare': return 'text-blue-400 bg-blue-400/10 border-blue-400/30';
-      default: return 'text-zinc-400 bg-zinc-400/10 border-zinc-400/30';
-    }
-  };
+  }, [heatmapData, streak]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-      
-      {/* Heatmap */}
+    <div className="w-full h-full">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="glass-card p-6 overflow-hidden relative flex flex-col"
+        className="glass-card p-2 px-4 overflow-hidden relative flex flex-col h-full"
       >
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl"></div>
         
-        <div className="relative z-10 flex flex-col flex-1">
-          <div className="mb-6 flex flex-wrap gap-4 md:gap-8 text-sm">
-            <div>
-              <div className="text-glass-muted uppercase tracking-wider text-xs mb-1">Submissions in past year</div>
-              <div className="text-2xl font-bold">{stats.totalSubmissions}</div>
-            </div>
-            <div>
-              <div className="text-glass-muted uppercase tracking-wider text-xs mb-1">Total active days</div>
-              <div className="text-2xl font-bold">{stats.activeDays}</div>
-            </div>
-            <div>
-              <div className="text-glass-muted uppercase tracking-wider text-xs mb-1">Max streak</div>
-              <div className="text-2xl font-bold">{stats.maxStreak}</div>
+        <div className="relative z-10 flex flex-col flex-1 h-full">
+          {/* Header & Stats */}
+          <div className="flex justify-between items-start mb-1">
+            <h3 className="text-glass-muted uppercase tracking-widest text-[9px] font-bold">Momentum Engine</h3>
+            <div className="flex gap-6 text-right">
+              <div>
+                <div className="text-[9px] uppercase text-glass-muted tracking-wider">Total</div>
+                <div className="text-sm font-bold text-glass-text leading-tight">{stats.totalSubmissions}</div>
+              </div>
+              <div>
+                <div className="text-[9px] uppercase text-glass-muted tracking-wider">Max Streak</div>
+                <div className="text-sm font-bold text-glass-text leading-tight">{stats.maxStreak}</div>
+              </div>
             </div>
           </div>
           
-          <div className="overflow-x-auto pb-4 custom-scrollbar flex-1">
-            <div className="min-w-[800px]">
-              <div className="flex gap-1.5 relative mb-1">
-                {weeks.map((week, i) => (
-                  <div key={i} className="flex flex-col gap-1.5">
-                    {week.map((day, j) => {
-                      if (!day) return <div key={`empty-${j}`} className="w-3 h-3"></div>;
-                      return (
-                        <div 
-                          key={day.date}
-                          title={`${day.count} problems on ${day.date}`}
-                          className={`w-3 h-3 rounded-[3px] border transition-all duration-200 hover:scale-150 hover:z-10 hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] cursor-pointer ${getColorClass(day.level)}`}
-                        ></div>
-                      );
-                    })}
+          {/* Main Momentum Display */}
+          <div className="flex-1 flex items-center gap-6 md:gap-10">
+            
+            {/* The Fire (Current Streak) */}
+            <div className="flex flex-col items-center justify-center min-w-[70px]">
+              <div className="relative">
+                {streak > 0 && <div className="absolute inset-0 bg-orange-500/30 blur-xl rounded-full animate-pulse"></div>}
+                <Flame size={24} className={`relative z-10 transition-colors duration-500 ${streak > 0 ? 'text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]' : 'text-glass-border'}`} />
+              </div>
+              <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 leading-none mt-1">
+                {streak}
+              </div>
+              <div className="text-[8px] font-bold uppercase text-orange-500/80 tracking-widest mt-0.5">Day Streak</div>
+            </div>
+
+            {/* The Power Cells (Last 14 Days) */}
+            <div className="flex-1 flex items-end gap-1.5 md:gap-2 h-12 relative">
+              {days.map((day, idx) => {
+                const isActive = day.count > 0;
+                const isToday = idx === 13;
+                
+                return (
+                  <div key={day.date} className="flex-1 flex flex-col items-center justify-end h-full relative group cursor-crosshair">
+                    
+                    {/* Hover Tooltip */}
+                    <div className="absolute -top-6 bg-black/80 text-white text-[9px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20 shadow-lg border border-white/10">
+                      {day.count} {day.count === 1 ? 'Submission' : 'Submissions'} on {day.label}
+                    </div>
+
+                    {/* Power Cell Block */}
+                    <div 
+                      className={`w-full transition-all duration-300 rounded-sm relative ${
+                        isActive 
+                          ? 'bg-brand-primary h-full shadow-[0_0_12px_rgba(139,92,246,0.5)]' 
+                          : 'bg-glass-border/30 h-1/4 group-hover:h-1/3 group-hover:bg-glass-border/50'
+                      } ${isToday ? 'ring-1 ring-white/30 ring-offset-1 ring-offset-transparent' : ''}`}
+                    >
+                      {isActive && (
+                        <div className="absolute inset-0 bg-white/20 blur-[2px] rounded-sm animate-pulse-slow"></div>
+                      )}
+                    </div>
                   </div>
-                ))}
-              </div>
-              <div className="relative h-6 mt-2 text-xs text-glass-muted font-medium w-full">
-                {monthLabels.map(({ label, index }) => (
-                  <span 
-                    key={`${label}-${index}`} 
-                    className="absolute" 
-                    style={{ left: `${index * 1.05}rem` }}
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
+                );
+              })}
             </div>
           </div>
-
-          <div className="flex items-center justify-end gap-2 text-xs font-medium text-glass-muted mt-2">
-            <span>Less</span>
-            <div className={`w-3 h-3 rounded-sm border ${getColorClass(0)}`}></div>
-            <div className={`w-3 h-3 rounded-sm border ${getColorClass(1)}`}></div>
-            <div className={`w-3 h-3 rounded-sm border ${getColorClass(2)}`}></div>
-            <div className={`w-3 h-3 rounded-sm border ${getColorClass(3)}`}></div>
-            <span>More</span>
-          </div>
+          
         </div>
       </motion.div>
     </div>

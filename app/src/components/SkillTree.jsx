@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import PatternDetailModal from './PatternDetailModal';
 
 // Hardcoded coordinates for the Forge/Skill Tree layout (ViewBox 0 0 1000 600)
 const NODE_LAYOUT = [
@@ -39,7 +38,7 @@ const EDGES = [
   { source: 'Graph', target: 'Dynamic Programming' },
 ];
 
-const SkillNode = ({ node, data, onClick, isHovered, onHover }) => {
+const SkillNode = ({ node, data, isHovered, onHover }) => {
   const radius = 30;
   const stroke = 6;
   const normalizedRadius = radius - stroke * 2;
@@ -79,12 +78,11 @@ const SkillNode = ({ node, data, onClick, isHovered, onHover }) => {
       transform={`translate(${node.x}, ${node.y})`}
       onMouseEnter={() => onHover(node.id)}
       onMouseLeave={() => onHover(null)}
-      onClick={() => onClick(data)}
-      style={{ cursor: data ? 'pointer' : 'not-allowed' }}
+      className="cursor-default"
     >
-      {/* Background glow (simulated with layered circles for performance instead of SVG blur) */}
-      <circle r={radius + 12} fill={glowColor} className="transition-opacity duration-300" opacity={isHovered ? 0.2 : 0.05} />
-      <circle r={radius + 6} fill={glowColor} className="transition-opacity duration-300" opacity={isHovered ? 0.4 : 0.15} />
+      {/* Background glow */}
+      <circle r={radius + 12} fill={glowColor} className="transition-opacity duration-300" opacity={isHovered ? 0.3 : 0.05} />
+      <circle r={radius + 6} fill={glowColor} className="transition-opacity duration-300" opacity={isHovered ? 0.5 : 0.15} />
       
       {/* Node Background */}
       <circle r={radius} fill="var(--glass-bg)" stroke="var(--glass-muted)" strokeOpacity={0.3} strokeWidth={3} />
@@ -100,12 +98,14 @@ const SkillNode = ({ node, data, onClick, isHovered, onHover }) => {
       </text>
       
       {/* Progress Ring */}
-      <circle
+      <motion.circle
         stroke={colorValue}
         fill="transparent"
         strokeWidth={stroke}
-        strokeDasharray={circumference + ' ' + circumference}
-        style={{ strokeDashoffset, transition: 'stroke-dashoffset 1s ease-out' }}
+        strokeDasharray={circumference}
+        initial={{ strokeDashoffset: circumference }}
+        animate={{ strokeDashoffset: strokeDashoffset }}
+        transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
         strokeLinecap="round"
         r={normalizedRadius}
         transform="rotate(-90)"
@@ -116,8 +116,8 @@ const SkillNode = ({ node, data, onClick, isHovered, onHover }) => {
         y={radius + 24} 
         textAnchor="middle" 
         fill="var(--glass-text)" 
-        className="text-sm font-bold font-sans drop-shadow-md"
-        opacity={isHovered ? 1 : 0.8}
+        className="text-sm font-bold font-sans drop-shadow-md transition-opacity"
+        opacity={isHovered ? 1 : 0.7}
       >
         {node.label}
       </text>
@@ -140,37 +140,8 @@ const SkillNode = ({ node, data, onClick, isHovered, onHover }) => {
   );
 };
 
-const SkillTree = ({ patterns, completed, toggleCompletion }) => {
-  const [selectedPattern, setSelectedPattern] = useState(null);
+const SkillTree = ({ patterns, completed }) => {
   const [hoveredNode, setHoveredNode] = useState(null);
-  
-  // Drag-to-scroll state
-  const scrollRef = React.useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Scroll speed multiplier
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
 
   // Map patternsData to nodes
   const resolveData = (nodeId) => {
@@ -178,19 +149,17 @@ const SkillTree = ({ patterns, completed, toggleCompletion }) => {
   };
 
   return (
-    <div 
-      className={`glass-card overflow-x-auto relative w-full hide-scrollbar ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-      ref={scrollRef}
-      onMouseDown={handleMouseDown}
-      onMouseLeave={handleMouseLeave}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="glass-card relative w-full h-full min-h-[500px] flex items-center justify-center p-4 lg:p-8"
     >
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent pointer-events-none rounded-2xl"></div>
       
-      <div className="min-w-[1000px] h-[600px] relative">
-        <svg viewBox="0 0 1000 600" className="w-full h-full">
+      <div className="w-full h-full max-w-5xl relative flex items-center justify-center">
+        <svg viewBox="0 0 1000 600" className="w-full h-auto max-h-full drop-shadow-xl" preserveAspectRatio="xMidYMid meet">
           {/* Draw Edges */}
           {EDGES.map((edge, idx) => {
             const source = NODE_LAYOUT.find(n => n.id === edge.source);
@@ -200,46 +169,61 @@ const SkillTree = ({ patterns, completed, toggleCompletion }) => {
             const sData = resolveData(source.id);
             const isActive = sData && sData.progress > 0;
             
+            const lineLength = Math.sqrt(Math.pow(target.x - source.x, 2) + Math.pow(target.y - source.y, 2));
+            
             return (
-              <line 
-                key={idx}
-                x1={source.x} 
-                y1={source.y} 
-                x2={target.x} 
-                y2={target.y} 
-                stroke={isActive ? 'var(--brand-primary-light)' : 'var(--glass-muted)'}
-                strokeWidth={isActive ? 3 : 2}
-                opacity={isActive ? 0.6 : 0.15}
-                className="transition-all duration-500"
-              />
+              <g key={idx}>
+                {/* Base faded line */}
+                <line 
+                  x1={source.x} 
+                  y1={source.y} 
+                  x2={target.x} 
+                  y2={target.y} 
+                  stroke="var(--glass-muted)"
+                  strokeWidth={2}
+                  opacity={0.15}
+                />
+                
+                {/* Animated active line */}
+                {isActive && (
+                  <motion.line 
+                    x1={source.x} 
+                    y1={source.y} 
+                    x2={target.x} 
+                    y2={target.y} 
+                    stroke="var(--brand-primary-light)"
+                    strokeWidth={3}
+                    opacity={0.8}
+                    strokeDasharray={lineLength}
+                    initial={{ strokeDashoffset: lineLength }}
+                    animate={{ strokeDashoffset: 0 }}
+                    transition={{ duration: 1.5, ease: "easeInOut", delay: idx * 0.1 }}
+                    style={{ filter: "drop-shadow(0 0 8px rgba(167, 139, 250, 0.6))" }}
+                  />
+                )}
+              </g>
             );
           })}
           
           {/* Draw Nodes */}
-          {NODE_LAYOUT.map(node => (
-            <SkillNode 
-              key={node.id} 
-              node={node} 
-              data={resolveData(node.id)}
-              onClick={(data) => {
-                if (data) setSelectedPattern(data);
-              }}
-              isHovered={hoveredNode === node.id}
-              onHover={setHoveredNode}
-            />
+          {NODE_LAYOUT.map((node, idx) => (
+            <motion.g 
+              key={node.id}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: idx * 0.05 + 0.5 }}
+            >
+              <SkillNode 
+                node={node} 
+                data={resolveData(node.id)}
+                isHovered={hoveredNode === node.id}
+                onHover={setHoveredNode}
+              />
+            </motion.g>
           ))}
         </svg>
       </div>
-
-      {selectedPattern && (
-        <PatternDetailModal 
-          pattern={selectedPattern} 
-          completed={completed} 
-          toggleCompletion={toggleCompletion} 
-          onClose={() => setSelectedPattern(null)}
-        />
-      )}
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback, Suspense, lazy } from 'react';
 import questionsData from './data/questions.json';
-import TopNav from './components/TopNav';
-import HeroSection from './components/HeroSection';
-import SubMetrics from './components/SubMetrics';
+import SideNav from './components/SideNav';
 import Login from './components/Login';
 import './index.css';
 import achievementsData from './data/achievements.json';
 import { calculateStreak, getDailyCounts, getPeriodicStats, getTimeStats, calculateXP, calculateLevel, getDailyQuests, getUnlockedAchievements } from './utils';
 
+const Dashboard = lazy(() => import('./components/Dashboard'));
 const SkillTree = lazy(() => import('./components/SkillTree'));
-const AlgorithmMastery = lazy(() => import('./components/AlgorithmMastery'));
-const StreakActivity = lazy(() => import('./components/StreakActivity'));
+const ProblemBoard = lazy(() => import('./components/ProblemBoard'));
+const Analytics = lazy(() => import('./components/Analytics'));
 const SettingsModal = lazy(() => import('./components/SettingsModal'));
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -19,7 +18,7 @@ function App() {
   const [questions] = useState(questionsData);
   const [username, setUsername] = useState(() => localStorage.getItem('username') || '');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [forgeView, setForgeView] = useState('tree'); // 'tree' or 'cards'
+  const [activeTab, setActiveTab] = useState('dashboard');
   
   const [completed, setCompleted] = useState(() => {
     const saved = localStorage.getItem('completedQuestions');
@@ -171,7 +170,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-glass-bg text-glass-text p-4 md:p-8 font-sans selection:bg-brand-primary/30 relative">
+    <div className="min-h-screen bg-glass-bg text-glass-text font-sans selection:bg-brand-primary/30 flex">
       <Suspense fallback={null}>
         {isSettingsOpen && (
           <SettingsModal 
@@ -181,93 +180,87 @@ function App() {
           />
         )}
       </Suspense>
-      
-      <div className="max-w-[1400px] mx-auto space-y-8">
-        <TopNav 
-          theme={theme} 
-          toggleTheme={toggleTheme} 
-          username={username}
-          level={levelData.level}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-          onSignOut={handleSignOut}
-        />
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-5 h-full">
-            <HeroSection 
-              progress={overallProgress} 
-              completed={completedQuestionsCount} 
-              total={totalQuestions} 
-              streak={currentStreak}
-              levelData={levelData}
-            />
-          </div>
-          <div className="lg:col-span-7 h-full">
-            <SubMetrics 
-              timeStats={timeStats}
-              monthlyCompleted={monthlyCompleted}
-              pickRandomProblem={pickRandomProblem}
-              addTrackedTime={addTrackedTime}
-              dailyQuests={dailyQuests}
-              completedData={completed}
-              toggleCompletion={toggleCompletion}
-            />
-          </div>
-        </div>
 
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4 flex-1">
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight">The Forge</h2>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-glass-border to-transparent hidden md:block"></div>
-            </div>
-            <div className="flex items-center bg-black/20 dark:bg-white/5 rounded-lg p-1 border border-glass-border">
-              <button 
-                onClick={() => setForgeView('cards')}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${forgeView === 'cards' ? 'bg-brand-primary text-white shadow-md' : 'text-glass-muted hover:text-glass-text'}`}
-              >
-                Cards
-              </button>
-              <button 
-                onClick={() => setForgeView('tree')}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${forgeView === 'tree' ? 'bg-brand-primary text-white shadow-md' : 'text-glass-muted hover:text-glass-text'}`}
-              >
-                Tree
-              </button>
-            </div>
-          </div>
-          
+      <SideNav 
+        theme={theme} 
+        toggleTheme={toggleTheme} 
+        username={username}
+        level={levelData.level}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onSignOut={handleSignOut}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
+      
+      <main className="flex-1 ml-64 p-3 md:p-4 h-screen overflow-hidden flex items-center justify-center">
+        <div className="max-w-[1400px] w-full h-full flex flex-col justify-center">
           <Suspense fallback={<div className="h-64 flex items-center justify-center text-glass-muted">Loading...</div>}>
-            {forgeView === 'tree' ? (
-              <SkillTree 
-                patterns={patternsData} 
-                completed={completed} 
-                toggleCompletion={toggleCompletion} 
-              />
-            ) : (
-              <AlgorithmMastery
-                patterns={patternsData}
-                completed={completed}
+            {activeTab === 'dashboard' && (
+              <Dashboard 
+                overallProgress={overallProgress}
+                completedQuestionsCount={completedQuestionsCount}
+                totalQuestions={totalQuestions}
+                currentStreak={currentStreak}
+                levelData={levelData}
+                timeStats={timeStats}
+                monthlyCompleted={monthlyCompleted}
+                pickRandomProblem={pickRandomProblem}
+                addTrackedTime={addTrackedTime}
+                dailyQuests={dailyQuests}
+                completedData={completed}
                 toggleCompletion={toggleCompletion}
+                heatmapData={heatmapData}
               />
+            )}
+            
+            {activeTab === 'skillTree' && (
+              <div className="flex-1 flex flex-col min-h-0 space-y-6">
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight mb-2">Skill Tree</h1>
+                  <p className="text-glass-muted">Unlock your path to mastery. Follow the flowing data.</p>
+                </div>
+                <div className="flex-1 min-h-0">
+                  <SkillTree 
+                    patterns={patternsData} 
+                    completed={completed} 
+                    toggleCompletion={toggleCompletion} 
+                  />
+                </div>
+              </div>
+            )}
+            
+            {activeTab === 'problemBoard' && (
+              <div className="flex-1 flex flex-col min-h-0 space-y-6">
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight mb-2">Problem Board</h1>
+                  <p className="text-glass-muted">Master patterns with our 3D challenge viewer.</p>
+                </div>
+                <div className="flex-1 min-h-[500px]">
+                  <ProblemBoard
+                    patterns={patternsData}
+                    completed={completed}
+                    toggleCompletion={toggleCompletion}
+                  />
+                </div>
+              </div>
+            )}
+            
+            {activeTab === 'analytics' && (
+              <div className="flex-1 flex flex-col min-h-0 space-y-6">
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight mb-2">Performance Analytics</h1>
+                  <p className="text-glass-muted">Deep dive into your solving speed, volume, and time logged.</p>
+                </div>
+                <Analytics 
+                  completed={completed} 
+                  trackedTime={trackedTime} 
+                  questions={questions} 
+                />
+              </div>
             )}
           </Suspense>
         </div>
-
-        <div>
-          <div className="flex items-center gap-4 mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Activity Log</h2>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
-          </div>
-          <Suspense fallback={<div className="h-48 flex items-center justify-center text-glass-muted">Loading...</div>}>
-            <StreakActivity 
-              streak={currentStreak} 
-              heatmapData={heatmapData} 
-              completedCount={completedQuestionsCount}
-            />
-          </Suspense>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check, Filter } from 'lucide-react';
 
@@ -38,8 +39,8 @@ const PatternDetailModal = ({ pattern, completed, toggleCompletion, onClose }) =
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-sm" onClick={onClose}>
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md" onClick={onClose}>
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -155,7 +156,8 @@ const PatternDetailModal = ({ pattern, completed, toggleCompletion, onClose }) =
           ))}
         </div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
