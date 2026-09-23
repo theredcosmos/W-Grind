@@ -64,7 +64,7 @@ const Analytics = ({ completed, trackedTime, questions }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="space-y-6"
+      className="space-y-4 md:space-y-6 flex-1 flex flex-col min-h-0 w-full"
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="glass-card p-6 flex flex-col justify-between">
@@ -119,8 +119,8 @@ const Analytics = ({ completed, trackedTime, questions }) => {
         </div>
       </div>
 
-      <div className="glass-card overflow-hidden flex flex-col h-[400px]">
-        <div className="p-6 border-b border-glass-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="glass-card overflow-hidden flex flex-col flex-1 min-h-0">
+        <div className="p-6 border-b border-glass-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 flex-none">
           <h3 className="text-xl font-bold">Solving History</h3>
           <div className="px-4 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm font-medium text-glass-muted">
             Avg: {stats.avgQuestionsPerDay} questions / day

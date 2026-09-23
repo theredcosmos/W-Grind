@@ -170,7 +170,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-glass-bg text-glass-text font-sans selection:bg-brand-primary/30 flex">
+    <div className="h-screen w-full overflow-hidden bg-glass-bg text-glass-text font-sans selection:bg-brand-primary/30 flex p-3 md:p-4 gap-4 md:gap-6">
       <Suspense fallback={null}>
         {isSettingsOpen && (
           <SettingsModal 
@@ -192,8 +192,8 @@ function App() {
         setActiveTab={setActiveTab}
       />
       
-      <main className="flex-1 ml-64 p-3 md:p-4 h-screen overflow-hidden flex items-center justify-center">
-        <div className="max-w-[1400px] w-full h-full flex flex-col justify-center">
+      <main className="flex-1 min-w-0 h-full flex items-center justify-center px-1">
+        <div className="max-w-[1400px] w-full h-full flex flex-col justify-center min-w-0">
           <Suspense fallback={<div className="h-64 flex items-center justify-center text-glass-muted">Loading...</div>}>
             {activeTab === 'dashboard' && (
               <Dashboard 
