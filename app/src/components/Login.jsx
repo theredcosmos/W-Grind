@@ -1,41 +1,16 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../firebase';
+import { Mail, Lock, User } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const Login = ({ onLogin }) => {
-  const [view, setView] = useState('main'); // 'main', 'signin', 'signup', 'google-username'
+  const [isFlipped, setIsFlipped] = useState(false); // false = Sign In, true = Sign Up
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [googleId, setGoogleId] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const callAuthEndpoint = async (endpoint, payload) => {
-    try {
-      setIsLoading(true);
-      setError('');
-      
-      const res = await fetch(`${API_URL}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Authentication failed");
-      }
-      
-      onLogin(data.username);
-    } catch (err) {
-      console.error(err);
-      setError(err.message || "Failed to connect to backend server.");
-      setIsLoading(false);
-    }
-  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -43,16 +18,8 @@ const Login = ({ onLogin }) => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       
-      setGoogleId(user.uid);
-      
       if (user.displayName) {
-        // Attempt to login directly if they have a display name
-        await callAuthEndpoint('/google-auth', { 
-          username: user.displayName.replace(/[^a-zA-Z0-9]/g, ''), 
-          googleId: user.uid 
-        });
-      } else {
-        setView('google-username');
+        onLogin(user.displayName.replace(/[^a-zA-Z0-9]/g, ''));
       }
     } catch (err) {
       console.error(err);
@@ -60,137 +27,308 @@ const Login = ({ onLogin }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, type) => {
     e.preventDefault();
-    if (!username.trim()) return;
+    if (!username.trim() || !password) return;
 
-    if (view === 'signin') {
-      await callAuthEndpoint('/login', { username: username.trim(), password });
-    } else if (view === 'signup') {
-      await callAuthEndpoint('/register', { username: username.trim(), password });
-    } else if (view === 'google-username') {
-      await callAuthEndpoint('/google-auth', { username: username.trim(), googleId });
+    try {
+      setIsLoading(true);
+      setError('');
+      
+      const endpoint = type === 'signin' ? '/login' : '/register';
+      const payload = { username: username.trim(), password };
+
+      try {
+        const res = await fetch(`${API_URL}${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          onLogin(data.username);
+          return;
+        } else {
+          const data = await res.json();
+          throw new Error(data.error || "Authentication failed");
+        }
+      } catch (err) {
+        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+          console.warn("Backend not available, falling back to local storage.");
+          if (type === 'signup') {
+            const existing = localStorage.getItem(`user_${username.trim()}`);
+            if (existing) throw new Error("Username already exists locally. Please sign in.");
+            localStorage.setItem(`user_${username.trim()}`, password);
+            onLogin(username.trim());
+            return;
+          } else {
+            const storedPass = localStorage.getItem(`user_${username.trim()}`);
+            if (storedPass && storedPass === password) {
+              onLogin(username.trim());
+              return;
+            } else if (!storedPass) {
+              throw new Error("User not found locally. Please sign up.");
+            } else {
+              throw new Error("Invalid password.");
+            }
+          }
+        }
+        throw err;
+      }
+    } catch (err) {
+      setError(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const resetView = () => {
-    setView('main');
-    setError('');
-    setUsername('');
-    setPassword('');
-    setGoogleId(null);
-  };
+  const SocialLinks = () => (
+    <div className="flex justify-center gap-4 mb-4 mt-2">
+      <button type="button" onClick={handleGoogleSignIn} className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:border-brand-primary hover:text-brand-primary transition-colors bg-white text-gray-700 shadow-sm">
+        <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+      </button>
+      <button type="button" className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:border-brand-primary hover:text-brand-primary transition-colors bg-white text-gray-700 shadow-sm">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+      </button>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-glass-bg text-glass-text flex items-center justify-center p-4 selection:bg-brand-primary/30">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="glass-card p-8 md:p-12 w-full max-w-md relative overflow-hidden flex flex-col items-center"
-      >
-        <div className="absolute -top-32 -right-32 w-64 h-64 bg-brand-primary/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-brand-secondary/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="h-screen w-full bg-[#f6f2f9] dark:bg-gray-900 flex items-center justify-center p-4 selection:bg-brand-primary/30 overflow-hidden font-sans">
+      
+      {/* Required CSS for the precise Double Slider animation */}
+      <style>{`
+        .custom-container {
+          background-color: #fff;
+          border-radius: 1.5rem;
+          box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+          position: relative;
+          overflow: hidden;
+          width: 850px;
+          max-width: 100%;
+          min-height: 550px;
+        }
 
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.6)] mb-6 z-10">
-          <span className="text-white font-black text-2xl">LT</span>
-        </div>
+        .custom-form-container {
+          position: absolute;
+          top: 0;
+          height: 100%;
+          transition: all 0.6s ease-in-out;
+        }
+
+        .custom-sign-in-container {
+          left: 0;
+          width: 50%;
+          z-index: 2;
+        }
+
+        .custom-container.active .custom-sign-in-container {
+          transform: translateX(100%);
+          opacity: 0;
+          z-index: 1;
+        }
+
+        .custom-sign-up-container {
+          left: 0;
+          width: 50%;
+          opacity: 0;
+          z-index: 1;
+        }
+
+        .custom-container.active .custom-sign-up-container {
+          transform: translateX(100%);
+          opacity: 1;
+          z-index: 5;
+          animation: show 0.6s;
+        }
+
+        @keyframes show {
+          0%, 49.99% { opacity: 0; z-index: 1; }
+          50%, 100% { opacity: 1; z-index: 5; }
+        }
+
+        .custom-overlay-container {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 50%;
+          height: 100%;
+          overflow: hidden;
+          transition: transform 0.6s ease-in-out;
+          z-index: 100;
+        }
+
+        .custom-container.active .custom-overlay-container {
+          transform: translateX(-100%);
+        }
+
+        .custom-overlay {
+          background: #8B5CF6;
+          background: linear-gradient(to right, #d946ef, #8B5CF6);
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: 0 0;
+          color: #FFFFFF;
+          position: relative;
+          left: -100%;
+          height: 100%;
+          width: 200%;
+          transform: translateX(0);
+          transition: transform 0.6s ease-in-out;
+        }
+
+        .custom-container.active .custom-overlay {
+          transform: translateX(50%);
+        }
+
+        .custom-overlay-panel {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          padding: 0 40px;
+          text-align: center;
+          top: 0;
+          height: 100%;
+          width: 50%;
+          transform: translateX(0);
+          transition: transform 0.6s ease-in-out;
+        }
+
+        .custom-overlay-left {
+          transform: translateX(-20%);
+        }
+
+        .custom-container.active .custom-overlay-left {
+          transform: translateX(0);
+        }
+
+        .custom-overlay-right {
+          right: 0;
+          transform: translateX(0);
+        }
+
+        .custom-container.active .custom-overlay-right {
+          transform: translateX(20%);
+        }
+      `}</style>
+
+      {/* Animated Background Blobs */}
+      <div className="absolute inset-0 z-0 opacity-30 dark:opacity-20 pointer-events-none">
+        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-brand-primary/40 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute bottom-[10%] right-[20%] w-[600px] h-[600px] bg-brand-secondary/40 rounded-full blur-[120px] animate-pulse" />
+      </div>
+
+      <div className={`custom-container ${isFlipped ? 'active' : ''} dark:bg-gray-800`}>
         
-        <h1 className="text-3xl font-bold mb-2 z-10">
-          {view === 'main' && 'Welcome Back'}
-          {view === 'signin' && 'Sign In'}
-          {view === 'signup' && 'Create Account'}
-          {view === 'google-username' && 'Complete Profile'}
-        </h1>
-        <p className="text-glass-muted text-center mb-8 z-10">
-          {view === 'main' && 'Continue your LeetCode mastery journey.'}
-          {view === 'signin' && 'Enter your credentials to continue.'}
-          {view === 'signup' && 'Join the forge and track your progress.'}
-          {view === 'google-username' && 'Choose a username to enter the forge.'}
-        </p>
-
-        {view === 'main' && (
-          <div className="w-full z-10 flex flex-col gap-4">
-            {error && <p className="text-accent-danger text-sm mb-2 text-center">{error}</p>}
+        {/* Sign Up Container */}
+        <div className="custom-form-container custom-sign-up-container bg-white dark:bg-gray-800 flex items-center justify-center">
+          <form onSubmit={(e) => handleSubmit(e, 'signup')} className="bg-white dark:bg-gray-800 flex items-center justify-center flex-col px-10 w-full h-full text-center">
+            <h1 className="font-bold text-3xl m-0 text-gray-900 dark:text-white">Create Account</h1>
+            <SocialLinks />
+            <span className="text-xs mb-4 text-gray-500">or use your email for registration</span>
             
-            <button 
-              onClick={() => setView('signin')}
-              className="w-full py-3 px-4 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-xl font-bold shadow-[0_0_15px_rgba(139,92,246,0.4)] hover:shadow-[0_0_25px_rgba(139,92,246,0.6)] hover:scale-[1.02] transition-all"
-            >
-              Sign In
-            </button>
+            {error && <p className="text-red-500 text-xs w-full bg-red-50 dark:bg-red-900/20 p-2 rounded mb-2">{error}</p>}
             
-            <button 
-              onClick={() => setView('signup')}
-              className="w-full py-3 px-4 bg-black/20 border border-white/10 text-white rounded-xl font-semibold hover:bg-white/10 transition-all text-sm"
-            >
-              Sign Up
-            </button>
-            
-            <div className="relative flex items-center py-2">
-              <div className="flex-grow border-t border-white/10"></div>
-              <span className="flex-shrink-0 mx-4 text-white/30 text-xs uppercase">or</span>
-              <div className="flex-grow border-t border-white/10"></div>
-            </div>
-
-            <button 
-              onClick={handleGoogleSignIn}
-              disabled={isLoading}
-              className="w-full py-3 px-4 bg-white text-black rounded-xl font-bold shadow-md hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-              Sign In with Google
-            </button>
-          </div>
-        )}
-
-        {view !== 'main' && (
-          <form onSubmit={handleSubmit} className="w-full z-10">
-            {error && <p className="text-accent-danger text-sm mb-4 text-center">{error}</p>}
-            
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-glass-muted">Username</label>
-              <input 
-                type="text" 
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 transition-all text-glass-text placeholder-glass-muted"
-                placeholder="Enter your username"
-                autoFocus
-              />
-            </div>
-            
-            {(view === 'signin' || view === 'signup') && (
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2 text-glass-muted">Password</label>
-                <input 
-                  type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 transition-all text-glass-text placeholder-glass-muted"
-                  placeholder="Enter a secure password"
-                />
+            <div className="relative w-full mb-3">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User size={16} className="text-gray-400" />
               </div>
-            )}
-            
-            <button 
-              type="submit"
-              className="w-full py-3 px-4 mt-2 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-xl font-bold shadow-[0_0_15px_rgba(139,92,246,0.4)] hover:shadow-[0_0_25px_rgba(139,92,246,0.6)] hover:scale-[1.02] transition-all disabled:opacity-50 mb-4"
-              disabled={!username.trim() || ((view === 'signin' || view === 'signup') && !password) || isLoading}
-            >
-              {isLoading ? 'Processing...' : (view === 'signin' ? 'Sign In' : (view === 'signup' ? 'Sign Up' : 'Continue'))}
-            </button>
-            
-            <button 
-              type="button"
-              onClick={resetView}
-              className="w-full py-3 px-4 bg-black/20 border border-white/10 text-white rounded-xl font-semibold hover:bg-white/10 transition-all text-sm"
-            >
-              Back
+              <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="bg-gray-100 dark:bg-gray-700/50 border-none px-4 py-3 pl-10 text-sm rounded-lg w-full outline-none focus:ring-2 focus:ring-brand-primary text-gray-900 dark:text-white" />
+            </div>
+
+            <div className="relative w-full mb-3">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Mail size={16} className="text-gray-400" />
+              </div>
+              <input type="email" placeholder="Email" className="bg-gray-100 dark:bg-gray-700/50 border-none px-4 py-3 pl-10 text-sm rounded-lg w-full outline-none focus:ring-2 focus:ring-brand-primary text-gray-900 dark:text-white" />
+            </div>
+
+            <div className="relative w-full mb-4">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Lock size={16} className="text-gray-400" />
+              </div>
+              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="bg-gray-100 dark:bg-gray-700/50 border-none px-4 py-3 pl-10 text-sm rounded-lg w-full outline-none focus:ring-2 focus:ring-brand-primary text-gray-900 dark:text-white" />
+            </div>
+
+            <button type="submit" disabled={isLoading || !username || !password} className="rounded-[20px] border border-[#8B5CF6] bg-[#8B5CF6] text-white text-[12px] font-bold py-3 px-11 tracking-[1px] uppercase transition-transform active:scale-95 hover:bg-[#7c3aed] outline-none disabled:opacity-70 mt-2">
+              {isLoading ? 'Wait...' : 'Sign Up'}
             </button>
           </form>
-        )}
-      </motion.div>
+        </div>
+
+        {/* Sign In Container */}
+        <div className="custom-form-container custom-sign-in-container bg-white dark:bg-gray-800 flex items-center justify-center">
+          <form onSubmit={(e) => handleSubmit(e, 'signin')} className="bg-white dark:bg-gray-800 flex items-center justify-center flex-col px-10 w-full h-full text-center">
+            <h1 className="font-bold text-3xl m-0 text-gray-900 dark:text-white">Sign In</h1>
+            <SocialLinks />
+            <span className="text-xs mb-4 text-gray-500">or use your account</span>
+            
+            {error && <p className="text-red-500 text-xs w-full bg-red-50 dark:bg-red-900/20 p-2 rounded mb-2">{error}</p>}
+            
+            <div className="relative w-full mb-3">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User size={16} className="text-gray-400" />
+              </div>
+              <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="bg-gray-100 dark:bg-gray-700/50 border-none px-4 py-3 pl-10 text-sm rounded-lg w-full outline-none focus:ring-2 focus:ring-brand-primary text-gray-900 dark:text-white" />
+            </div>
+
+            <div className="relative w-full mb-4">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Lock size={16} className="text-gray-400" />
+              </div>
+              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="bg-gray-100 dark:bg-gray-700/50 border-none px-4 py-3 pl-10 text-sm rounded-lg w-full outline-none focus:ring-2 focus:ring-brand-primary text-gray-900 dark:text-white" />
+            </div>
+
+            <a href="#" className="text-gray-500 text-sm mb-4 decoration-none">Forgot your password?</a>
+            <button type="submit" disabled={isLoading || !username || !password} className="rounded-[20px] border border-[#8B5CF6] bg-[#8B5CF6] text-white text-[12px] font-bold py-3 px-11 tracking-[1px] uppercase transition-transform active:scale-95 hover:bg-[#7c3aed] outline-none disabled:opacity-70">
+              {isLoading ? 'Wait...' : 'Sign In'}
+            </button>
+          </form>
+        </div>
+
+        {/* Overlay Container */}
+        <div className="custom-overlay-container pointer-events-none">
+          <div className="custom-overlay">
+            {/* Left Panel */}
+            <div className="custom-overlay-panel custom-overlay-left pointer-events-auto">
+              <h1 className="font-bold text-3xl m-0 mb-4">Hello, Friend!</h1>
+              <p className="text-[14px] font-[300] leading-5 tracking-[0.5px] mt-0 mb-8 mx-0">Enter your personal details and start your journey with us</p>
+              <button onClick={() => {
+                setError('');
+                setUsername('');
+                setPassword('');
+                setIsFlipped(false);
+              }} className="bg-transparent border border-white text-white rounded-[20px] text-[12px] font-bold py-3 px-11 tracking-[1px] uppercase transition-transform active:scale-95 hover:bg-white hover:text-[#8B5CF6] outline-none">
+                Sign In
+              </button>
+            </div>
+            
+            {/* Right Panel */}
+            <div className="custom-overlay-panel custom-overlay-right pointer-events-auto">
+              <h1 className="font-bold text-3xl m-0 mb-4">Welcome Back!</h1>
+              <p className="text-[14px] font-[300] leading-5 tracking-[0.5px] mt-0 mb-8 mx-0">To keep connected with us please login with your personal info</p>
+              <button onClick={() => {
+                setError('');
+                setUsername('');
+                setPassword('');
+                setIsFlipped(true);
+              }} className="bg-transparent border border-white text-white rounded-[20px] text-[12px] font-bold py-3 px-11 tracking-[1px] uppercase transition-transform active:scale-95 hover:bg-white hover:text-[#8B5CF6] outline-none">
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
