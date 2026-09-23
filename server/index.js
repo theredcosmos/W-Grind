@@ -35,7 +35,7 @@ pool.getConnection()
 
 // Register endpoint
 app.post('/api/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: "Username and password are required" });
   }
@@ -48,8 +48,8 @@ app.post('/api/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const [result] = await pool.query(
-      'INSERT INTO users (username, password_hash) VALUES (?, ?)', 
-      [username, hashedPassword]
+      'INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)', 
+      [username, hashedPassword, email || null]
     );
     res.json({ id: result.insertId, username });
   } catch (error) {

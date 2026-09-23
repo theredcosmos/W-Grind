@@ -30,9 +30,12 @@ const ProblemBoard = ({ patterns, completed, toggleCompletion }) => {
 
   const getVisiblePatterns = () => {
     const visible = [];
+    const len = patterns.length;
+    if (len === 0) return visible;
+    
     // We want 5 visible cards: center, 2 left, 2 right
     for (let i = -2; i <= 2; i++) {
-      let idx = (currentIndex + i + patterns.length) % patterns.length;
+      let idx = (currentIndex + i + len) % len;
       if (patterns[idx]) {
         visible.push({
           pattern: patterns[idx],
@@ -58,14 +61,14 @@ const ProblemBoard = ({ patterns, completed, toggleCompletion }) => {
       {/* Navigation Buttons */}
       <button 
         onClick={handlePrev}
-        className="absolute left-2 md:left-6 z-[200] p-3 md:p-4 rounded-full bg-white text-black hover:scale-110 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+        className={`absolute left-2 md:left-6 z-[200] p-3 md:p-4 rounded-full bg-white text-black transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-110`}
       >
         <ChevronLeft size={24} />
       </button>
       
       <button 
         onClick={handleNext}
-        className="absolute right-2 md:right-6 z-[200] p-3 md:p-4 rounded-full bg-white text-black hover:scale-110 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+        className={`absolute right-2 md:right-6 z-[200] p-3 md:p-4 rounded-full bg-white text-black transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-110`}
       >
         <ChevronRight size={24} />
       </button>

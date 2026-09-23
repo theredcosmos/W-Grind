@@ -1,6 +1,5 @@
 import React from 'react';
 import { LayoutDashboard, Network, Layers, BarChart2, Settings, LogOut, Sun, Moon } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 const SideNav = ({ theme, toggleTheme, username, level, onOpenSettings, onSignOut, activeTab, setActiveTab }) => {
   const navItems = [
@@ -10,18 +9,26 @@ const SideNav = ({ theme, toggleTheme, username, level, onOpenSettings, onSignOu
     { id: 'analytics', label: 'Analytics', icon: BarChart2 },
   ];
 
+  const bottomActions = [
+    { id: 'theme', label: theme === 'dark' ? 'Light Mode' : 'Dark Mode', icon: theme === 'dark' ? Sun : Moon, onClick: toggleTheme },
+    { id: 'settings', label: 'Settings', icon: Settings, onClick: onOpenSettings },
+  ];
+
   return (
-    <div className="w-64 h-screen bg-glass-panel backdrop-blur-xl border-r border-glass-border flex flex-col fixed left-0 top-0 z-40 transition-all duration-300">
-      <div className="p-6">
-        <h1 className="text-xl font-bold tracking-tight text-glass-text flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.5)]">
-            <span className="text-white font-black text-xs">LC</span>
-          </div>
+    <aside className="group relative h-full w-[72px] hover:w-[240px] flex-shrink-0 bg-glass-panel backdrop-blur-xl border border-glass-border flex flex-col py-5 px-3 rounded-2xl transition-[width] duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden z-50 shadow-lg hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      
+      {/* Brand */}
+      <div className="flex items-center gap-4 px-1.5 mb-8">
+        <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.5)]">
+          <span className="text-white font-black text-sm">LC</span>
+        </div>
+        <h2 className="text-glass-text text-base font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           TrackerPro
-        </h1>
+        </h2>
       </div>
 
-      <nav className="flex-1 px-4 space-y-2 mt-4">
+      {/* Menu Items */}
+      <nav className="flex-1 flex flex-col gap-1.5">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -29,68 +36,65 @@ const SideNav = ({ theme, toggleTheme, username, level, onOpenSettings, onSignOu
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 relative
-                ${isActive 
-                  ? 'text-white' 
+              className={`flex items-center gap-4 p-3 rounded-xl transition-all duration-200 relative ${
+                isActive
+                  ? 'bg-gradient-to-br from-brand-primary to-brand-secondary text-white shadow-[0_0_20px_rgba(139,92,246,0.4)]'
                   : 'text-glass-muted hover:text-glass-text hover:bg-white/5'
-                }`}
+              }`}
             >
-              {isActive && (
-                <motion.div
-                  layoutId="activeTabIndicator"
-                  className="absolute left-0 top-2 bottom-2 w-1.5 bg-brand-primary rounded-r-full shadow-[0_0_10px_rgba(139,92,246,0.8)]"
-                  initial={false}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-              <Icon size={20} className="relative z-10" />
-              <span className="font-medium relative z-10">{item.label}</span>
+              <Icon size={22} className="flex-shrink-0" />
+              <span className="font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                {item.label}
+              </span>
             </button>
           );
         })}
       </nav>
 
-      <div className="p-4 mt-auto space-y-6">
-        <div className="flex items-center justify-between px-2">
-          <span className="text-sm font-medium text-glass-muted">Theme</span>
-          <button onClick={toggleTheme} className="text-glass-muted hover:text-brand-secondary transition-colors">
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-        </div>
-        
-        <div className="flex items-center gap-3 px-2">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-primary to-brand-secondary p-[2px] flex-shrink-0">
-            <div className="w-full h-full rounded-full bg-glass-bg flex items-center justify-center overflow-hidden">
-              <span className="text-xs font-bold text-white">
-                {username ? username.slice(0, 2).toUpperCase() : 'US'}
+      {/* Bottom Actions (Theme, Settings) */}
+      <div className="flex flex-col gap-1.5 mb-4">
+        {bottomActions.map((action) => {
+          const Icon = action.icon;
+          return (
+            <button
+              key={action.id}
+              onClick={action.onClick}
+              className="flex items-center gap-4 p-3 rounded-xl text-glass-muted hover:text-glass-text hover:bg-white/5 transition-all duration-200"
+            >
+              <Icon size={22} className="flex-shrink-0" />
+              <span className="font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                {action.label}
               </span>
-            </div>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-glass-text truncate">{username || "User"}</div>
-            <div className="text-xs text-brand-primary-light font-medium">Level {level || 1} Pro</div>
-          </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* User Profile Card */}
+      <div className="flex items-center gap-0 group-hover:gap-3 p-1.5 rounded-xl bg-white/5 border border-white/5 mt-auto relative group/profile overflow-hidden transition-all duration-200">
+        <div className="flex-shrink-0 w-9 h-9 rounded-full border border-white/10 overflow-hidden">
+           <div className="w-full h-full bg-glass-bg flex items-center justify-center">
+             <span className="text-xs font-bold text-glass-text">
+               {username ? username.slice(0, 2).toUpperCase() : 'US'}
+             </span>
+           </div>
         </div>
-        
-        <div className="flex justify-around pt-2">
-          <button 
-            onClick={onOpenSettings}
-            className="flex flex-col items-center justify-center gap-1 text-glass-muted hover:text-brand-primary transition-colors text-xs font-medium"
-          >
-            <Settings size={20} />
-            Settings
-          </button>
+        <div className="flex-1 min-w-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap flex items-center justify-between pr-1 w-0 group-hover:w-auto">
+          <div className="flex flex-col text-left">
+            <h3 className="text-[13px] font-semibold text-glass-text truncate">{username || "User"}</h3>
+            <p className="text-[10px] text-glass-muted font-medium">Level {level || 1} Pro</p>
+          </div>
           <button 
             onClick={onSignOut}
-            className="flex flex-col items-center justify-center gap-1 text-glass-muted hover:text-accent-danger transition-colors text-xs font-medium"
+            className="p-1 text-glass-muted hover:text-accent-danger transition-colors"
             title="Log Out"
           >
-            <LogOut size={20} />
-            Logout
+            <LogOut size={16} />
           </button>
         </div>
       </div>
-    </div>
+
+    </aside>
   );
 };
 

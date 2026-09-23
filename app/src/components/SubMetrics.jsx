@@ -87,13 +87,13 @@ const TodaysGrind = ({ timeStats }) => {
 
 const QuestBoard = ({ quests, completedData, toggleCompletion }) => {
   return (
-    <div className="glass-card p-3 flex flex-col gap-1.5 overflow-hidden relative h-full">
+    <div className="glass-card p-3 flex flex-col gap-1.5 overflow-hidden relative h-full min-w-0">
       <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary opacity-5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
       <span className="text-[10px] font-semibold text-glass-muted uppercase tracking-wider mb-2 flex items-center gap-2">
         <Star size={14} className="text-yellow-400" /> Daily Quests
       </span>
       
-      <div className="flex flex-col gap-1.5 z-10 overflow-y-auto custom-scrollbar flex-1 min-h-0 pr-1">
+      <div className="flex flex-col justify-center gap-1.5 z-10 overflow-y-auto custom-scrollbar flex-1 min-h-0 pr-1">
         {quests.slice(0, 2).map((q, idx) => {
           const isCompleted = !!completedData[q.id];
           const xp = q.difficulty === 'Easy' ? 50 : q.difficulty === 'Medium' ? 100 : 200;
@@ -103,7 +103,7 @@ const QuestBoard = ({ quests, completedData, toggleCompletion }) => {
           return (
             <div 
               key={`${q.id}-${idx}`} 
-              className={`flex-none flex items-center justify-between p-2 rounded-xl border transition-all cursor-pointer hover:border-brand-primary/50 ${isCompleted ? 'bg-white/5 border-glass-border opacity-50' : 'bg-glass-panel border-glass-border/50 shadow-sm'}`}
+              className={`flex-none flex items-center justify-between p-2 rounded-xl border transition-all cursor-pointer hover:border-brand-primary/50 min-w-0 w-full ${isCompleted ? 'bg-glass-panel border-glass-border/30 shadow-sm' : 'bg-glass-panel border-glass-border/50 shadow-sm'}`}
               onClick={() => {
                 if (!isCompleted) {
                   window.open(q.url, '_blank', 'noopener,noreferrer');
@@ -115,11 +115,11 @@ const QuestBoard = ({ quests, completedData, toggleCompletion }) => {
               <div className="flex items-center gap-3 overflow-hidden">
                 <button 
                   onClick={(e) => { e.stopPropagation(); toggleCompletion(q.id); }}
-                  className={`flex-shrink-0 w-5 h-5 rounded flex items-center justify-center border transition-colors ${isCompleted ? 'bg-accent-success border-accent-success text-white' : 'border-glass-muted hover:border-accent-success'}`}
+                  className={`flex-shrink-0 w-5 h-5 rounded flex items-center justify-center border transition-colors ${isCompleted ? 'bg-brand-primary-light border-brand-primary-light text-white shadow-[0_0_10px_rgba(167,139,250,0.4)]' : 'border-glass-muted hover:border-brand-primary-light'}`}
                 >
                   {isCompleted && <CheckCircle2 size={14} />}
                 </button>
-                <div className="truncate">
+                <div className="truncate flex-1 min-w-0">
                   <div className={`text-sm font-semibold truncate ${isCompleted ? 'line-through text-glass-muted' : 'text-glass-text'}`}>
                     {q.title}
                   </div>
@@ -127,7 +127,7 @@ const QuestBoard = ({ quests, completedData, toggleCompletion }) => {
                     <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${bgClass} ${colorClass}`}>
                       {q.difficulty}
                     </span>
-                    <span className="text-xs font-medium text-brand-primary-light">+{xp} XP</span>
+                    <span className="text-xs font-medium text-brand-primary">+{xp} XP</span>
                   </div>
                 </div>
               </div>
@@ -181,9 +181,9 @@ const SubMetrics = ({ timeStats, monthlyCompleted, pickRandomProblem, addTracked
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full min-h-0"
+      className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full min-h-0 min-w-0"
     >
-      <div className="flex flex-col gap-4 min-h-0">
+      <div className="flex flex-col gap-4 min-h-0 min-w-0">
         <TodaysGrind timeStats={timeStats} />
         <MiniRing 
           title="Monthly Progress" 
@@ -194,8 +194,8 @@ const SubMetrics = ({ timeStats, monthlyCompleted, pickRandomProblem, addTracked
         />
       </div>
       
-      <div className="grid grid-rows-2 gap-3 min-h-0">
-        <div className="glass-card p-3 flex flex-col gap-2 relative overflow-hidden">
+      <div className="grid grid-rows-2 gap-3 min-h-0 min-w-0">
+        <div className="glass-card p-3 flex flex-col gap-2 relative overflow-hidden min-w-0">
           <span className="text-[10px] font-semibold text-glass-muted uppercase tracking-wider mb-0">Quick Actions</span>
           
           <AnimatePresence mode="wait">
@@ -205,9 +205,9 @@ const SubMetrics = ({ timeStats, monthlyCompleted, pickRandomProblem, addTracked
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex flex-col items-center justify-center h-full space-y-4"
+                className="flex flex-col items-center justify-center flex-1 space-y-4"
               >
-                <div className="text-3xl font-mono text-brand-primary-light font-bold tracking-widest">
+                <div className="text-3xl font-mono text-brand-primary font-bold tracking-widest">
                   {new Date(sessionSeconds * 1000).toISOString().substr(11, 8)}
                 </div>
                 <button 
@@ -223,27 +223,28 @@ const SubMetrics = ({ timeStats, monthlyCompleted, pickRandomProblem, addTracked
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex flex-col gap-2"
+                className="flex flex-col justify-center gap-2 flex-1"
               >
                 <button 
                   onClick={() => window.open(dailyLink, '_blank', 'noopener,noreferrer')}
-                  className="premium-btn-primary flex justify-center items-center gap-2 py-1.5 text-xs"
+                  className="premium-btn-primary flex justify-center items-center py-1.5 text-xs w-full relative"
                 >
-                  <Target size={14} />
-                  Problem of the Day
+                  <Target size={14} className="absolute left-4" />
+                  <span>Problem of the Day</span>
                 </button>
                 <button 
                   onClick={pickRandomProblem}
-                  className="premium-btn flex justify-center items-center gap-2 py-1.5 text-xs"
+                  className="premium-btn flex justify-center items-center py-1.5 text-xs w-full relative"
                 >
-                  <Shuffle size={14} />
-                  Pick Random Problem
+                  <Shuffle size={14} className="absolute left-4" />
+                  <span>Pick Random Problem</span>
                 </button>
                 <button 
                   onClick={toggleFocusMode}
-                  className="premium-btn flex justify-center items-center gap-2 py-1.5 text-xs text-accent-success hover:border-accent-success/50"
+                  className="premium-btn flex justify-center items-center py-1.5 text-xs text-accent-success hover:border-accent-success/50 w-full relative"
                 >
-                  <Play size={14} fill="currentColor" /> Start Focus Mode
+                  <Play size={14} fill="currentColor" className="absolute left-4" />
+                  <span>Start Focus Mode</span>
                 </button>
               </motion.div>
             )}
