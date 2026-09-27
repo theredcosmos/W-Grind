@@ -20,7 +20,7 @@ const Dashboard = ({
   heatmapData
 }) => {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -33,16 +33,16 @@ const Dashboard = ({
 
       <div className="flex-1 min-h-0 min-w-0 grid grid-cols-1 lg:grid-cols-12 gap-4">
         <div className="lg:col-span-5 h-full min-h-0 min-w-0">
-          <HeroSection 
-            progress={overallProgress} 
-            completed={completedQuestionsCount} 
-            total={totalQuestions} 
+          <HeroSection
+            progress={overallProgress}
+            completed={completedQuestionsCount}
+            total={totalQuestions}
             streak={currentStreak}
             levelData={levelData}
           />
         </div>
         <div className="lg:col-span-7 h-full min-h-0 min-w-0">
-          <SubMetrics 
+          <SubMetrics
             timeStats={timeStats}
             monthlyCompleted={monthlyCompleted}
             pickRandomProblem={pickRandomProblem}
@@ -60,9 +60,9 @@ const Dashboard = ({
           <div className="h-[1px] flex-1 bg-gradient-to-r from-glass-border to-transparent"></div>
         </div>
         <div className="flex-1 min-h-0 min-w-0">
-          <StreakActivity 
-            streak={currentStreak} 
-            heatmapData={heatmapData} 
+          <StreakActivity
+            streak={currentStreak}
+            heatmapData={heatmapData}
             completedCount={completedQuestionsCount}
           />
         </div>

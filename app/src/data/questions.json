@@ -14,7 +14,7 @@
     "url": "https://leetcode.com/problems/3sum/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Converging",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -23,7 +23,7 @@
     "url": "https://leetcode.com/problems/3sum-closest/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Converging",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -32,7 +32,7 @@
     "url": "https://leetcode.com/problems/4sum/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Converging",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -59,7 +59,7 @@
     "url": "https://leetcode.com/problems/boats-to-save-people/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Converging",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -68,7 +68,7 @@
     "url": "https://leetcode.com/problems/squares-of-a-sorted-array/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Converging",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -77,7 +77,7 @@
     "url": "https://leetcode.com/problems/3sum-smaller/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Converging",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -104,7 +104,7 @@
     "url": "https://leetcode.com/problems/find-the-duplicate-number/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Fast & Slow",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -122,7 +122,7 @@
     "url": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Fixed Separation",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -140,7 +140,7 @@
     "url": "https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Fixed Separation",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -149,7 +149,7 @@
     "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "In-place Array Modification",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -158,7 +158,7 @@
     "url": "https://leetcode.com/problems/remove-element/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "In-place Array Modification",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -167,7 +167,7 @@
     "url": "https://leetcode.com/problems/sort-colors/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "In-place Array Modification",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -176,7 +176,7 @@
     "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "In-place Array Modification",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -194,7 +194,7 @@
     "url": "https://leetcode.com/problems/string-compression/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "In-place Array Modification",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -203,7 +203,7 @@
     "url": "https://leetcode.com/problems/sort-array-by-parity/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "In-place Array Modification",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -221,7 +221,7 @@
     "url": "https://leetcode.com/problems/separate-black-and-white-balls/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "In-place Array Modification",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -230,7 +230,7 @@
     "url": "https://leetcode.com/problems/backspace-string-compare/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "String Comparison with  special characters",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -250,7 +250,7 @@
     "url": "https://leetcode.com/problems/removing-stars-from-a-string/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "String Comparison with  special characters",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -268,7 +268,7 @@
     "url": "https://leetcode.com/problems/palindromic-substrings/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "Expanding From Center",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -286,7 +286,7 @@
     "url": "https://leetcode.com/problems/reverse-string/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "String Reversal",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -295,7 +295,7 @@
     "url": "https://leetcode.com/problems/reverse-vowels-of-a-string/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "String Reversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -304,7 +304,7 @@
     "url": "https://leetcode.com/problems/reverse-string-ii/",
     "pattern": "Two Pointer Patterns",
     "subpattern": "String Reversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -313,7 +313,7 @@
     "url": "https://leetcode.com/problems/moving-average-from-data-stream/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Fixed Size",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -322,7 +322,7 @@
     "url": "https://leetcode.com/problems/maximum-average-subarray-i/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Fixed Size",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -349,7 +349,7 @@
     "url": "https://leetcode.com/problems/find-x-sum-of-all-k-long-subarrays-i/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Fixed Size",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -367,7 +367,7 @@
     "url": "https://leetcode.com/problems/minimum-window-substring/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Variable Size",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -385,7 +385,7 @@
     "url": "https://leetcode.com/problems/contains-duplicate-ii/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Variable Size",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -412,7 +412,7 @@
     "url": "https://leetcode.com/problems/fruit-into-baskets/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Variable Size",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -421,7 +421,7 @@
     "url": "https://leetcode.com/problems/max-consecutive-ones-iii/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Variable Size",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -430,7 +430,7 @@
     "url": "https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Variable Size",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -504,7 +504,7 @@
     "url": "https://leetcode.com/problems/maximum-good-subarray-sum/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Variable Size",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -531,7 +531,7 @@
     "url": "https://leetcode.com/problems/sliding-window-maximum/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Monotonic Queue for Max/Min",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -549,7 +549,7 @@
     "url": "https://leetcode.com/problems/jump-game-vi/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Monotonic Queue for Max/Min",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -558,7 +558,7 @@
     "url": "https://leetcode.com/problems/twosum/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Character Frequency Matching",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -567,7 +567,7 @@
     "url": "https://leetcode.com/problems/find-all-anagrams-in-a-string/",
     "pattern": "Sliding Window Patterns",
     "subpattern": "Character Frequency Matching",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -585,7 +585,7 @@
     "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Level Order Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -594,7 +594,7 @@
     "url": "https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Level Order Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -612,7 +612,7 @@
     "url": "https://leetcode.com/problems/find-largest-value-in-each-tree-row/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Level Order Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -621,7 +621,7 @@
     "url": "https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Level Order Traversal",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -630,7 +630,7 @@
     "url": "https://leetcode.com/problems/same-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Preorder Traversal",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -639,7 +639,7 @@
     "url": "https://leetcode.com/problems/symmetric-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Preorder Traversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -675,7 +675,7 @@
     "url": "https://leetcode.com/problems/binary-tree-paths/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Preorder Traversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -693,7 +693,7 @@
     "url": "https://leetcode.com/problems/binary-tree-inorder-traversal/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Inorder Traversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -702,7 +702,7 @@
     "url": "https://leetcode.com/problems/validate-binary-search-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Inorder Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -711,7 +711,7 @@
     "url": "https://leetcode.com/problems/binary-search-tree-iterator/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Inorder Traversal",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -729,7 +729,7 @@
     "url": "https://leetcode.com/problems/find-mode-in-binary-search-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Inorder Traversal",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -738,7 +738,7 @@
     "url": "https://leetcode.com/problems/minimum-absolute-difference-in-bst/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Inorder Traversal",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -747,7 +747,7 @@
     "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Postorder Traversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -756,7 +756,7 @@
     "url": "https://leetcode.com/problems/balanced-binary-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Postorder Traversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -774,7 +774,7 @@
     "url": "https://leetcode.com/problems/binary-tree-postorder-traversal/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Postorder Traversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -783,7 +783,7 @@
     "url": "https://leetcode.com/problems/house-robber-iii/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Postorder Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -801,7 +801,7 @@
     "url": "https://leetcode.com/problems/diameter-of-binary-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Postorder Traversal",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -810,7 +810,7 @@
     "url": "https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Postorder Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -819,7 +819,7 @@
     "url": "https://leetcode.com/problems/delete-nodes-and-return-forest/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Postorder Traversal",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -828,7 +828,7 @@
     "url": "https://leetcode.com/problems/height-of-binary-tree-after-subtree-removal-queries/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Recursive Postorder Traversal",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -846,7 +846,7 @@
     "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Lowest Common Ancestor",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -855,7 +855,7 @@
     "url": "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Serialization and Deserialization",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -864,7 +864,7 @@
     "url": "https://leetcode.com/problems/subtree-of-another-tree/",
     "pattern": "Tree Traversal Patterns (DFS & BFS)",
     "subpattern": "Serialization and Deserialization",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -909,7 +909,7 @@
     "url": "https://leetcode.com/problems/number-of-provinces/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "DFS - Connected Components / Island Counting",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -927,7 +927,7 @@
     "url": "https://leetcode.com/problems/flood-fill/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "DFS - Connected Components / Island Counting",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -945,7 +945,7 @@
     "url": "https://leetcode.com/problems/number-of-enclaves/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "DFS - Connected Components / Island Counting",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -981,7 +981,7 @@
     "url": "https://leetcode.com/problems/01-matrix/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "BFS - Connected Components / Island Counting",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -990,7 +990,7 @@
     "url": "https://leetcode.com/problems/rotting-oranges/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "BFS - Connected Components / Island Counting",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1026,7 +1026,7 @@
     "url": "https://leetcode.com/problems/find-eventual-safe-states/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "DFS - Cycle Detection",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1035,7 +1035,7 @@
     "url": "https://leetcode.com/problems/all-paths-from-source-lead-to-destination/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "DFS - Cycle Detection",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1044,7 +1044,7 @@
     "url": "https://leetcode.com/problems/alien-dictionary/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "BFS - Topological Sort(Kahn's Algorithm)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1062,7 +1062,7 @@
     "url": "https://leetcode.com/problems/sequence-reconstruction/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "BFS - Topological Sort(Kahn's Algorithm)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1080,7 +1080,7 @@
     "url": "https://leetcode.com/problems/largest-color-value-in-a-directed-graph/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "BFS - Topological Sort(Kahn's Algorithm)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1089,7 +1089,7 @@
     "url": "https://leetcode.com/problems/parallel-courses-iii/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "BFS - Topological Sort(Kahn's Algorithm)",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": [
       "Pinterest"
     ]
@@ -1109,7 +1109,7 @@
     "url": "https://leetcode.com/problems/build-a-matrix-with-conditions/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "BFS - Topological Sort(Kahn's Algorithm)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1127,7 +1127,7 @@
     "url": "https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Deep Copy / Cloning",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1145,7 +1145,7 @@
     "url": "https://leetcode.com/problems/clone-n-ary-tree/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Deep Copy / Cloning",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": [
       "Google"
     ]
@@ -1203,7 +1203,7 @@
     "url": "https://leetcode.com/problems/second-minimum-time-to-reach-destination/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Shortest Path",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1212,7 +1212,7 @@
     "url": "https://leetcode.com/problems/minimum-weighted-subgraph-with-the-required-paths/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Shortest Path",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1221,7 +1221,7 @@
     "url": "https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Shortest Path",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1230,7 +1230,7 @@
     "url": "https://leetcode.com/problems/minimum-time-to-visit-a-cell-in-a-grid/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Shortest Path",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1239,7 +1239,7 @@
     "url": "https://leetcode.com/problems/find-the-safest-path-in-a-grid/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Shortest Path",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1248,7 +1248,7 @@
     "url": "https://leetcode.com/problems/cheapest-flights-within-k-stops/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Shortest Path (Bellman-Ford / BFS+K)",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1257,7 +1257,7 @@
     "url": "https://leetcode.com/problems/shortest-path-with-alternating-colors/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Shortest Path (Bellman-Ford / BFS+K)",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1266,7 +1266,7 @@
     "url": "https://leetcode.com/problems/graph-valid-tree/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Union-Find",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1275,7 +1275,7 @@
     "url": "https://leetcode.com/problems/number-of-islands-ii/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Union-Find",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1284,7 +1284,7 @@
     "url": "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Union-Find",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1293,7 +1293,7 @@
     "url": "https://leetcode.com/problems/redundant-connection/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Union-Find",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1302,7 +1302,7 @@
     "url": "https://leetcode.com/problems/sentence-similarity-ii/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Union-Find",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1320,7 +1320,7 @@
     "url": "https://leetcode.com/problems/largest-component-size-by-common-factor/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Union-Find",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1329,7 +1329,7 @@
     "url": "https://leetcode.com/problems/regions-cut-by-slashes/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Union-Find",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1338,7 +1338,7 @@
     "url": "https://leetcode.com/problems/the-earliest-moment-when-everyone-become-friends/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Union-Find",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1356,7 +1356,7 @@
     "url": "https://leetcode.com/problems/maximum-employees-to-be-invited-to-a-meeting/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Strongly Connected Components (Kosaraju / Tarjan)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1392,7 +1392,7 @@
     "url": "https://leetcode.com/problems/optimize-water-distribution-in-a-village/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Minimum Spanning Tree (Kruskal / Prim / DSU + heap)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1401,7 +1401,7 @@
     "url": "https://leetcode.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Minimum Spanning Tree (Kruskal / Prim / DSU + heap)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1410,7 +1410,7 @@
     "url": "https://leetcode.com/problems/word-ladder/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Bidirectional BFS",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1419,7 +1419,7 @@
     "url": "https://leetcode.com/problems/word-ladder-ii/",
     "pattern": "Graph Traversal Patterns (DFS & BFS)",
     "subpattern": "Bidirectional BFS",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1446,7 +1446,7 @@
     "url": "https://leetcode.com/problems/decode-ways/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Fibonacci Style",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1455,7 +1455,7 @@
     "url": "https://leetcode.com/problems/house-robber/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Fibonacci Style",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1491,7 +1491,7 @@
     "url": "https://leetcode.com/problems/min-cost-climbing-stairs/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Fibonacci Style",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -1500,7 +1500,7 @@
     "url": "https://leetcode.com/problems/maximum-subarray/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Kadane's Algorithm for Max/Min Subarray",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1509,7 +1509,7 @@
     "url": "https://leetcode.com/problems/maximum-sum-circular-subarray/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Kadane's Algorithm for Max/Min Subarray",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1548,7 +1548,7 @@
     "url": "https://leetcode.com/problems/coin-change/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Coin Change / Unbounded Knapsack Style",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1557,7 +1557,7 @@
     "url": "https://leetcode.com/problems/combination-sum-iv/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Coin Change / Unbounded Knapsack Style",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1575,7 +1575,7 @@
     "url": "https://leetcode.com/problems/partition-equal-subset-sum/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "0/1 Knapsack, Subset Sum Style",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1602,7 +1602,7 @@
     "url": "https://leetcode.com/problems/word-break-ii/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Word Break Style",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1611,7 +1611,7 @@
     "url": "https://leetcode.com/problems/longest-common-subsequence/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Longest Common Subsequence - LCS",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1620,7 +1620,7 @@
     "url": "https://leetcode.com/problems/shortest-common-supersequence/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Longest Common Subsequence - LCS",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1629,7 +1629,7 @@
     "url": "https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Longest Common Subsequence - LCS",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1638,7 +1638,7 @@
     "url": "https://leetcode.com/problems/edit-distance/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Edit Distance / Levenshtein Distance",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1656,7 +1656,7 @@
     "url": "https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Edit Distance / Levenshtein Distance",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1683,7 +1683,7 @@
     "url": "https://leetcode.com/problems/minimum-path-sum/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Unique Paths on Grid",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1701,7 +1701,7 @@
     "url": "https://leetcode.com/problems/maximal-square/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Unique Paths on Grid",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1719,7 +1719,7 @@
     "url": "https://leetcode.com/problems/count-square-submatrices-with-all-ones/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Unique Paths on Grid",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1728,7 +1728,7 @@
     "url": "https://leetcode.com/problems/burst-balloons/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Interval DP",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1737,7 +1737,7 @@
     "url": "https://leetcode.com/problems/remove-boxes/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Interval DP",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1755,7 +1755,7 @@
     "url": "https://leetcode.com/problems/unique-binary-search-trees/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Catalan Numbers",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1764,7 +1764,7 @@
     "url": "https://leetcode.com/problems/different-ways-to-add-parentheses/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Catalan Numbers",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1782,7 +1782,7 @@
     "url": "https://leetcode.com/problems/russian-doll-envelopes/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Longest Increasing Subsequence",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1791,7 +1791,7 @@
     "url": "https://leetcode.com/problems/minimum-number-of-removals-to-make-mountain-array/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Longest Increasing Subsequence",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1809,7 +1809,7 @@
     "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Stock problems",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -1827,7 +1827,7 @@
     "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Stock problems",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1836,7 +1836,7 @@
     "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/",
     "pattern": "Dynamic Programming (DP) Patterns",
     "subpattern": "Stock problems",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1863,7 +1863,7 @@
     "url": "https://leetcode.com/problems/top-k-frequent-elements/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Top K Elements",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1872,7 +1872,7 @@
     "url": "https://leetcode.com/problems/sort-characters-by-frequency/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Top K Elements",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1881,7 +1881,7 @@
     "url": "https://leetcode.com/problems/relative-ranks/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Top K Elements",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -1935,7 +1935,7 @@
     "url": "https://leetcode.com/problems/finding-mk-average/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Two Heaps for Median Finding",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1944,7 +1944,7 @@
     "url": "https://leetcode.com/problems/merge-k-sorted-lists/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "K-way Merge",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1953,7 +1953,7 @@
     "url": "https://leetcode.com/problems/find-k-pairs-with-smallest-sums/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "K-way Merge",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1971,7 +1971,7 @@
     "url": "https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "K-way Merge",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -1989,7 +1989,7 @@
     "url": "https://leetcode.com/problems/reorganize-string/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Scheduling / Minimum Cost",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -1998,7 +1998,7 @@
     "url": "https://leetcode.com/problems/minimum-cost-to-hire-k-workers/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Scheduling / Minimum Cost",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2020,7 +2020,7 @@
     "url": "https://leetcode.com/problems/maximum-average-pass-ratio/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Scheduling / Minimum Cost",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": [
       "Amazon"
     ]
@@ -2040,7 +2040,7 @@
     "url": "https://leetcode.com/problems/the-number-of-the-smallest-unoccupied-chair/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Scheduling / Minimum Cost",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2049,7 +2049,7 @@
     "url": "https://leetcode.com/problems/meeting-rooms-iii/",
     "pattern": "Heap (Priority Queue) Patterns",
     "subpattern": "Scheduling / Minimum Cost",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2067,7 +2067,7 @@
     "url": "https://leetcode.com/problems/combinations/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Subsets (Include/Exclude)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2076,7 +2076,7 @@
     "url": "https://leetcode.com/problems/subsets/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Subsets (Include/Exclude)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2085,7 +2085,7 @@
     "url": "https://leetcode.com/problems/subsets-ii/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Subsets (Include/Exclude)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2094,7 +2094,7 @@
     "url": "https://leetcode.com/problems/next-permutation/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Permutations",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2103,7 +2103,7 @@
     "url": "https://leetcode.com/problems/permutations/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Permutations",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2112,7 +2112,7 @@
     "url": "https://leetcode.com/problems/permutation-sequence/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Permutations",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2130,7 +2130,7 @@
     "url": "https://leetcode.com/problems/combination-sum-ii/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Combination Sum",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2166,7 +2166,7 @@
     "url": "https://leetcode.com/problems/word-search-ii/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Word Search / Path Finding in Grid",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2175,7 +2175,7 @@
     "url": "https://leetcode.com/problems/check-if-word-can-be-placed-in-crossword/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Word Search / Path Finding in Grid",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": [
       "Google"
     ]
@@ -2186,7 +2186,7 @@
     "url": "https://leetcode.com/problems/sudoku-solver/",
     "pattern": "Backtracking Patterns",
     "subpattern": "N-Queens / Constraint Satisfaction",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2195,7 +2195,7 @@
     "url": "https://leetcode.com/problems/n-queens/",
     "pattern": "Backtracking Patterns",
     "subpattern": "N-Queens / Constraint Satisfaction",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2213,7 +2213,7 @@
     "url": "https://leetcode.com/problems/palindrome-partitioning-ii/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Palindrome Partitioning",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2222,7 +2222,7 @@
     "url": "https://leetcode.com/problems/pseudo-palindromic-paths-in-a-binary-tree/",
     "pattern": "Backtracking Patterns",
     "subpattern": "Palindrome Partitioning",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": [
       "Bloomberg"
     ]
@@ -2251,7 +2251,7 @@
     "url": "https://leetcode.com/problems/employee-free-time/",
     "pattern": "Greedy Patterns",
     "subpattern": "Interval Merging/Scheduling",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2278,7 +2278,7 @@
     "url": "https://leetcode.com/problems/jump-game-ii/",
     "pattern": "Greedy Patterns",
     "subpattern": "Jump Game Reachability/Minimization",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2305,7 +2305,7 @@
     "url": "https://leetcode.com/problems/maximize-the-topmost-element-after-k-moves/",
     "pattern": "Greedy Patterns",
     "subpattern": "Gas Station Circuit",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2332,7 +2332,7 @@
     "url": "https://leetcode.com/problems/assign-cookies/",
     "pattern": "Greedy Patterns",
     "subpattern": "Sorting Based",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2341,7 +2341,7 @@
     "url": "https://leetcode.com/problems/candy/",
     "pattern": "Greedy Patterns",
     "subpattern": "Sorting Based",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2350,7 +2350,7 @@
     "url": "https://leetcode.com/problems/queue-reconstruction-by-height/",
     "pattern": "Greedy Patterns",
     "subpattern": "Sorting Based",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2359,7 +2359,7 @@
     "url": "https://leetcode.com/problems/two-city-scheduling/",
     "pattern": "Greedy Patterns",
     "subpattern": "Sorting Based",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2368,7 +2368,7 @@
     "url": "https://leetcode.com/problems/search-insert-position/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Sorted Array/List",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2395,7 +2395,7 @@
     "url": "https://leetcode.com/problems/first-bad-version/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Sorted Array/List",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2413,7 +2413,7 @@
     "url": "https://leetcode.com/problems/single-element-in-a-sorted-array/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Sorted Array/List",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2422,7 +2422,7 @@
     "url": "https://leetcode.com/problems/binary-search/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Sorted Array/List",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2431,7 +2431,7 @@
     "url": "https://leetcode.com/problems/kth-missing-positive-number/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Sorted Array/List",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": [
       "Amazon",
       "Facebook",
@@ -2455,7 +2455,7 @@
     "url": "https://leetcode.com/problems/search-in-rotated-sorted-array-ii/",
     "pattern": "Binary Search Patterns",
     "subpattern": "Find Min/Max in Rotated Sorted Array",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2473,7 +2473,7 @@
     "url": "https://leetcode.com/problems/peak-index-in-a-mountain-array/",
     "pattern": "Binary Search Patterns",
     "subpattern": "Find Min/Max in Rotated Sorted Array",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2482,7 +2482,7 @@
     "url": "https://leetcode.com/problems/find-in-mountain-array/",
     "pattern": "Binary Search Patterns",
     "subpattern": "Find Min/Max in Rotated Sorted Array",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2491,7 +2491,7 @@
     "url": "https://leetcode.com/problems/split-array-largest-sum/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Answer / Condition Function",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2500,7 +2500,7 @@
     "url": "https://leetcode.com/problems/minimize-max-distance-to-gas-station/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Answer / Condition Function",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2509,7 +2509,7 @@
     "url": "https://leetcode.com/problems/koko-eating-bananas/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Answer / Condition Function",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2518,7 +2518,7 @@
     "url": "https://leetcode.com/problems/capacity-to-ship-packages-6--within-d-days/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Answer / Condition Function",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2527,7 +2527,7 @@
     "url": "https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Answer / Condition Function",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": [
       "Google"
     ]
@@ -2538,7 +2538,7 @@
     "url": "https://leetcode.com/problems/minimum-limit-of-balls-in-a-bag/",
     "pattern": "Binary Search Patterns",
     "subpattern": "On Answer / Condition Function",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2583,7 +2583,7 @@
     "url": "https://leetcode.com/problems/median-of-two-sorted-arrays/",
     "pattern": "Binary Search Patterns",
     "subpattern": "Median / Kth across Two Sorted Arrays",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2592,7 +2592,7 @@
     "url": "https://leetcode.com/problems/find-k-th-smallest-pair-distance/",
     "pattern": "Binary Search Patterns",
     "subpattern": "Median / Kth across Two Sorted Arrays",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2601,7 +2601,7 @@
     "url": "https://leetcode.com/problems/valid-parentheses/",
     "pattern": "Stack Patterns",
     "subpattern": "Valid Parentheses Matching",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2610,7 +2610,7 @@
     "url": "https://leetcode.com/problems/longest-valid-parentheses/",
     "pattern": "Stack Patterns",
     "subpattern": "Valid Parentheses Matching",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2628,7 +2628,7 @@
     "url": "https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/",
     "pattern": "Stack Patterns",
     "subpattern": "Valid Parentheses Matching",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2646,7 +2646,7 @@
     "url": "https://leetcode.com/problems/remove-k-digits/",
     "pattern": "Stack Patterns",
     "subpattern": "Monotonic Stack",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2655,7 +2655,7 @@
     "url": "https://leetcode.com/problems/next-greater-element-i/",
     "pattern": "Stack Patterns",
     "subpattern": "Monotonic Stack",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2664,7 +2664,7 @@
     "url": "https://leetcode.com/problems/next-greater-element-ii/",
     "pattern": "Stack Patterns",
     "subpattern": "Monotonic Stack",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2682,7 +2682,7 @@
     "url": "https://leetcode.com/problems/online-stock-span/",
     "pattern": "Stack Patterns",
     "subpattern": "Monotonic Stack",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2700,7 +2700,7 @@
     "url": "https://leetcode.com/problems/maximum-width-ramp/",
     "pattern": "Stack Patterns",
     "subpattern": "Monotonic Stack",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2709,7 +2709,7 @@
     "url": "https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop/",
     "pattern": "Stack Patterns",
     "subpattern": "Monotonic Stack",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": [
       "Amazon"
     ]
@@ -2720,7 +2720,7 @@
     "url": "https://leetcode.com/problems/find-the-most-competitive-subsequence/",
     "pattern": "Stack Patterns",
     "subpattern": "Monotonic Stack",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": [
       "Google"
     ]
@@ -2740,7 +2740,7 @@
     "url": "https://leetcode.com/problems/basic-calculator/",
     "pattern": "Stack Patterns",
     "subpattern": "Expression Evaluation",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2749,7 +2749,7 @@
     "url": "https://leetcode.com/problems/basic-calculator-ii/",
     "pattern": "Stack Patterns",
     "subpattern": "Expression Evaluation",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2758,7 +2758,7 @@
     "url": "https://leetcode.com/problems/basic-calculator-iii/",
     "pattern": "Stack Patterns",
     "subpattern": "Expression Evaluation",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2785,7 +2785,7 @@
     "url": "https://leetcode.com/problems/asteroid-collision/",
     "pattern": "Stack Patterns",
     "subpattern": "Simulation / Backtracking Helper",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2821,7 +2821,7 @@
     "url": "https://leetcode.com/problems/maximal-rectangle/",
     "pattern": "Stack Patterns",
     "subpattern": "Largest Rectangle in Histogram",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2839,7 +2839,7 @@
     "url": "https://leetcode.com/problems/single-number-ii/",
     "pattern": "Bit Manipulation Patterns",
     "subpattern": "Bitwise XOR - Finding Single/Missing Number",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2848,7 +2848,7 @@
     "url": "https://leetcode.com/problems/missing-number/",
     "pattern": "Bit Manipulation Patterns",
     "subpattern": "Bitwise XOR - Finding Single/Missing Number",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2857,7 +2857,7 @@
     "url": "https://leetcode.com/problems/find-the-difference/",
     "pattern": "Bit Manipulation Patterns",
     "subpattern": "Bitwise XOR - Finding Single/Missing Number",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2866,7 +2866,7 @@
     "url": "https://leetcode.com/problems/number-of-1-bits/",
     "pattern": "Bit Manipulation Patterns",
     "subpattern": "Bitwise AND - Counting Set Bits (Hamming Weight)",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2884,7 +2884,7 @@
     "url": "https://leetcode.com/problems/total-hamming-distance/",
     "pattern": "Bit Manipulation Patterns",
     "subpattern": "Bitwise AND - Counting Set Bits (Hamming Weight)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2893,7 +2893,7 @@
     "url": "https://leetcode.com/problems/counting-bits/",
     "pattern": "Bit Manipulation Patterns",
     "subpattern": "Bitwise DP - Counting Bits Optimization",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2902,7 +2902,7 @@
     "url": "https://leetcode.com/problems/parallel-courses-ii/",
     "pattern": "Bit Manipulation Patterns",
     "subpattern": "Bitwise DP - Counting Bits Optimization",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -2920,7 +2920,7 @@
     "url": "https://leetcode.com/problems/power-of-four/",
     "pattern": "Bit Manipulation Patterns",
     "subpattern": "Bitwise Operations - Power of Two/Four Check",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2938,7 +2938,7 @@
     "url": "https://leetcode.com/problems/reverse-linked-list-ii/",
     "pattern": "Linked List Manipulation Patterns",
     "subpattern": "In-place Reversal",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -2947,7 +2947,7 @@
     "url": "https://leetcode.com/problems/reverse-linked-list/",
     "pattern": "Linked List Manipulation Patterns",
     "subpattern": "In-place Reversal",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -2983,7 +2983,7 @@
     "url": "https://leetcode.com/problems/merge-two-sorted-lists/",
     "pattern": "Linked List Manipulation Patterns",
     "subpattern": "Merging Two Sorted Lists",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3019,7 +3019,7 @@
     "url": "https://leetcode.com/problems/minimum-index-sum-of-two-lists/",
     "pattern": "Linked List Manipulation Patterns",
     "subpattern": "Intersection Detection",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3028,7 +3028,7 @@
     "url": "https://leetcode.com/problems/swap-nodes-in-pairs/",
     "pattern": "Linked List Manipulation Patterns",
     "subpattern": "Reordering / Partitioning",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3046,7 +3046,7 @@
     "url": "https://leetcode.com/problems/partition-list/",
     "pattern": "Linked List Manipulation Patterns",
     "subpattern": "Reordering / Partitioning",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3055,7 +3055,7 @@
     "url": "https://leetcode.com/problems/reorder-list/",
     "pattern": "Linked List Manipulation Patterns",
     "subpattern": "Reordering / Partitioning",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3073,7 +3073,7 @@
     "url": "https://leetcode.com/problems/rotate-image/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "In-place Rotation",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3082,7 +3082,7 @@
     "url": "https://leetcode.com/problems/rotate-array/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "In-place Rotation",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3109,7 +3109,7 @@
     "url": "https://leetcode.com/problems/spiral-matrix-ii/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Spiral Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3118,7 +3118,7 @@
     "url": "https://leetcode.com/problems/spiral-matrix-iii/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Spiral Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3127,7 +3127,7 @@
     "url": "https://leetcode.com/problems/spiral-matrix-iv/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Spiral Traversal",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3136,7 +3136,7 @@
     "url": "https://leetcode.com/problems/set-matrix-zeroes/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "In-place Marking",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3154,7 +3154,7 @@
     "url": "https://leetcode.com/problems/diagonal-traverse/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "In-place Marking",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3163,7 +3163,7 @@
     "url": "https://leetcode.com/problems/product-of-array-except-self/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Prefix/Suffix Products",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3181,7 +3181,7 @@
     "url": "https://leetcode.com/problems/minimum-penalty-for-a-shop/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Prefix/Suffix Products",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3190,7 +3190,7 @@
     "url": "https://leetcode.com/problems/plus-one/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Plus One",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3217,7 +3217,7 @@
     "url": "https://leetcode.com/problems/add-binary/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Plus One",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3226,7 +3226,7 @@
     "url": "https://leetcode.com/problems/merge-sorted-array/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "In-place from End",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3235,7 +3235,7 @@
     "url": "https://leetcode.com/problems/first-missing-positive/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Cyclic Sort",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -3253,7 +3253,7 @@
     "url": "https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/",
     "pattern": "Array/Matrix Manipulation Patterns",
     "subpattern": "Cyclic Sort",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3289,7 +3289,7 @@
     "url": "https://leetcode.com/problems/group-anagrams/",
     "pattern": "String Manipulation Patterns",
     "subpattern": "Anagram Check",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3307,7 +3307,7 @@
     "url": "https://leetcode.com/problems/roman-to-integer/",
     "pattern": "String Manipulation Patterns",
     "subpattern": "Roman to Integer Conversion",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3316,7 +3316,7 @@
     "url": "https://leetcode.com/problems/integer-to-roman/",
     "pattern": "String Manipulation Patterns",
     "subpattern": "Roman to Integer Conversion",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3334,7 +3334,7 @@
     "url": "https://leetcode.com/problems/valid-number/",
     "pattern": "String Manipulation Patterns",
     "subpattern": "String to Integer (atoi)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -3361,7 +3361,7 @@
     "url": "https://leetcode.com/problems/shortest-palindrome/",
     "pattern": "String Manipulation Patterns",
     "subpattern": "String Matching - Naive / KMP / Rabin-Karp",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -3370,7 +3370,7 @@
     "url": "https://leetcode.com/problems/repeated-string-match/",
     "pattern": "String Manipulation Patterns",
     "subpattern": "String Matching - Naive / KMP / Rabin-Karp",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3388,7 +3388,7 @@
     "url": "https://leetcode.com/problems/find-beautiful-indices-in-the-given-array-ii/",
     "pattern": "String Manipulation Patterns",
     "subpattern": "String Matching - Naive / KMP / Rabin-Karp",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -3397,7 +3397,7 @@
     "url": "https://leetcode.com/problems/repeated-substring-pattern/",
     "pattern": "String Manipulation Patterns",
     "subpattern": "Repeated Substring Pattern Detection",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3406,7 +3406,7 @@
     "url": "https://leetcode.com/problems/lru-cache/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3424,7 +3424,7 @@
     "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3433,7 +3433,7 @@
     "url": "https://leetcode.com/problems/flatten-2d-vector/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3460,7 +3460,7 @@
     "url": "https://leetcode.com/problems/design-snake-game/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3469,7 +3469,7 @@
     "url": "https://leetcode.com/problems/logger-rate-limiter/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Hard",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3487,7 +3487,7 @@
     "url": "https://leetcode.com/problems/design-phone-directory/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3496,7 +3496,7 @@
     "url": "https://leetcode.com/problems/insert-delete-getrandom-o1/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3505,7 +3505,7 @@
     "url": "https://leetcode.com/problems/all-oone-data-structure/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -3514,7 +3514,7 @@
     "url": "https://leetcode.com/problems/lfu-cache/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -3532,7 +3532,7 @@
     "url": "https://leetcode.com/problems/design-circular-queue/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3559,7 +3559,7 @@
     "url": "https://leetcode.com/problems/design-hashmap/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Medium",
+    "difficulty": "Easy",
     "companies": []
   },
   {
@@ -3568,7 +3568,7 @@
     "url": "https://leetcode.com/problems/range-module/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -3613,7 +3613,7 @@
     "url": "https://leetcode.com/problems/product-of-the-last-k-numbers/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Hard",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3622,7 +3622,7 @@
     "url": "https://leetcode.com/problems/design-a-stack-with-increment-operation/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3631,7 +3631,7 @@
     "url": "https://leetcode.com/problems/design-most-recently-used-queue/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": [
       "Google"
     ]
@@ -3642,7 +3642,7 @@
     "url": "https://leetcode.com/problems/detect-squares/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3662,7 +3662,7 @@
     "url": "https://leetcode.com/problems/design-a-text-editor/",
     "pattern": "Design Patterns",
     "subpattern": "Design (General/Specific)",
-    "difficulty": "Medium",
+    "difficulty": "Hard",
     "companies": []
   },
   {
@@ -3680,7 +3680,7 @@
     "url": "https://leetcode.com/problems/implement-trie-prefix-tree/",
     "pattern": "Design Patterns",
     "subpattern": "Pattern 94. Tries",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3698,7 +3698,7 @@
     "url": "https://leetcode.com/problems/longest-word-in-dictionary/",
     "pattern": "Design Patterns",
     "subpattern": "Pattern 94. Tries",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "companies": []
   },
   {
@@ -3716,7 +3716,7 @@
     "url": "https://leetcode.com/problems/word-squares/",
     "pattern": "Design Patterns",
     "subpattern": "Pattern 94. Tries",
-    "difficulty": "Easy",
+    "difficulty": "Hard",
     "companies": []
   },
   {

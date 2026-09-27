@@ -19,7 +19,7 @@ function App() {
   const [username, setUsername] = useState(() => localStorage.getItem('username') || '');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
-  
+
   const [completed, setCompleted] = useState(() => {
     const saved = localStorage.getItem('completedQuestions');
     if (saved) {
@@ -54,10 +54,10 @@ function App() {
         })
         .then(data => {
           if (data.completed && Object.keys(data.completed).length > 0) {
-            setCompleted(prev => ({...prev, ...data.completed}));
+            setCompleted(prev => ({ ...prev, ...data.completed }));
           }
           if (data.trackedTime && Object.keys(data.trackedTime).length > 0) {
-            setTrackedTime(prev => ({...prev, ...data.trackedTime}));
+            setTrackedTime(prev => ({ ...prev, ...data.trackedTime }));
           }
         })
         .catch(err => console.error("Error fetching from backend:", err));
@@ -68,7 +68,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem('completedQuestions', JSON.stringify(completed));
     localStorage.setItem('trackedTime', JSON.stringify(trackedTime));
-    
+
     if (username) {
       // Sync to backend
       fetch(`${API_URL}/sync/${username}`, {
@@ -131,7 +131,7 @@ function App() {
       if (!groups[p]) groups[p] = [];
       groups[p].push(q);
     });
-    
+
     return Object.keys(groups).map(pattern => {
       const qs = groups[pattern];
       const completedCount = qs.filter(q => completed[q.id]).length;
@@ -148,7 +148,7 @@ function App() {
   const totalQuestions = questions.length;
   const completedQuestionsCount = Object.keys(completed).length;
   const overallProgress = totalQuestions > 0 ? (completedQuestionsCount / totalQuestions) * 100 : 0;
-  
+
   const currentStreak = useMemo(() => calculateStreak(completed), [completed]);
   const heatmapData = useMemo(() => getDailyCounts(completed), [completed]);
   const { monthlyCompleted } = useMemo(() => getPeriodicStats(completed), [completed]);
@@ -173,7 +173,7 @@ function App() {
     <div className="h-screen w-full overflow-hidden bg-glass-bg text-glass-text font-sans selection:bg-brand-primary/30 flex p-3 md:p-4 gap-4 md:gap-6">
       <Suspense fallback={null}>
         {isSettingsOpen && (
-          <SettingsModal 
+          <SettingsModal
             onClose={() => setIsSettingsOpen(false)}
             achievements={achievementsData}
             unlockedAchievements={unlockedAchievements}
@@ -181,9 +181,9 @@ function App() {
         )}
       </Suspense>
 
-      <SideNav 
-        theme={theme} 
-        toggleTheme={toggleTheme} 
+      <SideNav
+        theme={theme}
+        toggleTheme={toggleTheme}
         username={username}
         level={levelData.level}
         onOpenSettings={() => setIsSettingsOpen(true)}
@@ -191,12 +191,12 @@ function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      
+
       <main className="flex-1 min-w-0 h-full flex items-center justify-center px-1">
         <div className="max-w-[1400px] w-full h-full flex flex-col justify-center min-w-0">
           <Suspense fallback={<div className="h-64 flex items-center justify-center text-glass-muted">Loading...</div>}>
             {activeTab === 'dashboard' && (
-              <Dashboard 
+              <Dashboard
                 overallProgress={overallProgress}
                 completedQuestionsCount={completedQuestionsCount}
                 totalQuestions={totalQuestions}
@@ -212,7 +212,7 @@ function App() {
                 heatmapData={heatmapData}
               />
             )}
-            
+
             {activeTab === 'skillTree' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-6">
                 <div>
@@ -220,15 +220,15 @@ function App() {
                   <p className="text-glass-muted">Unlock your path to mastery. Follow the flowing data.</p>
                 </div>
                 <div className="flex-1 min-h-0">
-                  <SkillTree 
-                    patterns={patternsData} 
-                    completed={completed} 
-                    toggleCompletion={toggleCompletion} 
+                  <SkillTree
+                    patterns={patternsData}
+                    completed={completed}
+                    toggleCompletion={toggleCompletion}
                   />
                 </div>
               </div>
             )}
-            
+
             {activeTab === 'problemBoard' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-6">
                 <div>
@@ -244,17 +244,17 @@ function App() {
                 </div>
               </div>
             )}
-            
+
             {activeTab === 'analytics' && (
               <div className="flex-1 flex flex-col min-h-0 space-y-6">
                 <div>
                   <h1 className="text-3xl font-bold tracking-tight mb-2">Performance Analytics</h1>
                   <p className="text-glass-muted">Deep dive into your solving speed, volume, and time logged.</p>
                 </div>
-                <Analytics 
-                  completed={completed} 
-                  trackedTime={trackedTime} 
-                  questions={questions} 
+                <Analytics
+                  completed={completed}
+                  trackedTime={trackedTime}
+                  questions={questions}
                 />
               </div>
             )}

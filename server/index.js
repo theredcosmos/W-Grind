@@ -47,10 +47,24 @@ app.post('/api/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const [result] = await pool.query(
-      'INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)', 
-      [username, hashedPassword, email || null]
-    );
+    let result;
+    try {
+      // Try inserting with email
+      [result] = await pool.query(
+        'INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)', 
+        [username, hashedPassword, email || null]
+      );
+    } catch (dbError) {
+      // Fallback if the email column doesn't exist in the database yet
+      if (dbError.code === 'ER_BAD_FIELD_ERROR') {
+        [result] = await pool.query(
+          'INSERT INTO users (username, password_hash) VALUES (?, ?)', 
+          [username, hashedPassword]
+        );
+      } else {
+        throw dbError;
+      }
+    }
     res.json({ id: result.insertId, username });
   } catch (error) {
     console.error(error);

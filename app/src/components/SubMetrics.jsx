@@ -3,25 +3,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Shuffle, Target, Zap, Play, Square, Medal, Trophy, Star, CheckCircle2 } from 'lucide-react';
 import { formatTime } from '../utils';
 
-const MiniRing = ({ title, value, total, colorClass, gradient }) => {
+const MiniRing = ({ title, value, total, colorClass, gradient, label = "Problems Solved", formattedValue, formattedTotal }) => {
   const [isMounted, setIsMounted] = useState(false);
-  const percentage = Math.min(100, (value / total) * 100);
+  const percentage = total > 0 ? Math.min(100, (value / total) * 100) : 0;
   
-  const radius = 35;
-  const stroke = 8;
-  const normalizedRadius = radius - stroke * 2;
+  const radius = 55;
+  const stroke = 10;
+  const normalizedRadius = radius - stroke;
   const circumference = normalizedRadius * 2 * Math.PI;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   useEffect(() => { setIsMounted(true); }, []);
 
   return (
-    <div className="glass-card p-3 flex flex-col justify-between h-full relative overflow-hidden group">
-      <div className={`absolute top-0 right-0 w-32 h-32 ${colorClass} opacity-5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 group-hover:opacity-10 transition-opacity`}></div>
+    <div className="glass-card p-5 flex flex-col justify-center h-full relative overflow-hidden group gap-3">
+      <div className={`absolute top-0 right-0 w-48 h-48 ${colorClass} opacity-5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 group-hover:opacity-10 transition-opacity`}></div>
       
-      <span className="text-[10px] font-semibold text-glass-muted uppercase tracking-wider mb-2">{title}</span>
-      <div className="flex items-center gap-4 z-10">
-        <div className="relative">
+      <span className="text-xs font-bold text-glass-muted uppercase tracking-widest">{title}</span>
+      
+      <div className="flex items-center gap-6 z-10 flex-1">
+        <div className="relative flex-shrink-0 drop-shadow-lg">
           <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
             <circle
               stroke="var(--glass-border)"
@@ -50,15 +51,23 @@ const MiniRing = ({ title, value, total, colorClass, gradient }) => {
                 <stop offset="0%" stopColor="#a78bfa" />
                 <stop offset="100%" stopColor="#8b5cf6" />
               </linearGradient>
+              <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#34d399" />
+                <stop offset="100%" stopColor="#10b981" />
+              </linearGradient>
             </defs>
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center font-bold text-lg">
+          <div className="absolute inset-0 flex items-center justify-center font-black text-2xl text-glass-text drop-shadow-md">
             {Math.round(percentage)}%
           </div>
         </div>
-        <div className="flex flex-col">
-          <span className="font-semibold text-2xl">{value} <span className="text-glass-muted text-sm font-normal">/ {total}</span></span>
-          <span className="text-glass-muted text-xs mt-1">Problems Solved</span>
+        
+        <div className="flex flex-col justify-center">
+          <span className="font-black text-4xl text-glass-text tracking-tight mb-1">
+            {formattedValue || value} 
+            <span className="text-glass-muted text-xl font-semibold ml-1">/ {formattedTotal || total}</span>
+          </span>
+          <div className="text-glass-muted text-sm font-medium">{label}</div>
         </div>
       </div>
     </div>
@@ -69,19 +78,26 @@ const TodaysGrind = ({ timeStats }) => {
   const { today, diff } = timeStats;
   const isPositive = diff >= 0;
 
-  return (
-    <div className="glass-card p-3 flex flex-col h-full relative overflow-hidden group">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-accent-success opacity-5 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 group-hover:opacity-10 transition-opacity"></div>
-      <span className="text-[10px] font-semibold text-glass-muted uppercase tracking-wider mb-2">Today's Grind</span>
-      <div className="flex flex-col justify-center h-full z-10">
-        <div className="text-3xl font-bold tracking-tight text-glass-text mb-1">
-          {formatTime(today)}
-        </div>
-        <div className={`text-sm font-medium flex items-center gap-1 ${isPositive ? 'text-accent-success' : 'text-accent-warning'}`}>
-          {isPositive ? '↑' : '↓'} {formatTime(Math.abs(diff))} from yesterday
-        </div>
-      </div>
+  const label = (
+    <div className="flex flex-col">
+      <span>Daily Goal (2h)</span>
+      <span className={`text-[10px] font-medium flex items-center gap-1 mt-1 ${isPositive ? 'text-accent-success' : 'text-accent-warning'}`}>
+        {isPositive ? '↑' : '↓'} {formatTime(Math.abs(diff))} vs yesterday
+      </span>
     </div>
+  );
+
+  return (
+    <MiniRing 
+      title="Today's Grind"
+      value={today}
+      total={7200} // 2 hours
+      colorClass="bg-accent-success"
+      gradient="grad-green"
+      label={label}
+      formattedValue={formatTime(today)}
+      formattedTotal={formatTime(7200)}
+    />
   );
 };
 
