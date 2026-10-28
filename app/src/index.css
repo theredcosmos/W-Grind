@@ -48,6 +48,10 @@
     --btn-accent: linear-gradient(180deg, #2a95ff, #1d6fe0);
     --heading-case: none;
     --heading-tracking: 0.02em;
+    --heading-weight: 700;
+    --radius-btn: 10px;
+    /* Static paper/film grain, drawn once (no animation). */
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .2 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     --tone: 100%; /* how much of a fixed brand colour to keep vs. ink (light themes darken them) */
     --bg-image:
       radial-gradient(1200px 600px at 85% -10%, rgb(29 124 242 / 0.16), transparent 60%),
@@ -60,7 +64,6 @@
     margin: 0;
     background-color: var(--color-void);
     background-image: var(--bg-image);
-    background-attachment: fixed;
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -78,178 +81,197 @@
 }
 
 /* ---------------------------------------------------------------- themes */
+/*
+ * Each theme changes palette, type, shape and motion ("feel"); its scenery is drawn by
+ * components/Ambience.jsx. Fonts are Google Fonts (SIL Open Font License).
+ */
 
-/* Gotham — Batman: charcoal, signal yellow, sharp corners. */
-:root[data-theme='gotham'] {
-  --font-display: 'Oswald', 'Inter', sans-serif;
-  --color-void: #08090a;
-  --color-abyss: #0c0d0f;
-  --color-panel: #121316;
-  --color-panel-2: #1a1b1f;
-  --color-line: rgb(250 204 21 / 0.1);
-  --color-line-strong: rgb(250 204 21 / 0.3);
-  --color-ink: #e7e5e4;
-  --color-hi: #fafaf9;
-  --color-dim: #a8a29e;
-  --color-faint: #6b6661;
-  --color-on-accent: #0a0a0a;
-  --color-on-sys: #0a0a0a;
-  --color-sys: #facc15;
-  --color-sys-deep: #ca8a04;
-  --color-mana: #a8a29e;
-  --color-gold: #facc15;
+/* Noir City — night skyline, searchlight, film grain. Sharp, heavy, cinematic. */
+:root[data-theme='noir'] {
+  --font-display: 'Bebas Neue', 'Barlow', sans-serif;
+  --font-sans: 'Barlow', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-void: #07080a;
+  --color-abyss: #0b0c0f;
+  --color-panel: #111215;
+  --color-panel-2: #18191d;
+  --color-line: rgb(255 214 10 / 0.09);
+  --color-line-strong: rgb(255 214 10 / 0.28);
+  --color-ink: #e8e6e3;
+  --color-hi: #ffffff;
+  --color-dim: #a19d97;
+  --color-faint: #716d68;
+  --color-on-accent: #0b0b0b;
+  --color-on-sys: #0b0b0b;
+  --color-sys: #ffd60a;
+  --color-sys-deep: #e0b400;
+  --color-mana: #6b7280;
+  --color-gold: #ffd60a;
   --color-easy: #4ade80;
   --color-medium: #fb923c;
   --color-hard: #f87171;
-  --radius-window: 6px;
-  --window-bg: linear-gradient(180deg, #151619, #0e0f11);
-  --surface-card: #111214;
-  --corner: #facc15;
-  --text-glow: 0 0 16px rgb(250 204 21 / 0.25);
-  --btn-accent: linear-gradient(180deg, #fde047, #eab308);
+  --radius-window: 3px;
+  --radius-btn: 3px;
+  --window-bg: linear-gradient(180deg, rgb(20 21 25 / 0.94), rgb(12 13 15 / 0.96));
+  --surface-card: rgb(16 17 20 / 0.92);
+  --corner: #ffd60a;
+  --text-glow: 0 0 18px rgb(255 214 10 / 0.2);
+  --btn-accent: linear-gradient(180deg, #ffe14d, #f0c000);
   --heading-case: uppercase;
-  --heading-tracking: 0.05em;
-  --bg-image: radial-gradient(700px 420px at 82% -8%, rgb(250 204 21 / 0.09), transparent 60%);
+  --heading-tracking: 0.06em;
+  --heading-weight: 400;
+  --ease-snap: cubic-bezier(0.7, 0, 0.2, 1);
+  --bg-image: radial-gradient(1000px 520px at 72% -12%, rgb(140 150 170 / 0.12), transparent 62%);
 }
 
-/* Sakura — light, soft cherry-blossom pink with a few drifting petals. */
+/* Sakura — washi paper, blossoming branch, drifting petals. Soft and slow. */
 :root[data-theme='sakura'] {
   color-scheme: light;
-  --font-display: 'Shippori Mincho', 'Inter', serif;
-  --color-void: #fbf4f6;
-  --color-abyss: #fff8fa;
+  --font-display: 'Shippori Mincho B1', 'Zen Kaku Gothic New', serif;
+  --font-sans: 'Zen Kaku Gothic New', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-void: #f1dde3;
+  --color-abyss: #fbf1f4;
   --color-panel: #ffffff;
-  --color-panel-2: #fff0f4;
-  --color-line: rgb(190 70 110 / 0.13);
-  --color-line-strong: rgb(190 70 110 / 0.3);
-  --color-ink: #3d2531;
-  --color-hi: #22111a;
-  --color-dim: #7d5c6b;
-  --color-faint: #a07f90;
+  --color-panel-2: #fcebf0;
+  --color-line: rgb(140 45 80 / 0.18);
+  --color-line-strong: rgb(140 45 80 / 0.38);
+  --color-ink: #2b1720;
+  --color-hi: #170910;
+  --color-dim: #5e3f4d;
+  --color-faint: #84647a;
   --color-on-accent: #ffffff;
   --color-on-sys: #ffffff;
   --color-sys: #c23a6c;
   --color-sys-deep: #a32d5a;
-  --color-mana: #8e6bbf;
-  --color-gold: #b7791f;
+  --color-mana: #8a6bb8;
+  --color-gold: #a8680a;
   --color-easy: #23845b;
   --color-medium: #a8680a;
-  --color-hard: #d14343;
-  --radius-window: 16px;
-  --window-bg: linear-gradient(180deg, #ffffff, #fff8fa);
-  --surface-card: #ffffff;
-  --shadow-window: 0 14px 34px -22px rgb(150 60 90 / 0.35);
-  --shadow-lift: 0 24px 50px -26px rgb(150 60 90 / 0.4);
-  --corner: rgb(194 58 108 / 0.45);
-  --text-glow: none;
-  --btn-accent: linear-gradient(180deg, #e66a9a, #cf4677);
-  --tone: 72%;
-  --bg-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='%23f4a7c0' fill-opacity='.35'%3E%3Cellipse cx='40' cy='50' rx='7' ry='4' transform='rotate(35 40 50)'/%3E%3Cellipse cx='190' cy='30' rx='6' ry='3.5' transform='rotate(-20 190 30)'/%3E%3Cellipse cx='120' cy='150' rx='8' ry='4.5' transform='rotate(60 120 150)'/%3E%3Cellipse cx='225' cy='210' rx='6' ry='3.5' transform='rotate(15 225 210)'/%3E%3Cellipse cx='60' cy='225' rx='5' ry='3' transform='rotate(-45 60 225)'/%3E%3C/g%3E%3C/svg%3E"),
-    radial-gradient(900px 500px at 90% -10%, rgb(244 167 192 / 0.35), transparent 60%),
-    radial-gradient(700px 500px at -10% 110%, rgb(196 172 230 / 0.25), transparent 60%);
-}
-
-/* Minimal — monochrome, flat, no glow. */
-:root[data-theme='minimal'] {
-  color-scheme: light;
-  --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #f6f6f4;
-  --color-abyss: #fbfbfa;
-  --color-panel: #ffffff;
-  --color-panel-2: #f1f1ef;
-  --color-line: rgb(0 0 0 / 0.08);
-  --color-line-strong: rgb(0 0 0 / 0.18);
-  --color-ink: #1c1c1c;
-  --color-hi: #000000;
-  --color-dim: #5e5e5e;
-  --color-faint: #858585;
-  --color-on-accent: #ffffff;
-  --color-on-sys: #ffffff;
-  --color-sys: #1c1c1c;
-  --color-sys-deep: #000000;
-  --color-mana: #6b6b6b;
-  --color-gold: #a16207;
-  --color-easy: #15803d;
-  --color-medium: #b45309;
-  --color-hard: #b91c1c;
-  --radius-window: 10px;
+  --color-hard: #c8323a;
+  --radius-window: 20px;
+  --radius-btn: 12px;
   --window-bg: #ffffff;
   --surface-card: #ffffff;
-  --shadow-window: 0 1px 2px rgb(0 0 0 / 0.04);
-  --shadow-lift: 0 18px 40px -24px rgb(0 0 0 / 0.25);
+  --shadow-window: 0 1px 2px rgb(120 40 70 / 0.08), 0 14px 34px -20px rgb(120 40 70 / 0.38);
+  --shadow-lift: 0 26px 50px -28px rgb(150 60 90 / 0.45);
+  --corner: transparent;
+  --text-glow: none;
+  --accent-glow: rgb(194 58 108 / 0.35);
+  --btn-accent: linear-gradient(180deg, #d4568a, #bb3a6a);
+  --heading-tracking: 0.01em;
+  --ease-snap: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --tone: 72%;
+  --bg-image:
+    var(--grain),
+    radial-gradient(900px 520px at 92% -8%, rgb(246 178 202 / 0.5), transparent 62%),
+    radial-gradient(800px 520px at -12% 112%, rgb(206 186 236 / 0.4), transparent 62%);
+}
+
+/* Tide — deep ocean, rolling waves. Rounded, pill-shaped, fluid. */
+:root[data-theme='tide'] {
+  --font-display: 'Sora', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-void: #031a26;
+  --color-abyss: rgb(3 28 41 / 0.86);
+  --color-panel: #06283a;
+  --color-panel-2: #0a3349;
+  --color-line: rgb(120 220 232 / 0.12);
+  --color-line-strong: rgb(120 220 232 / 0.3);
+  --color-ink: #dff6fb;
+  --color-hi: #ffffff;
+  --color-dim: #8fbac6;
+  --color-faint: #5f8c99;
+  --color-on-accent: #032027;
+  --color-on-sys: #032027;
+  --color-sys: #3ee0d0;
+  --color-sys-deep: #11a8c4;
+  --color-mana: #5aa9ff;
+  --color-gold: #ffd27a;
+  --color-easy: #5eead4;
+  --color-medium: #fcd34d;
+  --color-hard: #fb7185;
+  --radius-window: 22px;
+  --radius-btn: 999px;
+  --window-bg: linear-gradient(180deg, rgb(8 48 68 / 0.88), rgb(5 34 50 / 0.9));
+  --surface-card: rgb(6 40 58 / 0.84);
+  --corner: transparent;
+  --text-glow: 0 0 20px rgb(62 224 208 / 0.35);
+  --btn-accent: linear-gradient(180deg, #5ef0e0, #1fb8c9);
+  --heading-tracking: -0.01em;
+  --ease-snap: cubic-bezier(0.45, 0.05, 0.15, 1);
+  --bg-image:
+    radial-gradient(1200px 500px at 50% -20%, rgb(120 230 240 / 0.16), transparent 60%),
+    linear-gradient(180deg, #05324a 0%, #031a26 55%, #021520 100%);
+}
+
+/* Aurora — northern lights over mountains. Airy, glassy, dreamy. */
+:root[data-theme='aurora'] {
+  --font-display: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-void: #060912;
+  --color-abyss: rgb(8 12 24 / 0.82);
+  --color-panel: #0c1222;
+  --color-panel-2: #121a30;
+  --color-line: rgb(160 255 210 / 0.1);
+  --color-line-strong: rgb(160 255 210 / 0.26);
+  --color-ink: #e7eefc;
+  --color-hi: #ffffff;
+  --color-dim: #9aa7c4;
+  --color-faint: #69758f;
+  --color-on-accent: #04150e;
+  --color-on-sys: #04150e;
+  --color-sys: #6ef2b4;
+  --color-sys-deep: #2bd39a;
+  --color-mana: #b388ff;
+  --color-gold: #ffd479;
+  --color-easy: #6ef2b4;
+  --color-medium: #ffd479;
+  --color-hard: #ff7a9a;
+  --radius-window: 16px;
+  --radius-btn: 12px;
+  --window-bg: linear-gradient(180deg, rgb(16 22 42 / 0.8), rgb(10 14 28 / 0.86));
+  --surface-card: rgb(12 18 34 / 0.78);
+  --corner: rgb(110 242 180 / 0.45);
+  --text-glow: 0 0 22px rgb(110 242 180 / 0.35);
+  --btn-accent: linear-gradient(135deg, #6ef2b4, #4cc9f0);
+  --heading-tracking: -0.01em;
+  --bg-image: radial-gradient(1200px 600px at 50% 120%, rgb(40 30 90 / 0.35), transparent 60%);
+}
+
+/* Zen Paper — warm paper, ink, one brush stroke. Still and quiet. */
+:root[data-theme='zen'] {
+  color-scheme: light;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --color-void: #f4f1ea;
+  --color-abyss: #f8f6f0;
+  --color-panel: #fffdf8;
+  --color-panel-2: #efebe2;
+  --color-line: rgb(40 30 20 / 0.1);
+  --color-line-strong: rgb(40 30 20 / 0.22);
+  --color-ink: #22201c;
+  --color-hi: #0d0c0a;
+  --color-dim: #5f5a52;
+  --color-faint: #857f74;
+  --color-on-accent: #fffdf8;
+  --color-on-sys: #fffdf8;
+  --color-sys: #22201c;
+  --color-sys-deep: #000000;
+  --color-mana: #8c6a4a;
+  --color-gold: #8a5b00;
+  --color-easy: #2f7a4b;
+  --color-medium: #9a5b0a;
+  --color-hard: #b42318;
+  --radius-window: 10px;
+  --radius-btn: 8px;
+  --window-bg: #fffdf8;
+  --surface-card: #fffdf8;
+  --shadow-window: 0 1px 0 rgb(40 30 20 / 0.04);
+  --shadow-lift: 0 18px 40px -26px rgb(40 30 20 / 0.3);
   --corner: transparent;
   --text-glow: none;
   --accent-glow: transparent;
-  --btn-accent: #1c1c1c;
-  --heading-tracking: -0.01em;
-  --tone: 70%;
-  --bg-image: none;
-}
-
-/* Matrix — terminal green on black. */
-:root[data-theme='matrix'] {
-  --font-display: 'JetBrains Mono', ui-monospace, monospace;
-  --color-void: #010401;
-  --color-abyss: #020803;
-  --color-panel: #041007;
-  --color-panel-2: #06170b;
-  --color-line: rgb(34 197 94 / 0.14);
-  --color-line-strong: rgb(34 197 94 / 0.34);
-  --color-ink: #c8f7d4;
-  --color-hi: #ecfff1;
-  --color-dim: #6fa77f;
-  --color-faint: #3f6b4c;
-  --color-on-accent: #021a08;
-  --color-on-sys: #021a08;
-  --color-sys: #22c55e;
-  --color-sys-deep: #15803d;
-  --color-mana: #10b981;
-  --color-gold: #eab308;
-  --color-easy: #4ade80;
-  --color-medium: #facc15;
-  --color-hard: #f87171;
-  --radius-window: 4px;
-  --window-bg: linear-gradient(180deg, rgb(5 20 9 / 0.95), rgb(2 10 4 / 0.96));
-  --surface-card: rgb(4 16 7 / 0.92);
-  --btn-accent: linear-gradient(180deg, #34d36c, #16a34a);
+  --btn-accent: #22201c;
   --heading-tracking: 0;
-  --bg-image:
-    repeating-linear-gradient(0deg, rgb(34 197 94 / 0.025) 0 1px, transparent 1px 3px),
-    radial-gradient(900px 500px at 80% -10%, rgb(34 197 94 / 0.1), transparent 60%);
-}
-
-/* Nord — calm arctic slate, low contrast, easy on the eyes. */
-:root[data-theme='nord'] {
-  --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #242933;
-  --color-abyss: #2a303b;
-  --color-panel: #2e3440;
-  --color-panel-2: #363d4b;
-  --color-line: rgb(216 222 233 / 0.08);
-  --color-line-strong: rgb(216 222 233 / 0.18);
-  --color-ink: #e5e9f0;
-  --color-hi: #eceff4;
-  --color-dim: #a3adbf;
-  --color-faint: #6c7689;
-  --color-on-accent: #1f242d;
-  --color-on-sys: #1f242d;
-  --color-sys: #88c0d0;
-  --color-sys-deep: #5e81ac;
-  --color-mana: #b48ead;
-  --color-gold: #ebcb8b;
-  --color-easy: #a3be8c;
-  --color-medium: #ebcb8b;
-  --color-hard: #e0868d;
-  --radius-window: 12px;
-  --window-bg: linear-gradient(180deg, #2f3542, #2b313c);
-  --surface-card: #2e3440;
-  --shadow-window: 0 12px 30px -22px rgb(0 0 0 / 0.6);
-  --corner: rgb(136 192 208 / 0.4);
-  --text-glow: none;
-  --btn-accent: linear-gradient(180deg, #93c9d8, #7fb1c2);
-  --heading-tracking: -0.005em;
-  --bg-image: none;
+  --heading-weight: 400;
+  --tone: 70%;
+  --bg-image: var(--grain);
 }
 
 /* ------------------------------------------------------------ components */
@@ -287,7 +309,7 @@
 
   .sys-heading {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: var(--heading-weight);
     letter-spacing: var(--heading-tracking);
     text-transform: var(--heading-case);
   }
@@ -303,6 +325,7 @@
     transition: border-color 160ms var(--ease-snap), background-color 160ms var(--ease-snap), transform 160ms var(--ease-snap);
   }
   .card-hover:hover { border-color: var(--color-line-strong); background: var(--color-panel-2); }
+  :root[data-theme='sakura'] .card, :root[data-theme='zen'] .card { box-shadow: 0 1px 2px rgb(60 20 35 / 0.06); }
 
   .btn {
     display: inline-flex;
@@ -311,7 +334,7 @@
     gap: 8px;
     height: 36px;
     padding: 0 14px;
-    border-radius: min(10px, var(--radius-window));
+    border-radius: var(--radius-btn);
     font-size: 13px;
     font-weight: 600;
     border: 1px solid var(--color-line);
@@ -372,7 +395,7 @@
     height: 38px;
     width: 100%;
     padding: 0 12px;
-    border-radius: min(10px, var(--radius-window));
+    border-radius: var(--radius-btn);
     border: 1px solid var(--color-line);
     background: color-mix(in srgb, var(--color-void) 60%, transparent);
     color: var(--color-ink);
@@ -468,7 +491,10 @@
 .deck {
   --step: 235px;
   position: relative;
+  flex: 1 1 auto;
   height: 480px;
+  min-height: 340px;
+  max-height: 520px;
   display: grid;
   place-items: center;
   perspective: 1400px;
@@ -479,25 +505,27 @@
 .deck-card {
   position: absolute;
   width: 300px;
-  height: 430px;
+  height: min(430px, 92%);
   border-radius: calc(var(--radius-window) + 6px);
   overflow: hidden;
   border: 1px solid var(--color-line);
   background: var(--color-panel);
-  transform:
-    translateX(calc(var(--o) * var(--step)))
-    rotateY(calc(var(--o) * -24deg))
-    scale(calc(1 - min(var(--abs), 1) * 0.14));
-  transition: transform 520ms var(--ease-snap), opacity 320ms ease, border-color 220ms, box-shadow 320ms;
+  /* transform / opacity / z-index are set inline by CardDeck */
+  transition: transform 560ms cubic-bezier(0.22, 0.9, 0.24, 1), opacity 360ms ease, border-color 220ms, box-shadow 320ms;
   will-change: transform;
+  cursor: pointer;
+  -webkit-user-drag: none;
 }
+.deck-card.teleport { transition: opacity 360ms ease, border-color 220ms, box-shadow 320ms; }
+.deck.dragging { cursor: grabbing; }
+.deck.dragging .deck-card { transition: none; cursor: grabbing; }
 .deck-card::after {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--color-void);
-  opacity: calc(min(var(--abs), 2) * 0.32);
-  transition: opacity 320ms ease;
+  opacity: var(--dim, 0);
+  transition: opacity 360ms ease;
   pointer-events: none;
 }
 .deck-card.is-center {
@@ -505,6 +533,7 @@
   box-shadow: var(--shadow-lift), 0 0 60px -20px var(--accent);
 }
 .deck-card.is-center:hover { border-color: var(--accent); }
+.deck.dragging .deck-card::after { transition: none; }
 .deck-cta { opacity: 0; transition: opacity 240ms ease; }
 .is-center .deck-cta { opacity: 1; }
 
@@ -527,7 +556,100 @@
 .deck-nav:active { transform: scale(0.95); }
 
 @media (max-width: 640px) {
-  .deck { --step: 118px; height: 420px; }
+  .deck { --step: 118px; height: 420px; flex: none; }
   .deck-card { width: 250px; height: 380px; }
   .deck-card.far { opacity: 0 !important; pointer-events: none !important; }
+}
+
+/* ---------- Ambient scenery (components/Ambience.jsx) ---------- */
+.amb { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; contain: strict; }
+.amb > * { position: absolute; }
+
+@keyframes amb-spin { to { transform: rotate(360deg); } }
+@keyframes amb-rise {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translate3d(var(--drift), -110vh, 0); opacity: 0; }
+}
+@keyframes amb-fall {
+  0% { transform: translate3d(0, -6vh, 0) rotate(0deg); opacity: 0; }
+  8% { opacity: 0.95; }
+  100% { transform: translate3d(var(--drift), 110vh, 0) rotate(560deg); opacity: 0.85; }
+}
+@keyframes amb-sway { from { transform: rotate(-7deg); } to { transform: rotate(6deg); } }
+@keyframes amb-wave { to { transform: translate3d(-50%, 0, 0); } }
+@keyframes amb-ribbon {
+  from { transform: translate3d(-8%, 0, 0) rotate(-9deg) scaleY(0.85); opacity: 0.7; }
+  to { transform: translate3d(8%, -3vh, 0) rotate(-5deg) scaleY(1.15); opacity: 1; }
+}
+
+/* Abyssal Gate */
+.amb-portal { top: -24vh; right: -14vw; width: min(78vh, 900px); height: min(78vh, 900px); opacity: 0.9; }
+.amb-spin { animation: amb-spin 160s linear infinite; will-change: transform; }
+.amb-mote {
+  bottom: -10px;
+  border-radius: 999px;
+  background: radial-gradient(circle, #bfeaff 0 35%, rgb(76 194 255 / 0.45) 36%, transparent 70%);
+  animation: amb-rise var(--d) linear var(--delay) infinite;
+  will-change: transform;
+}
+
+/* Noir City */
+.amb-beam { left: 50%; bottom: 18vh; width: 34vw; height: 90vh; transform-origin: 50% 100%; animation: amb-sway 16s ease-in-out infinite alternate; }
+.amb-beam svg { width: 100%; height: 100%; }
+.amb-cloudglow { top: -14vh; left: 46%; width: 46vw; height: 32vh; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 240 190 / 0.08), transparent); }
+.amb-skyline { left: 0; bottom: 0; width: 100%; height: 36vh; }
+.amb-rain { inset: 0; opacity: 0.55; }
+
+/* Sakura */
+.amb-branch { top: -18px; right: -30px; width: min(620px, 62vw); }
+.amb-petal {
+  top: -20px;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, #fff1f5, #f6a9c2);
+  animation: amb-fall var(--d) linear var(--delay) infinite;
+  will-change: transform;
+}
+
+/* Tide */
+.amb-rays {
+  top: -10vh; left: 10%; width: 80%; height: 70vh;
+  background: repeating-linear-gradient(100deg, transparent 0 8%, rgb(160 240 245 / 0.035) 8% 11%, transparent 11% 19%);
+  mask-image: linear-gradient(180deg, black, transparent);
+}
+.amb-bubble {
+  bottom: -10px;
+  border-radius: 999px;
+  border: 1px solid rgb(160 240 245 / 0.35);
+  background: rgb(160 240 245 / 0.06);
+  animation: amb-rise var(--d) linear var(--delay) infinite;
+  will-change: transform;
+}
+.amb-wave { left: 0; bottom: 0; width: 200%; animation: amb-wave linear infinite; will-change: transform; }
+.amb-wave-1 { height: 26vh; animation: none; }
+.amb-wave-2 { height: 20vh; animation-duration: 34s; animation-direction: reverse; }
+.amb-wave-3 { height: 13vh; animation-duration: 24s; }
+
+/* Aurora */
+.amb-stars { inset: 0; width: 100%; height: 70%; }
+.amb-ribbon {
+  left: -20vw; width: 140vw; height: 34vh;
+  mask-image: linear-gradient(180deg, transparent, black 40%, black 60%, transparent);
+  animation: amb-ribbon ease-in-out infinite alternate;
+  will-change: transform;
+}
+.amb-ribbon-1 { top: 2vh; background: linear-gradient(90deg, transparent, rgb(110 242 180 / 0.32), rgb(76 201 240 / 0.24), transparent 85%); animation-duration: 40s; }
+.amb-ribbon-2 { top: 12vh; background: linear-gradient(90deg, transparent 10%, rgb(179 136 255 / 0.22), rgb(110 242 180 / 0.2), transparent); animation-duration: 55s; animation-delay: -12s; }
+.amb-ribbon-3 { top: -4vh; background: linear-gradient(90deg, transparent 30%, rgb(76 201 240 / 0.18), rgb(179 136 255 / 0.16), transparent); animation: none; transform: rotate(-7deg); }
+.amb-mountains { left: 0; bottom: 0; width: 100%; height: 30vh; }
+
+/* Zen Paper */
+.amb-enso { right: -60px; bottom: -70px; width: min(520px, 50vw); }
+
+/* Ambient motion off, or the OS asks for less motion: freeze the scenery. */
+:root[data-still] .amb *, :root[data-still] .amb { animation: none !important; }
+:root[data-still] .amb-mote, :root[data-still] .amb-petal, :root[data-still] .amb-bubble { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .amb-mote, .amb-petal, .amb-bubble { display: none; }
 }

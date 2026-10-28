@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { LIST_STYLE } from '../lib/theme';
 import { tone } from '../lib/themes';
 
-const LIST_SHORT = { blind75: 'B75', neetcode150: 'NC150', striver: 'SDE' };
+const LIST_SHORT = { blind75: 'B75', neetcode150: 'NC150', striver: 'SDE', top150: 'TI150' };
 
 export const ListBadge = ({ list }) => (
   <span className="pill font-mono" style={{ color: tone(LIST_STYLE[list].color), background: LIST_STYLE[list].bg }}>

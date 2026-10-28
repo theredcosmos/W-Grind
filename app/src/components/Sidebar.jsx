@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { BookOpenText, CloudOff, LayoutGrid, RotateCcw, Settings2, Shield } from 'lucide-react';
+import { BookOpenText, CloudOff, LayoutGrid, Palette, RotateCcw, Shield, Trophy } from 'lucide-react';
 import { tone } from '../lib/themes';
 
 const NAV = [
@@ -19,7 +19,7 @@ const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, du
           </div>
           <div className="hidden xl:block leading-tight">
             <div className="sys-heading text-[15px]">W-Grind</div>
-            <div className="text-[11px] text-faint tracking-wide">The System</div>
+            <div className="text-[11px] text-faint tracking-wide">Gate Tracker</div>
           </div>
         </a>
 
@@ -48,14 +48,27 @@ const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, du
           })}
         </nav>
 
-        <button
-          onClick={onSettings}
-          title="Settings & themes"
-          className="mt-auto mb-2 flex items-center gap-3 h-11 px-3 rounded-xl text-sm font-medium text-dim hover:text-ink hover:bg-ink/[0.04] transition-colors"
-        >
-          <Settings2 size={19} />
-          <span className="hidden xl:inline">Settings</span>
-        </button>
+        <div className="mt-auto mb-2 flex flex-col gap-1">
+          <a
+            href="#/titles"
+            title="Titles & achievements"
+            className={`relative flex items-center gap-3 h-11 px-3 rounded-xl text-sm font-medium transition-colors duration-150 ${
+              page === 'titles' ? 'text-hi bg-sys/12' : 'text-dim hover:text-ink hover:bg-ink/[0.04]'
+            }`}
+          >
+            {page === 'titles' && <span className="absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-r bg-sys glow-sm" />}
+            <Trophy size={19} className={page === 'titles' ? 'text-sys' : ''} />
+            <span className="hidden xl:inline">Titles</span>
+          </a>
+          <button
+            onClick={onSettings}
+            title="Themes & settings"
+            className="flex items-center gap-3 h-11 px-3 rounded-xl text-sm font-medium text-dim hover:text-ink hover:bg-ink/[0.04] transition-colors"
+          >
+            <Palette size={19} />
+            <span className="hidden xl:inline">Themes</span>
+          </button>
+        </div>
 
         <button onClick={onSettings} className="card p-2.5 flex items-center gap-3 text-left hover:border-line-strong">
           <div
@@ -78,16 +91,20 @@ const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, du
           <a
             key={id}
             href={`#/${id}`}
-            className={`relative flex flex-col items-center gap-1 py-2.5 px-3 text-[10.5px] font-medium ${page === id ? 'text-sys' : 'text-dim'}`}
+            className={`relative flex flex-col items-center gap-1 py-2.5 px-2 text-[10.5px] font-medium ${page === id ? 'text-sys' : 'text-dim'}`}
           >
             <Icon size={20} />
             {label}
             {id === 'reviews' && dueCount > 0 && <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full bg-hard" />}
           </a>
         ))}
-        <button onClick={onSettings} className="flex flex-col items-center gap-1 py-2.5 px-3 text-[10.5px] font-medium text-dim">
-          <Settings2 size={20} />
-          Settings
+        <a href="#/titles" className={`flex flex-col items-center gap-1 py-2.5 px-2 text-[10.5px] font-medium ${page === 'titles' ? 'text-sys' : 'text-dim'}`}>
+          <Trophy size={20} />
+          Titles
+        </a>
+        <button onClick={onSettings} className="flex flex-col items-center gap-1 py-2.5 px-2 text-[10.5px] font-medium text-dim">
+          <Palette size={20} />
+          Themes
         </button>
       </nav>
     </>

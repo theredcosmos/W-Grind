@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { ExternalLink, NotebookPen, RotateCcw } from 'lucide-react';
 import { Check, DiffPill, ListBadge } from './ui';
+import { monsterOf } from '../lib/lore';
 
 // One problem row. Memoised on primitive props so ticking a box re-renders only that row.
 const QuestionRow = memo(function QuestionRow({ q, solved, hasNote, due, onToggle, onOpen }) {
@@ -18,7 +19,7 @@ const QuestionRow = memo(function QuestionRow({ q, solved, hasNote, due, onToggl
         <div className={`truncate text-[14px] font-medium transition-colors ${solved ? 'text-dim' : 'text-ink group-hover:text-hi'}`}>
           {q.title}
         </div>
-        <div className="truncate text-[11.5px] text-faint">{q.pattern}</div>
+        <div className="truncate text-[11.5px] text-faint">{monsterOf(q.id).name} · {monsterOf(q.id).kind}</div>
       </button>
       <div className="hidden lg:flex items-center gap-1.5 shrink-0">
         {q.lists.map((l) => <ListBadge key={l} list={l} />)}

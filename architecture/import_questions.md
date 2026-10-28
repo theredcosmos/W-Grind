@@ -18,11 +18,18 @@ python tools/import_xlsx.py "C:/path/to/DSA_500_LeetCode_Tracker_and_ADHD_Manual
 
 If a sheet is renamed, update the constants at the top of the tool first.
 
+## Curated lists outside the workbook
+- `tools/data/top_interview_150.json` — LeetCode's Top Interview 150, in the study plan's groups.
+  Problems not in the workbook need an `extra` entry (title, difficulty, section, topic, pattern, trigger, linker)
+  using an existing section/topic name; they are numbered after the workbook's last Q#. A slug without
+  either a workbook row or an `extra` entry makes the tool raise.
+- To add another list: drop a JSON file in the same shape into `tools/data/` and register it in `CURATED_FILES`.
+
 ## Outputs
 `app/src/data/questions.json`, `lists.json`, `manual.json`, `legacyIds.json` — schema in `gemini.md`.
 
 ## Rules & edge cases (learned)
-- **Natural key = LeetCode slug** from the URL. The master sheet lists 41 problems twice (e.g. LRU Cache under two sections); they are stored once, with the extra sub-topic kept in `also`. 562 rows → 519 unique problems.
+- **Natural key = LeetCode slug** from the URL. The master sheet lists 41 problems twice (e.g. LRU Cache under two sections); they are stored once, with the extra sub-topic kept in `also`. 562 rows → 519 unique problems; Top Interview 150 adds 24 more → 543.
 - The Striver tab has 191 rows but repeats problems across days → 171 unique items.
 - List membership comes from the list tabs, not the master's Yes/No flags.
 - Missing title, non-LeetCode URL, or unknown difficulty → the tool raises. Never write blank rows.

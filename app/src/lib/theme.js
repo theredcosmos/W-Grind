@@ -33,5 +33,6 @@ export const LIST_STYLE = {
   blind75: { color: '#f472b6', bg: 'rgb(244 114 182 / 0.1)' },
   neetcode150: { color: '#4cc2ff', bg: 'rgb(76 194 255 / 0.1)' },
   striver: { color: '#a78bfa', bg: 'rgb(167 139 250 / 0.12)' },
+  top150: { color: '#fb923c', bg: 'rgb(251 146 60 / 0.12)' },
 };
 

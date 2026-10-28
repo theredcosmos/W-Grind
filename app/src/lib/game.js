@@ -26,8 +26,8 @@ export const RANKS = [
   { id: 'B', min: 35, name: 'B-Rank', color: '#818cf8' },
   { id: 'A', min: 50, name: 'A-Rank', color: '#c084fc' },
   { id: 'S', min: 70, name: 'S-Rank', color: '#fbbf24' },
-  { id: 'N', min: 85, name: 'National Level', color: '#fb7185' },
-  { id: 'M', min: 95, name: 'Shadow Monarch', color: '#a78bfa' },
+  { id: 'P', min: 85, name: 'Paragon', color: '#fb7185' },
+  { id: 'X', min: 95, name: 'Sovereign', color: '#a78bfa' },
 ];
 
 export const rankForLevel = (level) => [...RANKS].reverse().find((r) => level >= r.min);
@@ -64,25 +64,26 @@ export const reviewState = (solvedOn, rev = {}) => {
 
 export const ACHIEVEMENTS = [
   { id: 'first_blood', name: 'First Blood', desc: 'Clear your first problem', icon: 'Sword', xp: 25, metric: 'solved', target: 1 },
-  { id: 'awakened', name: 'The Awakened', desc: 'Clear 10 problems', icon: 'Sparkles', xp: 50, metric: 'solved', target: 10 },
+  { id: 'awakened', name: 'The Kindled', desc: 'Clear 10 problems', icon: 'Sparkles', xp: 50, metric: 'solved', target: 10 },
   { id: 'wolf_slayer', name: 'Wolf Slayer', desc: 'Clear 25 problems', icon: 'Crosshair', xp: 75, metric: 'solved', target: 25 },
-  { id: 'double_dungeon', name: 'Double Dungeon Survivor', desc: 'Clear 50 problems', icon: 'Shield', xp: 100, metric: 'solved', target: 50 },
+  { id: 'double_dungeon', name: 'Twin Gate Survivor', desc: 'Clear 50 problems', icon: 'Shield', xp: 100, metric: 'solved', target: 50 },
   { id: 'hundred', name: 'Hundred-Kill Hunter', desc: 'Clear 100 problems', icon: 'Swords', xp: 200, metric: 'solved', target: 100 },
   { id: 'raid_leader', name: 'Raid Leader', desc: 'Clear 250 problems', icon: 'Crown', xp: 400, metric: 'solved', target: 250 },
-  { id: 'monarch', name: 'Monarch of Shadows', desc: 'Clear every problem in the System', icon: 'Moon', xp: 1000, metric: 'solved', target: QUESTIONS.length },
+  { id: 'monarch', name: 'Monarch of the Abyss', desc: 'Defeat every monster in every gate', icon: 'Moon', xp: 1000, metric: 'solved', target: QUESTIONS.length },
   { id: 'giant_slayer', name: 'Giant Slayer', desc: 'Defeat 10 Hard problems', icon: 'Mountain', xp: 150, metric: 'hard', target: 10 },
   { id: 'dragon_slayer', name: 'Dragon Slayer', desc: 'Defeat 50 Hard problems', icon: 'Flame', xp: 400, metric: 'hard', target: 50 },
   { id: 'streak3', name: 'Spark', desc: 'Keep a 3-day streak', icon: 'Zap', xp: 30, metric: 'bestStreak', target: 3 },
   { id: 'streak7', name: 'Relentless', desc: 'Keep a 7-day streak', icon: 'Flame', xp: 100, metric: 'bestStreak', target: 7 },
   { id: 'streak30', name: 'Unbreakable Will', desc: 'Keep a 30-day streak', icon: 'Gem', xp: 500, metric: 'bestStreak', target: 30 },
-  { id: 'quest1', name: 'Player', desc: 'Complete a full Daily Quest', icon: 'ScrollText', xp: 50, metric: 'questDays', target: 1 },
-  { id: 'quest7', name: 'No Penalty Zone', desc: 'Complete 7 Daily Quests', icon: 'ShieldCheck', xp: 150, metric: 'questDays', target: 7 },
+  { id: 'quest1', name: 'Initiate', desc: 'Complete a full Daily Quest', icon: 'ScrollText', xp: 50, metric: 'questDays', target: 1 },
+  { id: 'quest7', name: 'Iron Routine', desc: 'Complete 7 Daily Quests', icon: 'ShieldCheck', xp: 150, metric: 'questDays', target: 7 },
   { id: 'review10', name: 'Memory Keeper', desc: 'Finish 10 spaced reviews', icon: 'Brain', xp: 75, metric: 'reviewsDone', target: 10 },
   { id: 'review50', name: 'Total Recall', desc: 'Finish 50 spaced reviews', icon: 'BrainCircuit', xp: 250, metric: 'reviewsDone', target: 50 },
   { id: 'gate1', name: 'Gate Breaker', desc: 'Fully clear one pattern', icon: 'DoorOpen', xp: 150, metric: 'gatesCleared', target: 1 },
   { id: 'gate5', name: 'Dungeon Conqueror', desc: 'Fully clear 5 patterns', icon: 'Castle', xp: 400, metric: 'gatesCleared', target: 5 },
   { id: 'blind75', name: 'Blind Swordsman', desc: 'Clear all of Blind 75', icon: 'EyeOff', xp: 500, metric: 'list:blind75', target: 75 },
   { id: 'neetcode150', name: 'Guild Elite', desc: 'Clear all of NeetCode 150', icon: 'Award', xp: 750, metric: 'list:neetcode150', target: 150 },
+  { id: 'top150', name: 'Vanguard', desc: 'Clear all of Top Interview 150', icon: 'Award', xp: 750, metric: 'list:top150', target: 150 },
   { id: 'striver', name: 'SDE Ready', desc: 'Clear the whole Striver SDE Sheet', icon: 'Trophy', xp: 750, metric: 'list:striver', target: LISTS.striver.items.length },
 ];
 
@@ -99,9 +100,9 @@ export function computeGame({ completed, reviews, trackedTime }) {
   const solvedIds = new Set();
   for (const [id, date] of Object.entries(completed)) {
     const q = BY_ID.get(id);
+    if (!q) continue; // old/removed ids: keep them stored, but don't let them count
     const d = day(date);
     d.solves++;
-    if (!q) continue;
     solvedIds.add(id);
     solvedXp += DIFF_XP[q.difficulty];
     byDiff[q.difficulty]++;

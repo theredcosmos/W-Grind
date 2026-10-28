@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { migrateCompleted } from './data';
 import { ymd } from './date';
-import { API_URL } from './session';
-
+import { API_URL, claimLegacyProgress, userKey } from './session';
 
 const read = (key, fallback) => {
   try {
@@ -25,18 +24,36 @@ const write = (key, value) => {
  * All user progress in one place.
  *   completed   { questionId: 'YYYY-MM-DD' }
  *   reviews     { questionId: { r7?: date, r14?: date } }
+ *   removed     { questionId: { date, review } }  un-solved problems: tells the server to delete the row,
+ *               keeps the login merge from resurrecting it, and restores date + reviews on re-solve
  *   notes       { questionId: string }
  *   trackedTime { 'YYYY-MM-DD': seconds }
  * Writes to localStorage are debounced; the backend gets a debounced POST
- * instead of one request per click.
+ * instead of one request per click. Both are flushed on sign-out and tab close.
  */
 export function useProgress(session, onExpired) {
-  const [completed, setCompleted] = useState(() => migrateCompleted(read('completedQuestions', {})));
-  const [reviews, setReviews] = useState(() => read('reviews', {}));
-  const [notes, setNotes] = useState(() => read('notes', {}));
-  const [trackedTime, setTrackedTime] = useState(() => read('trackedTime', {}));
+  const { username } = session;
+  const key = (k) => userKey(username, k);
+  // completed/reviews/removed change together, so they live in one state object.
+  const [solve, setSolve] = useState(() => {
+    claimLegacyProgress(username);
+    return {
+      completed: migrateCompleted(read(key('completedQuestions'), {})),
+      reviews: read(key('reviews'), {}),
+      removed: read(key('removed'), {}),
+    };
+  });
+  const [notes, setNotes] = useState(() => read(key('notes'), {}));
+  const [trackedTime, setTrackedTime] = useState(() => read(key('trackedTime'), {}));
+  const { completed, reviews, removed } = solve;
   const hydrated = useRef(false);
   const token = session.mode === 'cloud' ? session.token : null;
+
+  // Latest values for the flush-on-exit path (effects below can't see future renders).
+  const latest = useRef(null);
+  useEffect(() => {
+    latest.current = { completed, reviews, removed, notes, trackedTime };
+  }, [completed, reviews, removed, notes, trackedTime]);
 
   // Pull server state once per login and merge it in.
   useEffect(() => {
@@ -49,7 +66,13 @@ export function useProgress(session, onExpired) {
       })
       .then((data) => {
         if (cancelled) return;
-        if (data.completed) setCompleted((prev) => ({ ...migrateCompleted(data.completed), ...prev }));
+        if (data.completed) {
+          setSolve((prev) => {
+            const fromServer = migrateCompleted(data.completed);
+            for (const id of Object.keys(prev.removed)) delete fromServer[id]; // un-solved here: don't resurrect
+            return { ...prev, completed: { ...fromServer, ...prev.completed } };
+          });
+        }
         if (data.trackedTime) {
           setTrackedTime((prev) => {
             const next = { ...prev };
@@ -63,47 +86,74 @@ export function useProgress(session, onExpired) {
     return () => { cancelled = true; };
   }, [token, onExpired]);
 
+  const saveLocal = useCallback((s) => {
+    write(userKey(username, 'completedQuestions'), s.completed);
+    write(userKey(username, 'reviews'), s.reviews);
+    write(userKey(username, 'removed'), s.removed);
+    write(userKey(username, 'notes'), s.notes);
+    write(userKey(username, 'trackedTime'), s.trackedTime);
+  }, [username]);
+
+  const push = useCallback((s, { keepalive = false } = {}) => fetch(`${API_URL}/sync`, {
+    method: 'POST',
+    keepalive,
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ completed: s.completed, trackedTime: s.trackedTime, removed: Object.keys(s.removed) }),
+  }), [token]);
+
   useEffect(() => {
-    const t = setTimeout(() => {
-      write('completedQuestions', completed);
-      write('reviews', reviews);
-      write('notes', notes);
-      write('trackedTime', trackedTime);
-    }, 250);
+    const t = setTimeout(() => saveLocal({ completed, reviews, removed, notes, trackedTime }), 250);
     return () => clearTimeout(t);
-  }, [completed, reviews, notes, trackedTime]);
+  }, [completed, reviews, removed, notes, trackedTime, saveLocal]);
 
   useEffect(() => {
     if (!token || !hydrated.current) return;
     const t = setTimeout(() => {
-      fetch(`${API_URL}/sync`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ completed, trackedTime }),
-      })
+      push({ completed, trackedTime, removed })
         .then((res) => res.status === 401 && onExpired())
         .catch(() => {});
     }, 1500);
     return () => clearTimeout(t);
-  }, [completed, trackedTime, token, onExpired]);
+  }, [completed, trackedTime, removed, token, onExpired, push]);
+
+  // Flush pending writes when the tab is hidden/closed and when this user's view unmounts (sign-out).
+  useEffect(() => {
+    const flush = () => {
+      if (!latest.current) return;
+      saveLocal(latest.current);
+      if (token && hydrated.current) push(latest.current, { keepalive: true }).catch(() => {});
+    };
+    window.addEventListener('pagehide', flush);
+    return () => {
+      window.removeEventListener('pagehide', flush);
+      flush();
+    };
+  }, [saveLocal, push, token]);
 
   const toggleSolved = useCallback((id) => {
-    setCompleted((prev) => {
-      const next = { ...prev };
-      if (next[id]) delete next[id];
-      else next[id] = ymd();
-      return next;
-    });
-    setReviews((prev) => {
-      if (!prev[id]) return prev;
-      const next = { ...prev };
-      delete next[id];
-      return next;
+    setSolve((prev) => {
+      const completedNext = { ...prev.completed };
+      const reviewsNext = { ...prev.reviews };
+      const removedNext = { ...prev.removed };
+      if (completedNext[id]) {
+        // Un-solve: remember the original date and reviews in case it was a mis-click.
+        removedNext[id] = { date: completedNext[id], review: reviewsNext[id] };
+        delete completedNext[id];
+        delete reviewsNext[id];
+      } else if (removedNext[id]) {
+        // Re-solve: restore history instead of counting it as a brand-new solve today.
+        completedNext[id] = removedNext[id].date;
+        if (removedNext[id].review) reviewsNext[id] = removedNext[id].review;
+        delete removedNext[id];
+      } else {
+        completedNext[id] = ymd();
+      }
+      return { completed: completedNext, reviews: reviewsNext, removed: removedNext };
     });
   }, []);
 
   const markReviewed = useCallback((id, stage) => {
-    setReviews((prev) => ({ ...prev, [id]: { ...prev[id], [stage]: ymd() } }));
+    setSolve((prev) => ({ ...prev, reviews: { ...prev.reviews, [id]: { ...prev.reviews[id], [stage]: ymd() } } }));
   }, []);
 
   const setNote = useCallback((id, text) => {

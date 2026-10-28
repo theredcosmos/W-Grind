@@ -8,7 +8,7 @@ import { ymd } from './date';
 export const QUESTIONS = questions;
 export const BY_ID = new Map(questions.map((q) => [q.id, q]));
 export const LISTS = lists;
-export const LIST_KEYS = ['blind75', 'neetcode150', 'striver'];
+export const LIST_KEYS = ['blind75', 'neetcode150', 'top150', 'striver'];
 
 export const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
 export const DIFF_XP = { Easy: 40, Medium: 80, Hard: 160 };

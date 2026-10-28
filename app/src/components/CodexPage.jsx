@@ -107,14 +107,14 @@ function Linker({ rows }) {
 export default function CodexPage({ tab }) {
   const active = TABS.find((t) => t.key === tab) || TABS[0];
   return (
-    <div>
+    <div className="flex flex-col md:h-full min-h-0">
       <PageHeader kicker="Hunter's Codex" title={active.label} />
-      <div className="flex gap-2 overflow-x-auto mb-6 anim-rise">
+      <div className="flex gap-2 overflow-x-auto mb-5 shrink-0 anim-rise">
         {TABS.map((t) => (
           <a key={t.key} href={`#/codex/${t.key}`} className="chip h-9" data-on={t.key === active.key}>{t.label}</a>
         ))}
       </div>
-      <div className="anim-fade" key={active.key}>
+      <div className="anim-fade flex-1 min-h-0 overflow-y-auto scroll-thin -mx-1 px-1 pb-2" key={active.key}>
         {active.key === 'antiBlank' && <AntiBlank rows={manual.antiBlank.rows} />}
         {active.key === 'decoder' && <Decoder rows={manual.decoder.rows} />}
         {active.key === 'linker' && <Linker rows={manual.linker.rows} />}

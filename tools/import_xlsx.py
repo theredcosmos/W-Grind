@@ -10,6 +10,9 @@ Outputs (all regenerated, idempotent):
     app/src/data/manual.json      ADHD manual, pattern decoder and element-linker guide
     app/src/data/legacyIds.json   old numeric question id -> new slug (progress migration)
 
+Curated lists that are not in the workbook live in tools/data/*.json (e.g. LeetCode's
+Top Interview 150); problems they add get numbered after the workbook's last Q#.
+
 Natural key = LeetCode slug parsed from the URL, so a problem that appears in two
 sections of the master sheet is stored once and its list memberships are merged.
 """
@@ -35,6 +38,7 @@ LIST_META = {
     "striver": {"name": "Striver SDE Sheet", "short": "SDE"},
 }
 DIFFICULTIES = {"Easy", "Medium", "Hard"}
+CURATED_FILES = {"top150": os.path.join(ROOT, "tools", "data", "top_interview_150.json")}
 
 
 def slug_of(url):
@@ -120,6 +124,32 @@ def load_lists(wb, questions, by_master_no):
     return lists
 
 
+def load_curated(questions, lists):
+    """Merge JSON-defined lists; problems missing from the workbook come from the file's 'extra' map."""
+    next_n = max(q["n"] for q in questions.values()) + 1
+    for key, path in CURATED_FILES.items():
+        with open(path, encoding="utf-8") as f:
+            spec = json.load(f)
+        items = []
+        for group in spec["groups"]:
+            for slug in group["slugs"]:
+                if slug not in questions:
+                    extra = spec["extra"].get(slug)
+                    if not extra:
+                        raise ValueError(f"{path}: {slug} is not in the workbook and has no 'extra' entry")
+                    if extra["difficulty"] not in DIFFICULTIES:
+                        raise ValueError(f"{path}: {slug} has bad difficulty {extra['difficulty']!r}")
+                    questions[slug] = {
+                        "id": slug, "n": next_n, "url": f"https://leetcode.com/problems/{slug}/",
+                        "week": "", **extra, "lists": [], "also": [],
+                    }
+                    next_n += 1
+                items.append({"id": slug, "group": group["group"]})
+                if key not in questions[slug]["lists"]:
+                    questions[slug]["lists"].append(key)
+        lists[key] = {"name": spec["name"], "short": spec["short"], "items": items}
+
+
 def load_manual(wb):
     def table(sheet, header_row):
         ws = wb[sheet]
@@ -174,6 +204,7 @@ def main():
     wb = openpyxl.load_workbook(sys.argv[1], data_only=True, read_only=True)
     questions, by_master_no = load_master(wb)
     lists = load_lists(wb, questions, by_master_no)
+    load_curated(questions, lists)
     legacy = legacy_map(questions)
 
     ordered = sorted(questions.values(), key=lambda q: q["n"])

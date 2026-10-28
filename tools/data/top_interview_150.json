@@ -1,0 +1,490 @@
+{
+  "name": "Top Interview 150",
+  "short": "TI150",
+  "source": "LeetCode 'Top Interview 150' study plan (leetcode.com/studyplan/top-interview-150/), grouped as on that page",
+  "groups": [
+    {
+      "group": "Array / String",
+      "slugs": [
+        "merge-sorted-array",
+        "remove-element",
+        "remove-duplicates-from-sorted-array",
+        "remove-duplicates-from-sorted-array-ii",
+        "majority-element",
+        "rotate-array",
+        "best-time-to-buy-and-sell-stock",
+        "best-time-to-buy-and-sell-stock-ii",
+        "jump-game",
+        "jump-game-ii",
+        "h-index",
+        "insert-delete-getrandom-o1",
+        "product-of-array-except-self",
+        "gas-station",
+        "candy",
+        "trapping-rain-water",
+        "roman-to-integer",
+        "integer-to-roman",
+        "length-of-last-word",
+        "longest-common-prefix",
+        "reverse-words-in-a-string",
+        "zigzag-conversion",
+        "find-the-index-of-the-first-occurrence-in-a-string",
+        "text-justification"
+      ]
+    },
+    {
+      "group": "Two Pointers",
+      "slugs": [
+        "valid-palindrome",
+        "is-subsequence",
+        "two-sum-ii-input-array-is-sorted",
+        "container-with-most-water",
+        "3sum"
+      ]
+    },
+    {
+      "group": "Sliding Window",
+      "slugs": [
+        "minimum-size-subarray-sum",
+        "longest-substring-without-repeating-characters",
+        "substring-with-concatenation-of-all-words",
+        "minimum-window-substring"
+      ]
+    },
+    {
+      "group": "Matrix",
+      "slugs": [
+        "valid-sudoku",
+        "spiral-matrix",
+        "rotate-image",
+        "set-matrix-zeroes",
+        "game-of-life"
+      ]
+    },
+    {
+      "group": "Hashmap",
+      "slugs": [
+        "ransom-note",
+        "isomorphic-strings",
+        "word-pattern",
+        "valid-anagram",
+        "group-anagrams",
+        "two-sum",
+        "happy-number",
+        "contains-duplicate-ii",
+        "longest-consecutive-sequence"
+      ]
+    },
+    {
+      "group": "Intervals",
+      "slugs": [
+        "summary-ranges",
+        "merge-intervals",
+        "insert-interval",
+        "minimum-number-of-arrows-to-burst-balloons"
+      ]
+    },
+    {
+      "group": "Stack",
+      "slugs": [
+        "valid-parentheses",
+        "simplify-path",
+        "min-stack",
+        "evaluate-reverse-polish-notation",
+        "basic-calculator"
+      ]
+    },
+    {
+      "group": "Linked List",
+      "slugs": [
+        "linked-list-cycle",
+        "add-two-numbers",
+        "merge-two-sorted-lists",
+        "copy-list-with-random-pointer",
+        "reverse-linked-list-ii",
+        "reverse-nodes-in-k-group",
+        "remove-nth-node-from-end-of-list",
+        "remove-duplicates-from-sorted-list-ii",
+        "rotate-list",
+        "partition-list",
+        "lru-cache"
+      ]
+    },
+    {
+      "group": "Binary Tree General",
+      "slugs": [
+        "maximum-depth-of-binary-tree",
+        "same-tree",
+        "invert-binary-tree",
+        "symmetric-tree",
+        "construct-binary-tree-from-preorder-and-inorder-traversal",
+        "construct-binary-tree-from-inorder-and-postorder-traversal",
+        "populating-next-right-pointers-in-each-node-ii",
+        "flatten-binary-tree-to-linked-list",
+        "path-sum",
+        "sum-root-to-leaf-numbers",
+        "binary-tree-maximum-path-sum",
+        "binary-search-tree-iterator",
+        "count-complete-tree-nodes",
+        "lowest-common-ancestor-of-a-binary-tree"
+      ]
+    },
+    {
+      "group": "Binary Tree BFS",
+      "slugs": [
+        "binary-tree-right-side-view",
+        "average-of-levels-in-binary-tree",
+        "binary-tree-level-order-traversal",
+        "binary-tree-zigzag-level-order-traversal"
+      ]
+    },
+    {
+      "group": "Binary Search Tree",
+      "slugs": [
+        "minimum-absolute-difference-in-bst",
+        "kth-smallest-element-in-a-bst",
+        "validate-binary-search-tree"
+      ]
+    },
+    {
+      "group": "Graph General",
+      "slugs": [
+        "number-of-islands",
+        "surrounded-regions",
+        "clone-graph",
+        "evaluate-division",
+        "course-schedule",
+        "course-schedule-ii"
+      ]
+    },
+    {
+      "group": "Graph BFS",
+      "slugs": [
+        "snakes-and-ladders",
+        "minimum-genetic-mutation",
+        "word-ladder"
+      ]
+    },
+    {
+      "group": "Trie",
+      "slugs": [
+        "implement-trie-prefix-tree",
+        "design-add-and-search-words-data-structure",
+        "word-search-ii"
+      ]
+    },
+    {
+      "group": "Backtracking",
+      "slugs": [
+        "letter-combinations-of-a-phone-number",
+        "combinations",
+        "permutations",
+        "combination-sum",
+        "n-queens-ii",
+        "generate-parentheses",
+        "word-search"
+      ]
+    },
+    {
+      "group": "Divide & Conquer",
+      "slugs": [
+        "convert-sorted-array-to-binary-search-tree",
+        "sort-list",
+        "construct-quad-tree",
+        "merge-k-sorted-lists"
+      ]
+    },
+    {
+      "group": "Kadane's Algorithm",
+      "slugs": [
+        "maximum-subarray",
+        "maximum-sum-circular-subarray"
+      ]
+    },
+    {
+      "group": "Binary Search",
+      "slugs": [
+        "search-insert-position",
+        "search-a-2d-matrix",
+        "find-peak-element",
+        "search-in-rotated-sorted-array",
+        "find-first-and-last-position-of-element-in-sorted-array",
+        "find-minimum-in-rotated-sorted-array",
+        "median-of-two-sorted-arrays"
+      ]
+    },
+    {
+      "group": "Heap",
+      "slugs": [
+        "kth-largest-element-in-an-array",
+        "ipo",
+        "find-k-pairs-with-smallest-sums",
+        "find-median-from-data-stream"
+      ]
+    },
+    {
+      "group": "Bit Manipulation",
+      "slugs": [
+        "add-binary",
+        "reverse-bits",
+        "number-of-1-bits",
+        "single-number",
+        "single-number-ii",
+        "bitwise-and-of-numbers-range"
+      ]
+    },
+    {
+      "group": "Math",
+      "slugs": [
+        "palindrome-number",
+        "plus-one",
+        "factorial-trailing-zeroes",
+        "sqrtx",
+        "powx-n",
+        "max-points-on-a-line"
+      ]
+    },
+    {
+      "group": "1D DP",
+      "slugs": [
+        "climbing-stairs",
+        "house-robber",
+        "word-break",
+        "coin-change",
+        "longest-increasing-subsequence"
+      ]
+    },
+    {
+      "group": "Multidimensional DP",
+      "slugs": [
+        "triangle",
+        "minimum-path-sum",
+        "unique-paths-ii",
+        "longest-palindromic-substring",
+        "interleaving-string",
+        "edit-distance",
+        "best-time-to-buy-and-sell-stock-iii",
+        "best-time-to-buy-and-sell-stock-iv",
+        "maximal-square"
+      ]
+    }
+  ],
+  "extra": {
+    "remove-element": {
+      "title": "Remove Element",
+      "difficulty": "Easy",
+      "section": "Arrays",
+      "topic": "Two Pointers",
+      "pattern": "Read/Write Pointers",
+      "trigger": "Remove all copies of a value in-place and return the new length",
+      "linker": "Slow write pointer k + fast read pointer i: copy nums[i] to nums[k] only when nums[i] != val"
+    },
+    "remove-duplicates-from-sorted-array-ii": {
+      "title": "Remove Duplicates from Sorted Array II",
+      "difficulty": "Medium",
+      "section": "Arrays",
+      "topic": "Two Pointers",
+      "pattern": "Read/Write Pointers",
+      "trigger": "Sorted array, keep each value at most twice, in-place",
+      "linker": "Write pointer k; keep nums[i] if k < 2 or nums[i] != nums[k-2]"
+    },
+    "rotate-array": {
+      "title": "Rotate Array",
+      "difficulty": "Medium",
+      "section": "Arrays",
+      "topic": "Two Pointers",
+      "pattern": "Triple Reversal",
+      "trigger": "Rotate array right by k steps with O(1) extra space",
+      "linker": "k %= n, then reverse whole array, reverse first k, reverse remaining n-k"
+    },
+    "h-index": {
+      "title": "H-Index",
+      "difficulty": "Medium",
+      "section": "Arrays",
+      "topic": "Sorting & Searching in Arrays",
+      "pattern": "Counting Sort",
+      "trigger": "Largest h with at least h papers having h+ citations",
+      "linker": "Bucket counts[min(c, n)]; walk from n down accumulating papers until total >= h"
+    },
+    "length-of-last-word": {
+      "title": "Length of Last Word",
+      "difficulty": "Easy",
+      "section": "Strings",
+      "topic": "String Manipulation & Hashing",
+      "pattern": "Reverse Scan",
+      "trigger": "Length of the final word, ignoring trailing spaces",
+      "linker": "Index from the end: skip spaces, then count non-space characters"
+    },
+    "text-justification": {
+      "title": "Text Justification",
+      "difficulty": "Hard",
+      "section": "Strings",
+      "topic": "String Manipulation & Hashing",
+      "pattern": "Greedy Line Packing",
+      "trigger": "Pack words into lines of maxWidth, distribute spaces evenly, last line left-justified",
+      "linker": "Greedy take words while fit; gaps = words-1; base = spaces // gaps, extra spaces go to leftmost gaps"
+    },
+    "is-subsequence": {
+      "title": "Is Subsequence",
+      "difficulty": "Easy",
+      "section": "Strings",
+      "topic": "Pattern Matching",
+      "pattern": "Two Pointers",
+      "trigger": "Can s be formed from t by deleting characters without reordering",
+      "linker": "Pointer i on s advances only on match while j walks t; answer is i == len(s)"
+    },
+    "game-of-life": {
+      "title": "Game of Life",
+      "difficulty": "Medium",
+      "section": "Arrays",
+      "topic": "Sorting & Searching in Arrays",
+      "pattern": "In-Place State Encoding",
+      "trigger": "Update a grid simultaneously from neighbour counts with O(1) extra space",
+      "linker": "Encode transitions in place (1->0 as 2, 0->1 as 3) while counting 8 neighbours, then decode with % 2"
+    },
+    "ransom-note": {
+      "title": "Ransom Note",
+      "difficulty": "Easy",
+      "section": "Hashing, Math & Bit Manipulation",
+      "topic": "HashMap / HashSet Patterns",
+      "pattern": "Frequency Count",
+      "trigger": "Can one string be built from the letters of another",
+      "linker": "26-slot count array from magazine; decrement per ransom letter, fail if any goes negative"
+    },
+    "contains-duplicate-ii": {
+      "title": "Contains Duplicate II",
+      "difficulty": "Easy",
+      "section": "Hashing, Math & Bit Manipulation",
+      "topic": "HashMap / HashSet Patterns",
+      "pattern": "Sliding Window Set",
+      "trigger": "Equal values within distance k of each other",
+      "linker": "HashMap {value: last index}; or a HashSet window of size k that evicts nums[i-k]"
+    },
+    "summary-ranges": {
+      "title": "Summary Ranges",
+      "difficulty": "Easy",
+      "section": "Arrays",
+      "topic": "Sorting & Searching in Arrays",
+      "pattern": "Run Grouping",
+      "trigger": "Sorted unique array → compress consecutive runs into 'a->b' strings",
+      "linker": "Start a run at i, extend while nums[j+1] == nums[j]+1, emit 'a' or 'a->b'"
+    },
+    "simplify-path": {
+      "title": "Simplify Path",
+      "difficulty": "Medium",
+      "section": "Stacks & Queues",
+      "topic": "Monotonic Stack",
+      "pattern": "Stack of Tokens",
+      "trigger": "Canonical Unix path with '.', '..' and repeated slashes",
+      "linker": "Split on '/', push names, pop on '..', skip '' and '.', join with '/'"
+    },
+    "basic-calculator": {
+      "title": "Basic Calculator",
+      "difficulty": "Hard",
+      "section": "Strings",
+      "topic": "Stack-based String Problems",
+      "pattern": "Sign Stack",
+      "trigger": "Evaluate + - and parentheses without eval",
+      "linker": "Running result + sign; on '(' push (result, sign) and reset, on ')' pop and combine"
+    },
+    "populating-next-right-pointers-in-each-node-ii": {
+      "title": "Populating Next Right Pointers in Each Node II",
+      "difficulty": "Medium",
+      "section": "Trees",
+      "topic": "Binary Tree Properties",
+      "pattern": "Level Linking",
+      "trigger": "Connect each node to its right neighbour on the same level, any binary tree, O(1) space",
+      "linker": "Walk the current level via next pointers while building the next level with a dummy head + tail"
+    },
+    "minimum-absolute-difference-in-bst": {
+      "title": "Minimum Absolute Difference in BST",
+      "difficulty": "Easy",
+      "section": "Trees",
+      "topic": "Binary Search Trees (BST)",
+      "pattern": "In-order Traversal",
+      "trigger": "Smallest difference between any two BST values",
+      "linker": "In-order visit gives sorted values; track prev and min(curr - prev)"
+    },
+    "evaluate-division": {
+      "title": "Evaluate Division",
+      "difficulty": "Medium",
+      "section": "Graphs",
+      "topic": "DFS / Backtracking on Graphs",
+      "pattern": "Weighted Graph DFS",
+      "trigger": "Given a/b = k ratios, answer x/y queries",
+      "linker": "Graph edge a→b weight k and b→a weight 1/k; DFS/BFS multiplying weights along the path"
+    },
+    "minimum-genetic-mutation": {
+      "title": "Minimum Genetic Mutation",
+      "difficulty": "Medium",
+      "section": "Graphs",
+      "topic": "BFS (Shortest Path / Level-order)",
+      "pattern": "BFS on Implicit Graph",
+      "trigger": "Fewest single-character mutations from start to end using a bank",
+      "linker": "BFS over strings; neighbours = change one char to A/C/G/T that is in the bank set"
+    },
+    "construct-quad-tree": {
+      "title": "Construct Quad Tree",
+      "difficulty": "Medium",
+      "section": "Trees",
+      "topic": "Binary Tree Properties",
+      "pattern": "Divide & Conquer",
+      "trigger": "Build a quad tree from an n×n binary grid",
+      "linker": "Recurse on four quadrants; if all four children are leaves with the same value, merge into one leaf"
+    },
+    "maximum-sum-circular-subarray": {
+      "title": "Maximum Sum Circular Subarray",
+      "difficulty": "Medium",
+      "section": "Arrays",
+      "topic": "Kadane's / Greedy on Arrays",
+      "pattern": "Kadane (max & min)",
+      "trigger": "Max subarray sum when the array wraps around",
+      "linker": "Answer = max(maxKadane, total - minKadane), unless every number is negative"
+    },
+    "find-first-and-last-position-of-element-in-sorted-array": {
+      "title": "Find First and Last Position of Element in Sorted Array",
+      "difficulty": "Medium",
+      "section": "Binary Search",
+      "topic": "Classic Binary Search",
+      "pattern": "Lower / Upper Bound",
+      "trigger": "Start and end index of a target in a sorted array in O(log n)",
+      "linker": "Two binary searches: lower_bound(target) and lower_bound(target + 1) - 1"
+    },
+    "add-binary": {
+      "title": "Add Binary",
+      "difficulty": "Easy",
+      "section": "Hashing, Math & Bit Manipulation",
+      "topic": "Bit Manipulation",
+      "pattern": "Digit-by-Digit Carry",
+      "trigger": "Add two binary strings",
+      "linker": "Walk both strings from the end with a carry; append (sum % 2), carry = sum // 2, reverse"
+    },
+    "bitwise-and-of-numbers-range": {
+      "title": "Bitwise AND of Numbers Range",
+      "difficulty": "Medium",
+      "section": "Hashing, Math & Bit Manipulation",
+      "topic": "Bit Manipulation",
+      "pattern": "Common Prefix",
+      "trigger": "AND of every integer in [left, right]",
+      "linker": "Shift both right until equal (their common prefix), then shift back left"
+    },
+    "max-points-on-a-line": {
+      "title": "Max Points on a Line",
+      "difficulty": "Hard",
+      "section": "Hashing, Math & Bit Manipulation",
+      "topic": "Math & Number Theory",
+      "pattern": "Slope Hashing",
+      "trigger": "Most points lying on one straight line",
+      "linker": "For each anchor point, count slopes as reduced (dy/g, dx/g) pairs in a HashMap"
+    },
+    "triangle": {
+      "title": "Triangle",
+      "difficulty": "Medium",
+      "section": "Dynamic Programming",
+      "topic": "2-D DP (Grid / Two Sequences)",
+      "pattern": "Bottom-up DP",
+      "trigger": "Minimum path sum from top to bottom of a triangle",
+      "linker": "Start from the last row: dp[j] = row[j] + min(dp[j], dp[j+1]); answer dp[0]"
+    }
+  }
+}

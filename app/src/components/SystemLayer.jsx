@@ -17,9 +17,12 @@ export default function SystemLayer() {
   }), []);
 
   useEffect(() => {
-    if (!banner) return;
+    if (!banner) return undefined;
+    const onKey = (e) => (e.key === 'Escape' || e.key === 'Enter') && setBanner(null);
+    window.addEventListener('keydown', onKey);
+    const off = () => window.removeEventListener('keydown', onKey);
     const t = setTimeout(() => setBanner(null), banner.type === 'rank' ? 4200 : 2800);
-    return () => clearTimeout(t);
+    return () => { clearTimeout(t); off(); };
   }, [banner]);
 
   return (
@@ -38,7 +41,7 @@ export default function SystemLayer() {
       </div>
 
       {banner && (
-        <div className="fixed inset-0 z-[70] grid place-items-center bg-void/70 anim-fade px-4" onClick={() => setBanner(null)}>
+        <div role="alertdialog" aria-live="assertive" className="fixed inset-0 z-[70] grid place-items-center bg-void/70 anim-fade px-4" onClick={() => setBanner(null)}>
           <div className="sys-window anim-pop overflow-hidden w-[min(420px,100%)] px-8 py-10 text-center">
             <div className="absolute inset-x-0 h-24 -top-24 bg-gradient-to-b from-transparent via-sys/10 to-transparent" style={{ animation: 'scan 1.6s ease-in-out 1' }} />
             <div className="sys-label mb-3">{banner.type === 'rank' ? 'Rank Reassessment' : 'Notification'}</div>
@@ -56,7 +59,7 @@ export default function SystemLayer() {
                 </div>
               </>
             )}
-            <div className="mt-6 text-[11px] text-faint tracking-wide">Click anywhere to continue</div>
+            <div className="mt-6 text-[11px] text-faint tracking-wide">Click or press Enter to continue</div>
           </div>
         </div>
       )}

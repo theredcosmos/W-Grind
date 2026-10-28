@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 // Local-calendar date helpers. Everything is keyed by 'YYYY-MM-DD' in the user's
 // own timezone (toISOString() would roll the date over at UTC midnight).
 
@@ -19,6 +21,23 @@ export const addDays = (s, n) => {
 };
 
 export const daysBetween = (a, b) => Math.round((parseYmd(b) - parseYmd(a)) / 86400000);
+
+/** Current local date that updates at midnight and when the tab becomes visible again. */
+export function useToday() {
+  const [today, setToday] = useState(ymd);
+  useEffect(() => {
+    const check = () => setToday(ymd());
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const t = setTimeout(check, midnight - now + 500);
+    document.addEventListener('visibilitychange', check);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener('visibilitychange', check);
+    };
+  }, [today]);
+  return today;
+}
 
 export const prettyDate = (s) =>
   parseYmd(s).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });

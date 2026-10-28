@@ -2,18 +2,32 @@ import { useCallback, useState } from 'react';
 
 // Colours here only drive the picker previews; the real values live in index.css.
 export const THEMES = [
-  { id: 'system', name: 'The System', note: 'Solo Leveling blue', bg: '#04060c', panel: '#0e172d', accent: '#4cc2ff', ink: '#e6edf8', meta: '#04060c' },
-  { id: 'gotham', name: 'Gotham', note: 'Batman · signal yellow', bg: '#08090a', panel: '#1a1b1f', accent: '#facc15', ink: '#e7e5e4', meta: '#08090a' },
-  { id: 'sakura', name: 'Sakura', note: 'Light · cherry blossom', bg: '#fbf4f6', panel: '#ffffff', accent: '#c23a6c', ink: '#3d2531', meta: '#fbf4f6' },
-  { id: 'minimal', name: 'Minimal', note: 'Light · monochrome', bg: '#f6f6f4', panel: '#ffffff', accent: '#1c1c1c', ink: '#1c1c1c', meta: '#f6f6f4' },
-  { id: 'matrix', name: 'Matrix', note: 'Terminal green', bg: '#010401', panel: '#06170b', accent: '#22c55e', ink: '#c8f7d4', meta: '#010401' },
-  { id: 'nord', name: 'Nord', note: 'Calm arctic slate', bg: '#242933', panel: '#363d4b', accent: '#88c0d0', ink: '#e5e9f0', meta: '#242933' },
+  { id: 'system', name: 'Abyssal Gate', note: 'Gate portal · mana motes', bg: '#04060c', panel: '#0e172d', accent: '#4cc2ff', ink: '#e6edf8', meta: '#04060c', font: "'Chakra Petch'" },
+  { id: 'noir', name: 'Noir City', note: 'Skyline · searchlight · grain', bg: '#07080a', panel: '#18191d', accent: '#ffd60a', ink: '#e8e6e3', meta: '#07080a', font: "'Bebas Neue'" },
+  { id: 'sakura', name: 'Sakura', note: 'Blossoms · drifting petals', bg: '#fbf3f4', panel: '#ffffff', accent: '#c23a6c', ink: '#3a2430', meta: '#fbf3f4', font: "'Shippori Mincho B1'" },
+  { id: 'tide', name: 'Tide', note: 'Rolling ocean waves', bg: '#031a26', panel: '#0a3349', accent: '#3ee0d0', ink: '#dff6fb', meta: '#031a26', font: "'Sora'" },
+  { id: 'aurora', name: 'Aurora', note: 'Northern lights · mountains', bg: '#060912', panel: '#121a30', accent: '#6ef2b4', ink: '#e7eefc', meta: '#060912', font: "'Space Grotesk'" },
+  { id: 'zen', name: 'Zen Paper', note: 'Still · ink on paper', bg: '#f4f1ea', panel: '#fffdf8', accent: '#22201c', ink: '#22201c', meta: '#f4f1ea', font: "'Instrument Serif'" },
 ];
 
+// Themes from earlier builds that no longer exist.
+const RENAMED = { minimal: 'zen', nord: 'aurora', matrix: 'system', gotham: 'noir' };
+
 const KEY = 'uiTheme';
+const MOTION_KEY = 'ambientMotion';
+
+const read = (key, fallback) => {
+  try {
+    return localStorage.getItem(key) ?? fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const resolve = (id) => THEMES.find((t) => t.id === (RENAMED[id] || id)) || THEMES[0];
 
 export const applyTheme = (id) => {
-  const theme = THEMES.find((t) => t.id === id) || THEMES[0];
+  const theme = resolve(id);
   const root = document.documentElement;
   if (theme.id === 'system') delete root.dataset.theme;
   else root.dataset.theme = theme.id;
@@ -21,22 +35,32 @@ export const applyTheme = (id) => {
   return theme.id;
 };
 
-export const storedTheme = () => {
-  try {
-    return localStorage.getItem(KEY) || 'system';
-  } catch {
-    return 'system';
-  }
+export const applyMotion = (on) => {
+  if (on) delete document.documentElement.dataset.still;
+  else document.documentElement.dataset.still = '';
 };
 
+export const storedTheme = () => read(KEY, 'system');
+export const storedMotion = () => read(MOTION_KEY, 'on') !== 'off';
+
 export function useTheme() {
-  const [theme, setThemeState] = useState(storedTheme);
+  const [theme, setThemeState] = useState(() => resolve(storedTheme()).id);
   const setTheme = useCallback((id) => {
     const applied = applyTheme(id);
     try { localStorage.setItem(KEY, applied); } catch { /* private mode */ }
     setThemeState(applied);
   }, []);
   return [theme, setTheme];
+}
+
+export function useMotion() {
+  const [motion, setMotionState] = useState(storedMotion);
+  const setMotion = useCallback((on) => {
+    applyMotion(on);
+    try { localStorage.setItem(MOTION_KEY, on ? 'on' : 'off'); } catch { /* private mode */ }
+    setMotionState(on);
+  }, []);
+  return [motion, setMotion];
 }
 
 /** Fixed brand colours (ranks, guilds) are darkened toward the ink colour on light themes. */

@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useDialog } from '../lib/useDialog';
 import { CalendarClock, ExternalLink, Lightbulb, Link2, X } from 'lucide-react';
 import { BY_ID, DIFF_XP, LISTS } from '../lib/data';
 import { reviewState } from '../lib/game';
 import { prettyDate } from '../lib/date';
 import { LIST_STYLE } from '../lib/theme';
 import { Check, DiffPill } from './ui';
+import { floorOf, gateName, monsterOf } from '../lib/lore';
 import { tone } from '../lib/themes';
 
 // Group label of a problem inside each curated list, e.g. "Day 7: Linked List and Arrays".
@@ -15,6 +17,14 @@ const groupIndex = Object.fromEntries(
 export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, onNote, onClose }) {
   const q = BY_ID.get(id);
   const [draft, setDraft] = useState(note || '');
+  const dialogRef = useDialog();
+  // Save an unsaved note however the drawer closes (Escape, backdrop, navigation), not only on blur.
+  const pending = useRef({ draft: note || '', note: note || '', id, onNote });
+  useEffect(() => { pending.current = { draft, note: note || '', id, onNote }; });
+  useEffect(() => () => {
+    const p = pending.current;
+    if (p.draft !== p.note) p.onNote(p.id, p.draft);
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
@@ -32,7 +42,7 @@ export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, o
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-void/60 anim-fade" onClick={onClose} />
-      <aside data-drawer className="relative anim-slide h-full w-full max-w-[520px] bg-panel border-l border-line-strong overflow-y-auto scroll-thin">
+      <aside data-drawer ref={dialogRef} role="dialog" aria-modal="true" aria-label={q.title} tabIndex={-1} className="relative anim-slide h-full w-full max-w-[520px] bg-panel border-l border-line-strong overflow-y-auto scroll-thin">
         <div className="sticky top-0 z-10 bg-panel/95 border-b border-line px-6 py-4 flex items-center gap-3">
           <span className="sys-label">Quest Info</span>
           <span className="text-faint text-xs font-mono">#{q.n}</span>
@@ -49,11 +59,16 @@ export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, o
             </div>
             <h2 className="sys-heading text-2xl leading-tight">{q.title}</h2>
             <div className="mt-2 text-sm text-dim">{q.section} · {q.topic}</div>
+            <div className="mt-3 inline-flex items-center gap-2 rounded-lg border border-line px-3 py-1.5 text-[12.5px]">
+              <span className="text-hi font-semibold">{monsterOf(q.id).name}</span>
+              <span className="text-dim">{monsterOf(q.id).kind}</span>
+              <span className="text-faint">· {gateName(q.section)}, Floor {floorOf(q.section, q.topic)}</span>
+            </div>
           </div>
 
           <div className="flex gap-2">
             <a href={q.url} target="_blank" rel="noopener noreferrer" className="btn btn-sys flex-1 h-11">
-              Enter Dungeon <ExternalLink size={15} />
+              Enter Gate <ExternalLink size={15} />
             </a>
             <button onClick={() => onToggle(q.id)} className="btn h-11 group">
               <Check on={!!solvedOn} /> {solvedOn ? 'Cleared' : 'Mark cleared'}

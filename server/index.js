@@ -6,7 +6,8 @@ import bcrypt from 'bcryptjs';
 import { MIN_PASSWORD, USERNAME_RE, rateLimit, requireAuth, signToken } from './auth.js';
 
 const app = express();
-app.set('trust proxy', 1); // Render / Vercel sit behind a proxy; needed for per-IP rate limits
+// Render / Vercel sit behind one proxy; set TRUST_PROXY=0 when self-hosting without one so X-Forwarded-For can't be spoofed.
+app.set('trust proxy', Number(process.env.TRUST_PROXY ?? 1));
 app.use(cors(process.env.CORS_ORIGIN ? { origin: process.env.CORS_ORIGIN.split(',') } : undefined));
 app.use(express.json({ limit: '256kb' }));
 
@@ -38,7 +39,9 @@ const authLimiter = rateLimit({
   max: 10,
   key: (req) => `${req.ip}|${String(req.body?.username || '').toLowerCase()}`,
 });
+const ipLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 40, key: (req) => req.ip }); // many usernames from one IP
 const signupLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, key: (req) => req.ip });
+const syncLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, key: (req) => `sync|${req.user.id}` });
 
 const session = (user) => ({ username: user.username, token: signToken(user) });
 
@@ -81,13 +84,14 @@ app.post('/api/register', signupLimiter, async (req, res) => {
     }
     res.json(session({ id: result.insertId, username }));
   } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'That hunter name is taken.' });
     console.error(error);
     res.status(500).json({ error: 'Server error during registration.' });
   }
 });
 
 // Password login
-app.post('/api/login', authLimiter, async (req, res) => {
+app.post('/api/login', ipLimiter, authLimiter, async (req, res) => {
   const username = String(req.body?.username || '').trim();
   const password = String(req.body?.password || '');
   if (!username || !password) {
@@ -98,11 +102,9 @@ app.post('/api/login', authLimiter, async (req, res) => {
     const [rows] = await pool.query('SELECT id, username, password_hash FROM users WHERE username = ?', [username]);
     const user = rows[0];
     const ok = await bcrypt.compare(password, user?.password_hash || DUMMY_HASH);
-    if (user && !user.password_hash) {
-      return res.status(403).json({ error: 'This account uses Google sign-in.' });
-    }
-    if (!user || !ok) {
-      return res.status(401).json({ error: 'Wrong hunter name or password.' });
+    if (!user || !user.password_hash || !ok) {
+      // Same answer whether the name is unknown, Google-only, or the password is wrong.
+      return res.status(401).json({ error: 'Wrong hunter name or password. If you signed up with Google, use Google sign-in.' });
     }
     res.json(session(user));
   } catch (error) {
@@ -112,7 +114,7 @@ app.post('/api/login', authLimiter, async (req, res) => {
 });
 
 // Google sign-in: the client sends its Firebase ID token and we verify it with Google.
-app.post('/api/google-auth', authLimiter, async (req, res) => {
+app.post('/api/google-auth', ipLimiter, authLimiter, async (req, res) => {
   const apiKey = process.env.FIREBASE_API_KEY;
   if (!apiKey) return res.status(501).json({ error: 'Google sign-in is not configured on the server.' });
   const idToken = String(req.body?.idToken || '');
@@ -141,11 +143,19 @@ app.post('/api/google-auth', authLimiter, async (req, res) => {
       if (!taken.length) break;
       username = `${base}${i}`;
     }
-    const [result] = await pool.query(
-      'INSERT INTO users (username, google_id, email) VALUES (?, ?, ?)',
-      [username, googleId, account.email || null]
-    );
-    res.json(session({ id: result.insertId, username }));
+    try {
+      const [result] = await pool.query(
+        'INSERT INTO users (username, google_id, email) VALUES (?, ?, ?)',
+        [username, googleId, account.email || null]
+      );
+      res.json(session({ id: result.insertId, username }));
+    } catch (insertError) {
+      if (insertError.code !== 'ER_DUP_ENTRY') throw insertError;
+      // A parallel request created this Google user first.
+      const [again] = await pool.query('SELECT id, username FROM users WHERE google_id = ?', [googleId]);
+      if (!again.length) throw insertError;
+      res.json(session(again[0]));
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error during Google sign-in.' });
@@ -181,17 +191,27 @@ const getSync = async (req, res) => {
 };
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const ID_RE = /^[a-z0-9-]{1,100}$/; // LeetCode slugs (old builds used numeric ids, which also match)
+const MAX_ROWS = 3000;
 
 const postSync = async (req, res) => {
   const userId = req.user.id;
+  const removed = (Array.isArray(req.body?.removed) ? req.body.removed : [])
+    .filter((id) => typeof id === 'string' && ID_RE.test(id))
+    .slice(0, MAX_ROWS);
+  const removedSet = new Set(removed);
   const completed = Object.entries(req.body?.completed || {})
-    .filter(([id, date]) => id.length <= 255 && DATE_RE.test(date))
-    .slice(0, 5000);
+    .filter(([id, date]) => ID_RE.test(id) && typeof date === 'string' && DATE_RE.test(date) && !removedSet.has(id))
+    .slice(0, MAX_ROWS);
   const tracked = Object.entries(req.body?.trackedTime || {})
     .filter(([date, s]) => DATE_RE.test(date) && Number.isInteger(s) && s >= 0 && s <= 86400)
-    .slice(0, 5000);
+    .slice(0, MAX_ROWS);
 
   try {
+    // Problems un-solved on the client.
+    if (removed.length) {
+      await pool.query('DELETE FROM completed_questions WHERE user_id = ? AND question_id IN (?)', [userId, removed]);
+    }
     // One multi-row upsert per table instead of a query per row.
     if (completed.length) {
       await pool.query(
@@ -201,21 +221,25 @@ const postSync = async (req, res) => {
     }
     if (tracked.length) {
       await pool.query(
-        'INSERT INTO tracked_time (user_id, track_date, seconds) VALUES ? ON DUPLICATE KEY UPDATE seconds = VALUES(seconds)',
+        'INSERT INTO tracked_time (user_id, track_date, seconds) VALUES ? ON DUPLICATE KEY UPDATE seconds = GREATEST(seconds, VALUES(seconds))',
         [tracked.map(([date, s]) => [userId, date, s])]
       );
     }
     res.json({ success: true });
   } catch (error) {
+    // Valid token, but the account was deleted: treat it as a dead session.
+    if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+      return res.status(401).json({ error: 'This account no longer exists. Please sign in again.' });
+    }
     console.error(error);
     res.status(500).json({ error: 'Server error while saving progress.' });
   }
 };
 
 app.get('/api/sync', requireAuth, getSync);
-app.post('/api/sync', requireAuth, postSync);
+app.post('/api/sync', requireAuth, syncLimiter, postSync);
 app.get('/api/sync/:username', requireAuth, ownSync, getSync);
-app.post('/api/sync/:username', requireAuth, ownSync, postSync);
+app.post('/api/sync/:username', requireAuth, ownSync, syncLimiter, postSync);
 
 const PORT = process.env.PORT || 5000;
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {

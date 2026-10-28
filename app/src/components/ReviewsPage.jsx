@@ -29,13 +29,14 @@ function ReviewCard({ item, note, onReview, onOpen }) {
 
 export default function ReviewsPage({ due, upcoming, notes, onReview, onOpen }) {
   return (
-    <div>
+    <div className="flex flex-col md:h-full min-h-0">
       <PageHeader kicker="Re-entry Queue" title="Spaced Reviews" />
-      <p className="text-dim text-sm max-w-2xl -mt-3 mb-6 anim-rise">
+      <p className="text-dim text-sm max-w-2xl -mt-3 mb-5 shrink-0 anim-rise">
         Solving once builds episodic memory. Re-entering a cleared dungeon 7 and 14 days later builds trigger memory,
         the part that fires in an interview. Re-solve from scratch, then mark it done.
       </p>
 
+      <div className="flex-1 min-h-0 overflow-y-auto scroll-thin -mx-1 px-1 pb-2">
       <h2 className="sys-label mb-3">Due now · {due.length}</h2>
       {due.length === 0 ? (
         <Empty icon={CalendarCheck} title="Queue clear">Nothing to review today. Clear new problems and they will come back here in 7 days.</Empty>
@@ -61,6 +62,7 @@ export default function ReviewsPage({ due, upcoming, notes, onReview, onOpen }) 
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }

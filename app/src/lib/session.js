@@ -17,6 +17,33 @@ const readJson = (key, fallback) => {
   }
 };
 
+// Before progress was stored per user, it lived in global keys. Remember who owned it
+// (the user signed in at the time) so only that account inherits it.
+const LEGACY_PROGRESS = ['completedQuestions', 'reviews', 'notes', 'trackedTime'];
+(() => {
+  try {
+    if (localStorage.getItem('legacyOwner') !== null) return;
+    if (!LEGACY_PROGRESS.some((k) => localStorage.getItem(k) !== null)) return;
+    const owner = localStorage.getItem('username') || localStorage.getItem('lastUsername') || '';
+    localStorage.setItem('legacyOwner', owner);
+  } catch { /* storage blocked */ }
+})();
+
+/** Key prefix for everything stored per user. */
+export const userKey = (username, key) => `u:${username.toLowerCase()}:${key}`;
+
+/** Move pre-namespacing progress into this user's keys if they owned it. */
+export const claimLegacyProgress = (username) => {
+  const owner = localStorage.getItem('legacyOwner');
+  if (owner === null || (owner && owner.toLowerCase() !== username.toLowerCase())) return;
+  for (const k of LEGACY_PROGRESS) {
+    const v = localStorage.getItem(k);
+    if (v !== null && localStorage.getItem(userKey(username, k)) === null) localStorage.setItem(userKey(username, k), v);
+    localStorage.removeItem(k);
+  }
+  localStorage.removeItem('legacyOwner');
+};
+
 export const loadSession = () => {
   const s = readJson(SESSION_KEY, null);
   return s?.username && (s.mode === 'offline' || s.token) ? s : null;
@@ -76,11 +103,19 @@ export const offlineSignUp = async (username, password, email) => {
   if (accounts[id] || localStorage.getItem(`user_${username}`)) {
     throw new Error('That hunter name already exists on this device. Sign in instead.');
   }
+  // A cloud account already has progress here: an offline profile must not take it over.
+  const prefix = userKey(username, '');
+  if (Object.keys(localStorage).some((k) => k.startsWith(prefix))) {
+    throw new Error("Can't reach the server, and that name belongs to an account on this device. Sign in once the server is back.");
+  }
   const salt = crypto.getRandomValues(new Uint8Array(16));
   accounts[id] = { username, salt: toHex(salt), hash: await derive(password, salt), email: email || undefined };
   localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
   return { username, mode: 'offline' };
 };
+
+export const hasOfflineAccount = (username) =>
+  Boolean(readJson(ACCOUNTS_KEY, {})[username.toLowerCase()] || localStorage.getItem(`user_${username}`));
 
 export const offlineSignIn = async (username, password) => {
   const accounts = readJson(ACCOUNTS_KEY, {});
@@ -92,7 +127,7 @@ export const offlineSignIn = async (username, password) => {
   }
   // Older builds kept offline passwords in plain text; verify once, then upgrade to a hash.
   const legacy = localStorage.getItem(`user_${username}`);
-  if (legacy == null) throw new Error('No offline hunter with that name on this device.');
+  if (legacy == null) throw new Error("Can't reach the server, and this device has no offline profile with that name. Start the backend, or create an account.");
   if (legacy !== password) throw new Error('Wrong hunter name or password.');
   localStorage.removeItem(`user_${username}`);
   const email = localStorage.getItem(`user_${username}_email`) || undefined;

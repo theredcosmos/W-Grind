@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { DIFFICULTIES } from '../lib/data';
+import { useDialog } from '../lib/useDialog';
 import { RANK_COLOR, SECTION_ICONS } from '../lib/theme';
 import QuestionRow from './QuestionRow';
+import { gateName } from '../lib/lore';
 import { Bar } from './ui';
 import { tone } from '../lib/themes';
 
@@ -18,6 +20,7 @@ export default function PatternModal({ pattern, guild, completed, dueIds, notes,
   const [diff, setDiff] = useState('All');
   const [status, setStatus] = useState('all');
   const Icon = SECTION_ICONS[pattern.name];
+  const dialogRef = useDialog();
   const rc = RANK_COLOR[pattern.rank];
 
   useEffect(() => {
@@ -44,7 +47,7 @@ export default function PatternModal({ pattern, guild, completed, dueIds, notes,
   return createPortal(
     <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center sm:p-6">
       <div className="absolute inset-0 bg-void/75 anim-fade" onClick={onClose} />
-      <div className="sys-window relative anim-drop w-full max-w-4xl max-h-[92vh] sm:max-h-[88vh] flex flex-col overflow-hidden rounded-b-none sm:rounded-b-[14px]">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label={gateName(pattern.name)} tabIndex={-1} className="sys-window relative anim-drop w-full max-w-4xl max-h-[92vh] sm:max-h-[88vh] flex flex-col overflow-hidden rounded-b-none sm:rounded-b-[14px]">
         <div className="flex items-center gap-4 px-5 sm:px-6 py-5 border-b border-line">
           {Icon && (
             <div className="crest grid place-items-center w-12 h-12 shrink-0" style={{ color: tone(rc), background: `${rc}12`, boxShadow: `inset 0 0 0 1.5px ${rc}77` }}>
@@ -53,9 +56,9 @@ export default function PatternModal({ pattern, guild, completed, dueIds, notes,
           )}
           <div className="min-w-0 flex-1">
             <div className="text-[10.5px] tracking-[0.2em] uppercase font-semibold" style={{ color: tone(guild.color) }}>
-              {guild.name} · {pattern.rank}-Rank
+              {guild.name} · {pattern.rank}-Rank gate · {pattern.name}
             </div>
-            <h2 className="sys-heading text-xl sm:text-2xl truncate">{pattern.name}</h2>
+            <h2 className="sys-heading text-xl sm:text-2xl truncate">{gateName(pattern.name)}</h2>
             <div className="flex items-center gap-3 mt-1.5 max-w-xs">
               <Bar value={done} total={pattern.questions.length} color={rc} className="flex-1" />
               <span className="text-xs text-dim tabular whitespace-nowrap">{done}/{pattern.questions.length}</span>
@@ -80,10 +83,12 @@ export default function PatternModal({ pattern, guild, completed, dueIds, notes,
           {topics.every((t) => t.rows.length === 0) && (
             <p className="text-center text-dim text-sm py-10">No problems match these filters.</p>
           )}
-          {topics.filter((t) => t.rows.length).map((t) => (
+          {topics.filter((t) => t.rows.length).map((t, i) => (
             <section key={t.name}>
               <div className="flex items-center gap-3 mb-2.5 px-1">
-                <h3 className="text-[15px] font-semibold" style={{ color: 'var(--color-hi)' }}>{t.name}</h3>
+                <h3 className="text-[15px] font-semibold flex items-baseline gap-2" style={{ color: 'var(--color-hi)' }}>
+                  <span className="sys-label text-[10px]">Floor {i + 1}</span>{t.name}
+                </h3>
                 <div className="h-px flex-1 bg-gradient-to-r from-line-strong to-transparent" />
                 <span className="text-xs text-dim tabular">{t.done}/{t.questions.length}</span>
               </div>
