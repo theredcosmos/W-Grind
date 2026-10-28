@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm install --prefix app && npm install --prefix server",
+  "buildCommand": "npm run build --prefix app",
+  "outputDirectory": "app/dist",
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }],
+  "headers": [
+    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+  ]
+}

@@ -6,7 +6,9 @@ const SESSION_KEY = 'session';
 const ACCOUNTS_KEY = 'offlineAccounts';
 const ITERATIONS = 210000;
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Production builds talk to the API on the same address (vercel.json routes /api to the server);
+// development talks to the local server. VITE_API_URL overrides both.
+export const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
 export const googleEnabled = Boolean(import.meta.env.VITE_FIREBASE_API_KEY);
 
 const readJson = (key, fallback) => {
