@@ -13,7 +13,7 @@ const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, du
   return (
     <>
       <aside className="hidden md:flex flex-col shrink-0 w-[76px] xl:w-[232px] h-full border-r border-line bg-abyss/80 px-3 py-5">
-        <a href="#/status" className="flex items-center gap-3 px-2 mb-8">
+        <a href="#/status" className="flex items-center justify-center xl:justify-start gap-3 xl:px-2 mb-8">
           <div className="grid place-items-center w-10 h-10 rounded-xl bg-gradient-to-br from-sys-deep to-mana glow-md">
             <span className="sys-heading text-on-accent text-sm">W</span>
           </div>
@@ -31,7 +31,7 @@ const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, du
                 key={id}
                 href={`#/${id}`}
                 title={label}
-                className={`relative flex items-center gap-3 h-11 px-3 rounded-xl text-sm font-medium transition-colors duration-150 ${
+                className={`relative flex items-center justify-center xl:justify-start gap-3 h-11 xl:px-3 rounded-xl text-sm font-medium transition-colors duration-150 ${
                   on ? 'text-hi bg-sys/12' : 'text-dim hover:text-ink hover:bg-ink/[0.04]'
                 }`}
               >
@@ -52,7 +52,7 @@ const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, du
           <a
             href="#/titles"
             title="Titles & achievements"
-            className={`relative flex items-center gap-3 h-11 px-3 rounded-xl text-sm font-medium transition-colors duration-150 ${
+            className={`relative flex items-center justify-center xl:justify-start gap-3 h-11 xl:px-3 rounded-xl text-sm font-medium transition-colors duration-150 ${
               page === 'titles' ? 'text-hi bg-sys/12' : 'text-dim hover:text-ink hover:bg-ink/[0.04]'
             }`}
           >
@@ -63,14 +63,14 @@ const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, du
           <button
             onClick={onSettings}
             title="Themes & settings"
-            className="flex items-center gap-3 h-11 px-3 rounded-xl text-sm font-medium text-dim hover:text-ink hover:bg-ink/[0.04] transition-colors"
+            className="flex items-center justify-center xl:justify-start gap-3 h-11 xl:px-3 rounded-xl text-sm font-medium text-dim hover:text-ink hover:bg-ink/[0.04] transition-colors"
           >
             <Palette size={19} />
             <span className="hidden xl:inline">Themes</span>
           </button>
         </div>
 
-        <button onClick={onSettings} className="card p-2.5 flex items-center gap-3 text-left hover:border-line-strong">
+        <button onClick={onSettings} title={`${username} · Lv. ${level} · ${rank.name}`} className="card p-1.5 xl:p-2.5 flex items-center justify-center xl:justify-start gap-3 text-left hover:border-line-strong">
           <div
             className="grid place-items-center w-9 h-9 shrink-0 rounded-lg sys-heading text-sm"
             style={{ color: tone(rank.color), background: `${rank.color}1f`, boxShadow: `inset 0 0 0 1px ${rank.color}55` }}

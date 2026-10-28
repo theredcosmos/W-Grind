@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 const appDir = join(dirname(fileURLToPath(import.meta.url)), '..');
 const serverDir = join(appDir, '..', 'server');
 const children = [];
+// The API always gets its own port; a PORT meant for Vite (set by some launchers) must not leak into it.
+const API_PORT = Number(process.env.API_PORT) || 5000;
 
 const portInUse = (port) => new Promise((resolve) => {
   const sock = createConnection({ port, host: '127.0.0.1' });
@@ -18,10 +20,10 @@ const portInUse = (port) => new Promise((resolve) => {
 
 if (!existsSync(join(serverDir, 'node_modules'))) {
   console.warn('[dev] server/node_modules missing — run `npm install` in server/ to enable sign-in. Starting Vite only.');
-} else if (await portInUse(5000)) {
-  console.log('[dev] Something is already listening on :5000 — assuming it is the API server.');
+} else if (await portInUse(API_PORT)) {
+  console.log(`[dev] Something is already listening on :${API_PORT} — assuming it is the API server.`);
 } else {
-  children.push(spawn(process.execPath, ['index.js'], { cwd: serverDir, stdio: 'inherit' }));
+  children.push(spawn(process.execPath, ['index.js'], { cwd: serverDir, stdio: 'inherit', env: { ...process.env, PORT: String(API_PORT) } }));
 }
 
 const vite = spawn(process.execPath, [join(appDir, 'node_modules', 'vite', 'bin', 'vite.js'), ...process.argv.slice(2)], {

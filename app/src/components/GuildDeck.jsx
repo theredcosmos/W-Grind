@@ -1,11 +1,12 @@
 import { memo, useCallback, useDeferredValue, useEffect, useState } from 'react';
-import { ArrowLeft, Search, SearchX } from 'lucide-react';
+import { ArrowLeft, GalleryHorizontalEnd, List, Search, SearchX } from 'lucide-react';
 import { DECKS, GUILD_BY_KEY, GUILD_QUESTIONS } from '../lib/guilds';
 import { RANK_COLOR, SECTION_ICONS } from '../lib/theme';
 import { go } from '../lib/useHashRoute';
 import { gateName } from '../lib/lore';
 import { tone } from '../lib/themes';
 import CardDeck from './CardDeck';
+import GuildList from './GuildList';
 import PatternModal from './PatternModal';
 import QuestionRow from './QuestionRow';
 import { Bar, Empty } from './ui';
@@ -69,6 +70,10 @@ const PatternCard = memo(function PatternCard({ pattern, done, guildColor }) {
 });
 
 const nameOf = (p) => p.name;
+const VIEW_KEY = 'deckView';
+const readView = () => {
+  try { return localStorage.getItem(VIEW_KEY) === 'list' ? 'list' : 'cards'; } catch { return 'cards'; }
+};
 
 export default function GuildDeck({ guildKey, openPattern, completed, dueIds, notes, onToggle, onOpen }) {
   const guild = GUILD_BY_KEY[guildKey];
@@ -76,19 +81,24 @@ export default function GuildDeck({ guildKey, openPattern, completed, dueIds, no
   const len = deck.length;
   const [active, setActive] = useState(() => Math.max(0, deck.findIndex((p) => p.name === openPattern)));
   const [query, setQuery] = useState('');
+  const [view, setViewState] = useState(readView);
+  const setView = (v) => {
+    setViewState(v);
+    try { localStorage.setItem(VIEW_KEY, v); } catch { /* private mode */ }
+  };
   const q = useDeferredValue(query.trim().toLowerCase());
 
   const openAt = useCallback((i) => go(`guilds/${guildKey}?p=${encodeURIComponent(deck[i].name)}`), [guildKey, deck]);
 
   useEffect(() => {
     const onKey = (e) => {
-      if (openPattern || ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+      if (openPattern || view !== 'cards' || ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
       if (e.key === 'ArrowRight') setActive((a) => (a + 1) % len);
       else if (e.key === 'ArrowLeft') setActive((a) => (a - 1 + len) % len);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [openPattern, len]);
+  }, [openPattern, len, view]);
 
   const all = GUILD_QUESTIONS[guildKey];
   const done = all.filter((x) => completed[x.id]).length;
@@ -103,7 +113,7 @@ export default function GuildDeck({ guildKey, openPattern, completed, dueIds, no
   return (
     <div className="flex flex-col md:h-full min-h-0">
       <header className="flex flex-wrap items-center gap-4 mb-4 shrink-0 anim-rise">
-        <a href="#/guilds" className="grid place-items-center w-9 h-9 rounded-lg border border-line text-dim hover:text-ink hover:border-line-strong" aria-label="Back to guild hall">
+        <a href="#/guilds" className="grid place-items-center w-9 h-9 rounded-lg border border-[color:var(--control-border)] text-dim hover:text-ink hover:border-line-strong" aria-label="Back to guild hall">
           <ArrowLeft size={17} />
         </a>
         <div className="crest grid place-items-center w-11 h-11 sys-heading text-xs" style={{ color: tone(guild.color), background: `${guild.color}14`, boxShadow: `inset 0 0 0 1.5px ${guild.color}77` }}>
@@ -119,9 +129,26 @@ export default function GuildDeck({ guildKey, openPattern, completed, dueIds, no
         </div>
       </header>
 
-      <div className="relative w-full max-w-md mx-auto mb-1 shrink-0 anim-rise">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-faint pointer-events-none" />
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={`Search ${guild.name}…`} className="input pl-9" />
+      <div className="flex items-center gap-3 mb-1 shrink-0 anim-rise">
+        <div className="hidden sm:block flex-1" />
+        <div className="relative flex-1 sm:flex-none sm:w-full sm:max-w-md">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-faint pointer-events-none" />
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={`Search ${guild.name}…`} className="input pl-9" />
+        </div>
+        <div className="flex-1 flex justify-end">
+          <div className="flex p-1 rounded-xl border border-[color:var(--control-border)] bg-ink/[0.03]" role="group" aria-label="View">
+            {[['cards', GalleryHorizontalEnd, 'Cards'], ['list', List, 'List']].map(([v, Icon, label]) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                aria-pressed={view === v}
+                className={`flex items-center gap-1.5 h-8 px-3 rounded-lg text-[13px] font-semibold transition-colors ${view === v ? 'bg-panel-2 text-hi shadow-[inset_0_0_0_1px_var(--color-line-strong)]' : 'text-dim hover:text-ink'}`}
+              >
+                <Icon size={15} /> <span className="hidden sm:inline">{label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {results ? (
@@ -135,6 +162,10 @@ export default function GuildDeck({ guildKey, openPattern, completed, dueIds, no
               ))}
             </div>
           )}
+        </div>
+      ) : view === 'list' ? (
+        <div className="mt-4 flex-1 min-h-0 overflow-y-auto scroll-thin -mx-1 px-1 pb-2 anim-fade">
+          <GuildList deck={deck} completed={completed} dueIds={dueIds} notes={notes} onToggle={onToggle} onOpen={onOpen} />
         </div>
       ) : (
         <CardDeck

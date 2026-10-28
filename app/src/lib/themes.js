@@ -7,7 +7,7 @@ export const THEMES = [
   { id: 'sakura', name: 'Sakura', note: 'Blossoms · drifting petals', bg: '#fbf3f4', panel: '#ffffff', accent: '#c23a6c', ink: '#3a2430', meta: '#fbf3f4', font: "'Shippori Mincho B1'" },
   { id: 'tide', name: 'Tide', note: 'Rolling ocean waves', bg: '#031a26', panel: '#0a3349', accent: '#3ee0d0', ink: '#dff6fb', meta: '#031a26', font: "'Sora'" },
   { id: 'aurora', name: 'Aurora', note: 'Northern lights · mountains', bg: '#060912', panel: '#121a30', accent: '#6ef2b4', ink: '#e7eefc', meta: '#060912', font: "'Space Grotesk'" },
-  { id: 'zen', name: 'Zen Paper', note: 'Still · ink on paper', bg: '#f4f1ea', panel: '#fffdf8', accent: '#22201c', ink: '#22201c', meta: '#f4f1ea', font: "'Instrument Serif'" },
+  { id: 'zen', name: 'Zen Paper', note: 'Still · ink on paper', bg: '#ebe6dc', panel: '#fffdf8', accent: '#22201c', ink: '#22201c', meta: '#ebe6dc', font: "'Instrument Serif'" },
 ];
 
 // Themes from earlier builds that no longer exist.

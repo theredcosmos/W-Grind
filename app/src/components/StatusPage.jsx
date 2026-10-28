@@ -134,7 +134,7 @@ function GuildStrip({ game, completed, onOpen }) {
               </div>
             </a>
             {next ? (
-              <button onClick={() => onOpen(next.id)} className="text-left flex items-center gap-2 rounded-lg border border-line px-2.5 py-1.5 hover:border-line-strong transition-colors group min-w-0">
+              <button onClick={() => onOpen(next.id)} className="text-left flex items-center gap-2 rounded-lg border border-[color:var(--control-border)] px-2.5 py-1.5 hover:border-line-strong transition-colors group min-w-0">
                 <span className="text-[12.5px] truncate flex-1 text-dim group-hover:text-hi">{next.title}</span>
                 <DiffPill difficulty={next.difficulty} />
               </button>

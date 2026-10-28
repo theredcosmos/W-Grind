@@ -97,7 +97,7 @@ export default function Login({ onLogin, notice }) {
         </div>
 
         <div className="sys-window p-6">
-          <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-ink/[0.04] border border-line mb-5" role="tablist">
+          <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-ink/[0.04] border border-[color:var(--control-border)] mb-5" role="tablist">
             {[['signin', 'Sign in'], ['signup', 'Create account']].map(([k, label]) => (
               <button
                 key={k}
