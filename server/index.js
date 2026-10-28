@@ -236,6 +236,43 @@ const postSync = async (req, res) => {
   }
 };
 
+// ---- LeetCode import: proxy LeetCode's public GraphQL (browsers are blocked by CORS).
+// Public data only exposes a user's latest 20 accepted submissions.
+const LC_USER_RE = /^[A-Za-z0-9_-]{1,40}$/;
+const lcCache = new Map(); // username -> { at, body }
+const lcLimiter = rateLimit({ windowMs: 60 * 1000, max: 10, key: (req) => `lc|${req.user.id}` });
+
+app.get('/api/leetcode/:lcUser/recent', requireAuth, lcLimiter, async (req, res) => {
+  const lcUser = req.params.lcUser;
+  if (!LC_USER_RE.test(lcUser)) return res.status(400).json({ error: 'That does not look like a LeetCode username.' });
+  const cached = lcCache.get(lcUser.toLowerCase());
+  if (cached && Date.now() - cached.at < 60 * 1000) return res.json(cached.body);
+  try {
+    const r = await fetch('https://leetcode.com/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Referer: 'https://leetcode.com', 'User-Agent': 'W-Grind tracker' },
+      body: JSON.stringify({
+        query: 'query r($u: String!, $n: Int!) { matchedUser(username: $u) { username } recentAcSubmissionList(username: $u, limit: $n) { titleSlug timestamp } }',
+        variables: { u: lcUser, n: 20 },
+      }),
+      signal: AbortSignal.timeout(10000),
+    });
+    const data = await r.json();
+    if (!r.ok || data.errors?.length && !data.data) return res.status(502).json({ error: 'LeetCode did not answer. Try again in a minute.' });
+    if (!data.data?.matchedUser) return res.status(404).json({ error: `No LeetCode user named “${lcUser}”.` });
+    const body = {
+      username: data.data.matchedUser.username,
+      solves: (data.data.recentAcSubmissionList || []).map((s) => ({ slug: s.titleSlug, at: Number(s.timestamp) * 1000 })),
+    };
+    lcCache.set(lcUser.toLowerCase(), { at: Date.now(), body });
+    if (lcCache.size > 500) lcCache.delete(lcCache.keys().next().value);
+    res.json(body);
+  } catch (error) {
+    console.error('LeetCode fetch failed:', error.message);
+    res.status(502).json({ error: 'Could not reach LeetCode. Try again in a minute.' });
+  }
+});
+
 app.get('/api/sync', requireAuth, getSync);
 app.post('/api/sync', requireAuth, syncLimiter, postSync);
 app.get('/api/sync/:username', requireAuth, ownSync, getSync);
