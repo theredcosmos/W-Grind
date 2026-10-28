@@ -13,7 +13,7 @@ function ReviewCard({ item, note, onReview, onOpen }) {
           <DiffPill difficulty={q.difficulty} />
           {item.overdue > 0 && <span className="text-[11px] text-hard">{item.overdue}d overdue</span>}
         </div>
-        <button onClick={() => onOpen(q.id)} className="text-[15px] font-semibold hover:text-white text-left">{q.title}</button>
+        <button onClick={() => onOpen(q.id)} className="text-[15px] font-semibold hover:text-hi text-left">{q.title}</button>
         <div className="mt-1.5 text-[12.5px] text-dim flex gap-1.5">
           <Lightbulb size={13} className="text-gold/80 mt-0.5 shrink-0" />
           <span className="line-clamp-2">{note || q.trigger}</span>
@@ -52,7 +52,7 @@ export default function ReviewsPage({ due, upcoming, notes, onReview, onOpen }) 
           <h2 className="sys-label mt-8 mb-3">Next 7 days · {upcoming.length}</h2>
           <div className="card divide-y divide-line">
             {upcoming.map((item) => (
-              <button key={item.id + item.stage} onClick={() => onOpen(item.id)} className="w-full flex items-center gap-3 px-4 h-12 text-left hover:bg-white/[0.02]">
+              <button key={item.id + item.stage} onClick={() => onOpen(item.id)} className="w-full flex items-center gap-3 px-4 h-12 text-left hover:bg-ink/[0.02]">
                 <span className="text-xs text-dim w-16 tabular">{prettyDate(item.due)}</span>
                 <span className="text-sm flex-1 truncate">{item.q.title}</span>
                 <span className="text-[11px] text-faint">{item.stage === 'r7' ? '7-day' : '14-day'}</span>

@@ -1,10 +1,11 @@
 import { memo } from 'react';
 import { LIST_STYLE } from '../lib/theme';
+import { tone } from '../lib/themes';
 
 const LIST_SHORT = { blind75: 'B75', neetcode150: 'NC150', striver: 'SDE' };
 
 export const ListBadge = ({ list }) => (
-  <span className="pill font-mono" style={{ color: LIST_STYLE[list].color, background: LIST_STYLE[list].bg }}>
+  <span className="pill font-mono" style={{ color: tone(LIST_STYLE[list].color), background: LIST_STYLE[list].bg }}>
     {LIST_SHORT[list]}
   </span>
 );
@@ -27,7 +28,7 @@ export const Ring = memo(function Ring({ value, total, size = 64, stroke = 6, co
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgb(255 255 255 / 0.07)" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="color-mix(in srgb, var(--color-ink) 8%, transparent)" strokeWidth={stroke} />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -59,11 +60,11 @@ export const PageHeader = ({ kicker, title, children }) => (
 export const Check = ({ on }) => (
   <span
     className={`grid place-items-center w-[22px] h-[22px] rounded-[7px] border transition-colors duration-150 ${
-      on ? 'bg-sys border-sys shadow-[0_0_14px_-2px_rgb(76_194_255/0.7)]' : 'border-line-strong bg-transparent group-hover:border-sys/70'
+      on ? 'bg-sys border-sys glow-sm' : 'border-line-strong bg-transparent group-hover:border-sys/70'
     }`}
   >
     {on && (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#04101f" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-on-sys" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M5 12.5l4.5 4.5L19 7.5" strokeDasharray="24" style={{ animation: 'check 220ms ease-out both' }} />
       </svg>
     )}

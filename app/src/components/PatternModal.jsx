@@ -5,6 +5,7 @@ import { DIFFICULTIES } from '../lib/data';
 import { RANK_COLOR, SECTION_ICONS } from '../lib/theme';
 import QuestionRow from './QuestionRow';
 import { Bar } from './ui';
+import { tone } from '../lib/themes';
 
 const STATUS = [
   { key: 'all', label: 'Any status' },
@@ -46,12 +47,12 @@ export default function PatternModal({ pattern, guild, completed, dueIds, notes,
       <div className="sys-window relative anim-drop w-full max-w-4xl max-h-[92vh] sm:max-h-[88vh] flex flex-col overflow-hidden rounded-b-none sm:rounded-b-[14px]">
         <div className="flex items-center gap-4 px-5 sm:px-6 py-5 border-b border-line">
           {Icon && (
-            <div className="crest grid place-items-center w-12 h-12 shrink-0" style={{ color: rc, background: `${rc}12`, boxShadow: `inset 0 0 0 1.5px ${rc}77` }}>
+            <div className="crest grid place-items-center w-12 h-12 shrink-0" style={{ color: tone(rc), background: `${rc}12`, boxShadow: `inset 0 0 0 1.5px ${rc}77` }}>
               <Icon size={22} strokeWidth={1.7} />
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <div className="text-[10.5px] tracking-[0.2em] uppercase font-semibold" style={{ color: guild.color }}>
+            <div className="text-[10.5px] tracking-[0.2em] uppercase font-semibold" style={{ color: tone(guild.color) }}>
               {guild.name} · {pattern.rank}-Rank
             </div>
             <h2 className="sys-heading text-xl sm:text-2xl truncate">{pattern.name}</h2>
@@ -60,7 +61,7 @@ export default function PatternModal({ pattern, guild, completed, dueIds, notes,
               <span className="text-xs text-dim tabular whitespace-nowrap">{done}/{pattern.questions.length}</span>
             </div>
           </div>
-          <button onClick={onClose} className="self-start grid place-items-center w-9 h-9 rounded-lg text-dim hover:text-ink hover:bg-white/5" aria-label="Close">
+          <button onClick={onClose} className="self-start grid place-items-center w-9 h-9 rounded-lg text-dim hover:text-ink hover:bg-ink/5" aria-label="Close">
             <X size={20} />
           </button>
         </div>
@@ -82,7 +83,7 @@ export default function PatternModal({ pattern, guild, completed, dueIds, notes,
           {topics.filter((t) => t.rows.length).map((t) => (
             <section key={t.name}>
               <div className="flex items-center gap-3 mb-2.5 px-1">
-                <h3 className="text-[15px] font-semibold" style={{ color: '#c7d7ff' }}>{t.name}</h3>
+                <h3 className="text-[15px] font-semibold" style={{ color: 'var(--color-hi)' }}>{t.name}</h3>
                 <div className="h-px flex-1 bg-gradient-to-r from-line-strong to-transparent" />
                 <span className="text-xs text-dim tabular">{t.done}/{t.questions.length}</span>
               </div>

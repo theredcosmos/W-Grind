@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { migrateCompleted } from './data';
 import { ymd } from './date';
+import { API_URL } from './session';
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const read = (key, fallback) => {
   try {
@@ -30,19 +30,23 @@ const write = (key, value) => {
  * Writes to localStorage are debounced; the backend gets a debounced POST
  * instead of one request per click.
  */
-export function useProgress(username) {
+export function useProgress(session, onExpired) {
   const [completed, setCompleted] = useState(() => migrateCompleted(read('completedQuestions', {})));
   const [reviews, setReviews] = useState(() => read('reviews', {}));
   const [notes, setNotes] = useState(() => read('notes', {}));
   const [trackedTime, setTrackedTime] = useState(() => read('trackedTime', {}));
   const hydrated = useRef(false);
+  const token = session.mode === 'cloud' ? session.token : null;
 
   // Pull server state once per login and merge it in.
   useEffect(() => {
-    if (!username) return;
+    if (!token) return;
     let cancelled = false;
-    fetch(`${API_URL}/sync/${encodeURIComponent(username)}`)
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(res.statusText))))
+    fetch(`${API_URL}/sync`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        if (res.status === 401) onExpired();
+        return res.ok ? res.json() : Promise.reject(new Error(res.statusText));
+      })
       .then((data) => {
         if (cancelled) return;
         if (data.completed) setCompleted((prev) => ({ ...migrateCompleted(data.completed), ...prev }));
@@ -53,11 +57,11 @@ export function useProgress(username) {
             return next;
           });
         }
+        hydrated.current = true;
       })
-      .catch(() => { /* offline or no backend: local-only mode */ })
-      .finally(() => { hydrated.current = true; });
+      .catch(() => { /* server unreachable: keep working locally, push on the next change */ hydrated.current = true; });
     return () => { cancelled = true; };
-  }, [username]);
+  }, [token, onExpired]);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -70,16 +74,18 @@ export function useProgress(username) {
   }, [completed, reviews, notes, trackedTime]);
 
   useEffect(() => {
-    if (!username || !hydrated.current) return;
+    if (!token || !hydrated.current) return;
     const t = setTimeout(() => {
-      fetch(`${API_URL}/sync/${encodeURIComponent(username)}`, {
+      fetch(`${API_URL}/sync`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ completed, trackedTime }),
-      }).catch(() => {});
+      })
+        .then((res) => res.status === 401 && onExpired())
+        .catch(() => {});
     }, 1500);
     return () => clearTimeout(t);
-  }, [completed, trackedTime, username]);
+  }, [completed, trackedTime, token, onExpired]);
 
   const toggleSolved = useCallback((id) => {
     setCompleted((prev) => {

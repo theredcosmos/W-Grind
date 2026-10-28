@@ -36,6 +36,17 @@ User progress (localStorage; `completed` + `trackedTime` also sync to the backen
 }
 ```
 
+Auth & preferences (localStorage):
+```json
+{
+  "session": { "username": "string", "mode": "cloud | offline", "token": "string (HS256 signed, 30-day, cloud only)" },
+  "offlineAccounts": { "<lowercased name>": { "username": "string", "salt": "hex", "hash": "hex (PBKDF2-SHA256, 210k iterations)" } },
+  "uiTheme": "system | gotham | sakura | minimal | matrix | nord"
+}
+```
+Server: `POST /api/login|register|google-auth` → `{ username, token }`. `GET|POST /api/sync` require `Authorization: Bearer <token>`.
+Env: `AUTH_SECRET` (required in production), optional `FIREBASE_API_KEY`, `CORS_ORIGIN`.
+
 ## Behavioral Rules
 - System Pilot Identity: Prioritize reliability over speed, deterministic self-healing automation.
 - B.L.A.S.T Protocol: Blueprint, Link, Architect, Stylize, Trigger.

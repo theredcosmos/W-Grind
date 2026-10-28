@@ -5,6 +5,8 @@ import { GUILD_BY_KEY } from './lib/guilds';
 import { notify } from './lib/system';
 import { useHashRoute } from './lib/useHashRoute';
 import { useProgress } from './lib/useProgress';
+import { clearSession, legacyUsername, loadSession, saveSession } from './lib/session';
+import { useTheme } from './lib/themes';
 import Sidebar from './components/Sidebar';
 import SystemLayer from './components/SystemLayer';
 import StatusPage from './components/StatusPage';
@@ -12,12 +14,17 @@ import GuildsPage from './components/GuildsPage';
 import GuildDeck from './components/GuildDeck';
 import ReviewsPage from './components/ReviewsPage';
 import QuestionDrawer from './components/QuestionDrawer';
+import ThemePicker from './components/ThemePicker';
 
 const Login = lazy(() => import('./components/Login'));
 const CodexPage = lazy(() => import('./components/CodexPage'));
 
-function Tracker({ username, onSignOut }) {
-  const progress = useProgress(username);
+function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
+  const { username } = session;
+  const progress = useProgress(session, onExpired);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const closeSettings = useCallback(() => setSettingsOpen(false), []);
+  const openSettings = useCallback(() => setSettingsOpen(true), []);
   const { completed, reviews, notes, trackedTime, toggleSolved, markReviewed, setNote, addTime } = progress;
   const route = useHashRoute();
   const [openId, setOpenId] = useState(null);
@@ -105,10 +112,11 @@ function Tracker({ username, onSignOut }) {
       <Sidebar
         page={route.page}
         username={username}
+        offline={session.mode === 'offline'}
         level={game.level}
         rank={game.rank}
         dueCount={game.due.length}
-        onSignOut={onSignOut}
+        onSettings={openSettings}
       />
       <main ref={mainRef} className="flex-1 min-w-0 h-full overflow-y-auto scroll-thin">
         <div key={route.page} className="anim-fade mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-10 pt-6 md:pt-10 pb-28 md:pb-16">
@@ -128,30 +136,48 @@ function Tracker({ username, onSignOut }) {
           onClose={onClose}
         />
       )}
+      {settingsOpen && (
+        <ThemePicker
+          theme={theme}
+          onChange={onTheme}
+          onClose={closeSettings}
+          account={{ username, mode: session.mode, onSignOut }}
+        />
+      )}
       <SystemLayer />
     </div>
   );
 }
 
 export default function App() {
-  const [username, setUsername] = useState(() => localStorage.getItem('username') || '');
+  const [session, setSession] = useState(loadSession);
+  const [theme, setTheme] = useTheme();
+  const [notice, setNotice] = useState(() =>
+    !loadSession() && legacyUsername() ? 'Sign-in got a security upgrade. Please sign in once more.' : '');
 
-  const login = useCallback((name) => {
-    localStorage.setItem('username', name);
-    setUsername(name);
+  const login = useCallback((s) => {
+    saveSession(s);
+    setSession(s);
+    setNotice('');
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('username');
-    setUsername('');
+    clearSession();
+    setSession(null);
   }, []);
 
-  if (!username) {
+  const expire = useCallback(() => {
+    clearSession();
+    setSession(null);
+    setNotice('Your session expired. Please sign in again.');
+  }, []);
+
+  if (!session) {
     return (
       <Suspense fallback={null}>
-        <Login onLogin={login} />
+        <Login onLogin={login} notice={notice} theme={theme} onTheme={setTheme} />
       </Suspense>
     );
   }
-  return <Tracker username={username} onSignOut={signOut} />;
+  return <Tracker key={session.username} session={session} onSignOut={signOut} onExpired={expire} theme={theme} onTheme={setTheme} />;
 }

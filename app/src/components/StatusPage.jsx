@@ -5,6 +5,7 @@ import { DAILY_QUESTS, QUEST_XP, RANKS } from '../lib/game';
 import { addDays, formatDuration, parseYmd, ymd } from '../lib/date';
 import { ACHIEVEMENT_ICONS, LIST_STYLE } from '../lib/theme';
 import { Bar, DiffPill, Ring } from './ui';
+import { tone } from '../lib/themes';
 
 const STAT_INFO = {
   STR: 'Hard problems defeated',
@@ -41,14 +42,14 @@ function HunterCard({ game, username }) {
 
       <div className="flex flex-wrap items-center gap-6">
         <div className="text-center">
-          <div className="sys-heading text-[64px] leading-none text-white glow-text tabular">{game.level}</div>
+          <div className="sys-heading text-[64px] leading-none text-hi glow-text tabular">{game.level}</div>
           <div className="sys-label text-[10px] mt-1 text-dim">Level</div>
         </div>
         <div className="flex-1 min-w-[220px]">
           <div className="text-xs text-faint mb-0.5">Name</div>
           <div className="sys-heading text-xl mb-2 truncate">{username}</div>
           <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-            <div><span className="text-faint">Rank </span><span className="font-semibold" style={{ color: game.rank.color }}>{game.rank.name}</span></div>
+            <div><span className="text-faint">Rank </span><span className="font-semibold" style={{ color: tone(game.rank.color) }}>{game.rank.name}</span></div>
             <div><span className="text-faint">Title </span><span className="font-semibold text-ink">{game.title}</span></div>
           </div>
           <div className="mt-4">
@@ -131,7 +132,7 @@ function PathCards({ game, onOpen }) {
               <button onClick={() => onOpen(next.id)} className="mt-4 text-left rounded-lg border border-line px-3 py-2.5 hover:border-line-strong transition-colors group">
                 <div className="text-[10.5px] uppercase tracking-wider text-faint mb-1">Next target · {l.next.group}</div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium truncate flex-1 group-hover:text-white">{next.title}</span>
+                  <span className="text-sm font-medium truncate flex-1 group-hover:text-hi">{next.title}</span>
                   <DiffPill difficulty={next.difficulty} />
                 </div>
               </button>
@@ -222,7 +223,7 @@ function Heatmap({ heatmap, streak, bestStreak }) {
       return { d, n: heatmap[d] || 0, future: d > today };
     });
   }, [heatmap]);
-  const shade = (n) => (n === 0 ? 'rgb(255 255 255 / 0.05)' : n === 1 ? 'rgb(76 194 255 / 0.3)' : n <= 3 ? 'rgb(76 194 255 / 0.55)' : 'rgb(76 194 255 / 0.9)');
+  const shade = (n) => (n === 0 ? 'color-mix(in srgb, var(--color-ink) 6%, transparent)' : n === 1 ? 'color-mix(in srgb, var(--color-sys) 30%, transparent)' : n <= 3 ? 'color-mix(in srgb, var(--color-sys) 55%, transparent)' : 'color-mix(in srgb, var(--color-sys) 90%, transparent)');
   return (
     <section className="card p-5">
       <div className="flex items-center justify-between mb-4">
@@ -266,7 +267,7 @@ function Titles({ achievements }) {
               title={a.desc}
             >
               <div className="flex items-center gap-2.5 mb-2">
-                <div className={`grid place-items-center w-8 h-8 rounded-lg ${a.unlocked ? 'bg-sys/15 text-sys' : 'bg-white/[0.04] text-faint'}`}>
+                <div className={`grid place-items-center w-8 h-8 rounded-lg ${a.unlocked ? 'bg-sys/15 text-sys' : 'bg-ink/[0.04] text-faint'}`}>
                   {a.unlocked ? <Icon size={16} /> : <Lock size={14} />}
                 </div>
                 <div className="min-w-0">

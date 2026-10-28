@@ -6,6 +6,7 @@ import { go } from '../lib/useHashRoute';
 import PatternModal from './PatternModal';
 import QuestionRow from './QuestionRow';
 import { Bar, Empty } from './ui';
+import { tone } from '../lib/themes';
 
 const statusFor = (pct) => {
   if (pct === 100) return { label: 'Cleared', color: 'var(--color-sys)' };
@@ -45,25 +46,25 @@ const PatternCard = memo(function PatternCard({ pattern, done, offset, guildColo
         pointerEvents: hidden ? 'none' : 'auto',
       }}
     >
-      <div className="absolute inset-0" style={{ background: `radial-gradient(110% 60% at 50% 0%, ${rc}30, transparent 65%), linear-gradient(180deg, #0d162c, #050911)` }} />
+      <div className="absolute inset-0" style={{ background: `radial-gradient(110% 60% at 50% 0%, ${rc}30, transparent 65%), linear-gradient(180deg, var(--color-panel-2), var(--color-void))` }} />
       <div className="absolute inset-0 card-grid opacity-50" />
-      {Icon && <Icon className="absolute -right-10 top-16 opacity-[0.07] rotate-12" size={240} strokeWidth={1} style={{ color: rc }} />}
+      {Icon && <Icon className="absolute -right-10 top-16 opacity-[0.07] rotate-12" size={240} strokeWidth={1} style={{ color: tone(rc) }} />}
 
       <div className="relative h-full flex flex-col p-6 text-left">
         <div className="flex items-center justify-between">
-          <span className="pill sys-heading tracking-wider" style={{ color: rc, background: `${rc}1a` }}>{pattern.rank}-RANK</span>
+          <span className="pill sys-heading tracking-wider" style={{ color: tone(rc), background: `${rc}1a` }}>{pattern.rank}-RANK</span>
           <span className="text-[11px] text-dim tabular">{total} problems</span>
         </div>
 
         <div className="flex-1 grid place-items-center">
           {Icon && (
-            <div className="crest grid place-items-center w-20 h-20" style={{ color: rc, background: `${rc}12`, boxShadow: `inset 0 0 0 1.5px ${rc}77, 0 0 36px -10px ${rc}` }}>
+            <div className="crest grid place-items-center w-20 h-20" style={{ color: tone(rc), background: `${rc}12`, boxShadow: `inset 0 0 0 1.5px ${rc}77, 0 0 36px -10px ${rc}` }}>
               <Icon size={32} strokeWidth={1.6} />
             </div>
           )}
         </div>
 
-        <h3 className="sys-heading text-[22px] leading-tight text-white">{pattern.name}</h3>
+        <h3 className="sys-heading text-[22px] leading-tight text-hi">{pattern.name}</h3>
         <div className="mt-1.5 flex flex-wrap gap-1.5">
           {pattern.topics.slice(0, 3).map((t) => (
             <span key={t.name} className="text-[10.5px] text-dim border border-line rounded-md px-1.5 py-0.5 truncate max-w-[140px]">{t.name}</span>
@@ -73,12 +74,12 @@ const PatternCard = memo(function PatternCard({ pattern, done, offset, guildColo
 
         <div className="mt-4 flex justify-between items-end text-sm mb-1.5">
           <span className="font-semibold" style={{ color: status.color }}>{status.label}</span>
-          <span className="text-white font-bold tabular">{pct}%</span>
+          <span className="text-hi font-bold tabular">{pct}%</span>
         </div>
         <Bar value={done} total={total} color={rc} />
         <div className="mt-1.5 text-[11px] text-faint tabular">{done} of {total} cleared</div>
 
-        <div className="deck-cta mt-4 pt-3 border-t border-white/10 text-center text-[13px] font-semibold" style={{ color: guildColor }}>
+        <div className="deck-cta mt-4 pt-3 border-t border-line text-center text-[13px] font-semibold" style={{ color: tone(guildColor) }}>
           Enter · view subpatterns
         </div>
       </div>
@@ -121,11 +122,11 @@ export default function GuildDeck({ guildKey, openPattern, completed, dueIds, no
         <a href="#/guilds" className="grid place-items-center w-9 h-9 rounded-lg border border-line text-dim hover:text-ink hover:border-line-strong" aria-label="Back to guild hall">
           <ArrowLeft size={17} />
         </a>
-        <div className="crest grid place-items-center w-11 h-11 sys-heading text-xs" style={{ color: guild.color, background: `${guild.color}14`, boxShadow: `inset 0 0 0 1.5px ${guild.color}77` }}>
+        <div className="crest grid place-items-center w-11 h-11 sys-heading text-xs" style={{ color: tone(guild.color), background: `${guild.color}14`, boxShadow: `inset 0 0 0 1.5px ${guild.color}77` }}>
           {guild.crest}
         </div>
         <div className="min-w-0">
-          <div className="text-[10.5px] tracking-[0.2em] uppercase font-semibold" style={{ color: guild.color }}>{guild.tag}</div>
+          <div className="text-[10.5px] tracking-[0.2em] uppercase font-semibold" style={{ color: tone(guild.color) }}>{guild.tag}</div>
           <h1 className="sys-heading text-2xl leading-tight">{guild.name}</h1>
         </div>
         <div className="ml-auto flex items-center gap-3 min-w-[200px]">
@@ -194,7 +195,7 @@ export default function GuildDeck({ guildKey, openPattern, completed, dueIds, no
                 aria-label={p.name}
                 title={p.name}
                 className="h-1.5 rounded-full transition-all duration-300"
-                style={{ width: i === active ? 22 : 6, background: i === active ? guild.color : 'rgb(255 255 255 / 0.15)' }}
+                style={{ width: i === active ? 22 : 6, background: i === active ? guild.color : 'var(--color-line-strong)' }}
               />
             ))}
           </div>

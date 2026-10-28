@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { subscribe } from '../lib/system';
+import { tone } from '../lib/themes';
 
 // Renders System toasts and the full-screen Level Up / Rank Up window.
 export default function SystemLayer() {
@@ -43,14 +44,14 @@ export default function SystemLayer() {
             <div className="sys-label mb-3">{banner.type === 'rank' ? 'Rank Reassessment' : 'Notification'}</div>
             {banner.type === 'level' ? (
               <>
-                <div className="sys-heading text-4xl text-white glow-text tracking-[0.12em]">LEVEL UP!</div>
+                <div className="sys-heading text-4xl text-hi glow-text tracking-[0.12em]">LEVEL UP!</div>
                 <div className="mt-4 text-dim text-sm">You have reached</div>
                 <div className="sys-heading text-6xl text-sys glow-text mt-1 tabular">Lv. {banner.level}</div>
               </>
             ) : (
               <>
                 <div className="text-dim text-sm">Your hunter rank has risen to</div>
-                <div className="sys-heading text-5xl mt-2" style={{ color: banner.rank.color, textShadow: `0 0 24px ${banner.rank.color}99` }}>
+                <div className="sys-heading text-5xl mt-2" style={{ color: tone(banner.rank.color), textShadow: `0 0 24px ${banner.rank.color}99` }}>
                   {banner.rank.name}
                 </div>
               </>

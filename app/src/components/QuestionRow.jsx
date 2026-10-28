@@ -6,7 +6,7 @@ import { Check, DiffPill, ListBadge } from './ui';
 const QuestionRow = memo(function QuestionRow({ q, solved, hasNote, due, onToggle, onOpen }) {
   return (
     <div
-      className={`group flex items-center gap-3 px-3 sm:px-4 h-[52px] border-t border-line/70 first:border-t-0 transition-colors duration-100 hover:bg-white/[0.025] ${
+      className={`group flex items-center gap-3 px-3 sm:px-4 h-[52px] border-t border-line/70 first:border-t-0 transition-colors duration-100 hover:bg-ink/[0.025] ${
         solved ? 'bg-sys/[0.03]' : ''
       }`}
     >
@@ -15,7 +15,7 @@ const QuestionRow = memo(function QuestionRow({ q, solved, hasNote, due, onToggl
       </button>
       <span className="hidden sm:block w-9 shrink-0 text-[11px] text-faint font-mono tabular">{q.n}</span>
       <button onClick={() => onOpen(q.id)} className="min-w-0 flex-1 text-left">
-        <div className={`truncate text-[14px] font-medium transition-colors ${solved ? 'text-dim' : 'text-ink group-hover:text-white'}`}>
+        <div className={`truncate text-[14px] font-medium transition-colors ${solved ? 'text-dim' : 'text-ink group-hover:text-hi'}`}>
           {q.title}
         </div>
         <div className="truncate text-[11.5px] text-faint">{q.pattern}</div>

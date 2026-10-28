@@ -1,23 +1,30 @@
 @import "tailwindcss";
 
-@theme {
+/*
+ * Default theme ("System" — Solo Leveling). Every other theme in this file only
+ * overrides these variables, so switching themes is a single repaint.
+ */
+@theme static {
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Chakra Petch', 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
 
-  --color-void: #04060c;
-  --color-abyss: #070b16;
-  --color-panel: #0a1122;
-  --color-panel-2: #0e172d;
+  --color-void: #04060c;        /* page background */
+  --color-abyss: #070b16;       /* sidebar */
+  --color-panel: #0a1122;       /* drawers, raised surfaces */
+  --color-panel-2: #0e172d;     /* selected / card art */
   --color-line: rgb(96 165 250 / 0.14);
   --color-line-strong: rgb(96 165 250 / 0.32);
-  --color-ink: #e6edf8;
+  --color-ink: #e6edf8;         /* body text; also used for subtle overlays */
+  --color-hi: #ffffff;          /* emphasised text */
   --color-dim: #8a9bb8;
   --color-faint: #56657f;
+  --color-on-accent: #ffffff;   /* text on accent-gradient buttons */
+  --color-on-sys: #04101f;      /* marks drawn on the flat accent (checkbox tick) */
 
-  --color-sys: #4cc2ff;
+  --color-sys: #4cc2ff;         /* accent */
   --color-sys-deep: #1d7cf2;
-  --color-mana: #8b5cf6;
+  --color-mana: #8b5cf6;        /* secondary accent */
   --color-gold: #fbbf24;
 
   --color-easy: #34d399;
@@ -30,7 +37,21 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --sys-glow: 0 0 0 1px rgb(76 194 255 / 0.08), 0 0 24px -6px rgb(76 194 255 / 0.25);
+    --radius-window: 14px;
+    --window-bg: linear-gradient(180deg, rgb(14 23 45 / 0.92), rgb(8 13 27 / 0.94));
+    --surface-card: rgb(10 17 34 / 0.85);
+    --shadow-window: 0 18px 40px -24px rgb(0 0 0 / 0.8);
+    --shadow-lift: 0 30px 60px -24px rgb(0 0 0 / 0.85);
+    --corner: color-mix(in srgb, var(--color-sys) 55%, transparent);
+    --text-glow: 0 0 18px color-mix(in srgb, var(--color-sys) 55%, transparent);
+    --accent-glow: color-mix(in srgb, var(--color-sys) 70%, transparent);
+    --btn-accent: linear-gradient(180deg, #2a95ff, #1d6fe0);
+    --heading-case: none;
+    --heading-tracking: 0.02em;
+    --tone: 100%; /* how much of a fixed brand colour to keep vs. ink (light themes darken them) */
+    --bg-image:
+      radial-gradient(1200px 600px at 85% -10%, rgb(29 124 242 / 0.16), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgb(139 92 246 / 0.12), transparent 60%);
   }
 
   html, body, #root { height: 100%; }
@@ -38,10 +59,7 @@
   body {
     margin: 0;
     background-color: var(--color-void);
-    /* One static background layer — no blur filters anywhere. */
-    background-image:
-      radial-gradient(1200px 600px at 85% -10%, rgb(29 124 242 / 0.16), transparent 60%),
-      radial-gradient(900px 500px at -10% 110%, rgb(139 92 246 / 0.12), transparent 60%);
+    background-image: var(--bg-image);
     background-attachment: fixed;
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -49,9 +67,9 @@
     text-rendering: optimizeLegibility;
   }
 
-  ::selection { background: rgb(76 194 255 / 0.3); }
+  ::selection { background: color-mix(in srgb, var(--color-sys) 30%, transparent); }
 
-  * { scrollbar-width: thin; scrollbar-color: rgb(96 165 250 / 0.25) transparent; }
+  * { scrollbar-width: thin; scrollbar-color: var(--color-line-strong) transparent; }
 
   :focus-visible { outline: 2px solid var(--color-sys); outline-offset: 2px; border-radius: 6px; }
 
@@ -59,14 +77,191 @@
   button:disabled { cursor: not-allowed; }
 }
 
+/* ---------------------------------------------------------------- themes */
+
+/* Gotham — Batman: charcoal, signal yellow, sharp corners. */
+:root[data-theme='gotham'] {
+  --font-display: 'Oswald', 'Inter', sans-serif;
+  --color-void: #08090a;
+  --color-abyss: #0c0d0f;
+  --color-panel: #121316;
+  --color-panel-2: #1a1b1f;
+  --color-line: rgb(250 204 21 / 0.1);
+  --color-line-strong: rgb(250 204 21 / 0.3);
+  --color-ink: #e7e5e4;
+  --color-hi: #fafaf9;
+  --color-dim: #a8a29e;
+  --color-faint: #6b6661;
+  --color-on-accent: #0a0a0a;
+  --color-on-sys: #0a0a0a;
+  --color-sys: #facc15;
+  --color-sys-deep: #ca8a04;
+  --color-mana: #a8a29e;
+  --color-gold: #facc15;
+  --color-easy: #4ade80;
+  --color-medium: #fb923c;
+  --color-hard: #f87171;
+  --radius-window: 6px;
+  --window-bg: linear-gradient(180deg, #151619, #0e0f11);
+  --surface-card: #111214;
+  --corner: #facc15;
+  --text-glow: 0 0 16px rgb(250 204 21 / 0.25);
+  --btn-accent: linear-gradient(180deg, #fde047, #eab308);
+  --heading-case: uppercase;
+  --heading-tracking: 0.05em;
+  --bg-image: radial-gradient(700px 420px at 82% -8%, rgb(250 204 21 / 0.09), transparent 60%);
+}
+
+/* Sakura — light, soft cherry-blossom pink with a few drifting petals. */
+:root[data-theme='sakura'] {
+  color-scheme: light;
+  --font-display: 'Shippori Mincho', 'Inter', serif;
+  --color-void: #fbf4f6;
+  --color-abyss: #fff8fa;
+  --color-panel: #ffffff;
+  --color-panel-2: #fff0f4;
+  --color-line: rgb(190 70 110 / 0.13);
+  --color-line-strong: rgb(190 70 110 / 0.3);
+  --color-ink: #3d2531;
+  --color-hi: #22111a;
+  --color-dim: #7d5c6b;
+  --color-faint: #a07f90;
+  --color-on-accent: #ffffff;
+  --color-on-sys: #ffffff;
+  --color-sys: #c23a6c;
+  --color-sys-deep: #a32d5a;
+  --color-mana: #8e6bbf;
+  --color-gold: #b7791f;
+  --color-easy: #23845b;
+  --color-medium: #a8680a;
+  --color-hard: #d14343;
+  --radius-window: 16px;
+  --window-bg: linear-gradient(180deg, #ffffff, #fff8fa);
+  --surface-card: #ffffff;
+  --shadow-window: 0 14px 34px -22px rgb(150 60 90 / 0.35);
+  --shadow-lift: 0 24px 50px -26px rgb(150 60 90 / 0.4);
+  --corner: rgb(194 58 108 / 0.45);
+  --text-glow: none;
+  --btn-accent: linear-gradient(180deg, #e66a9a, #cf4677);
+  --tone: 72%;
+  --bg-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='%23f4a7c0' fill-opacity='.35'%3E%3Cellipse cx='40' cy='50' rx='7' ry='4' transform='rotate(35 40 50)'/%3E%3Cellipse cx='190' cy='30' rx='6' ry='3.5' transform='rotate(-20 190 30)'/%3E%3Cellipse cx='120' cy='150' rx='8' ry='4.5' transform='rotate(60 120 150)'/%3E%3Cellipse cx='225' cy='210' rx='6' ry='3.5' transform='rotate(15 225 210)'/%3E%3Cellipse cx='60' cy='225' rx='5' ry='3' transform='rotate(-45 60 225)'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(900px 500px at 90% -10%, rgb(244 167 192 / 0.35), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, rgb(196 172 230 / 0.25), transparent 60%);
+}
+
+/* Minimal — monochrome, flat, no glow. */
+:root[data-theme='minimal'] {
+  color-scheme: light;
+  --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-void: #f6f6f4;
+  --color-abyss: #fbfbfa;
+  --color-panel: #ffffff;
+  --color-panel-2: #f1f1ef;
+  --color-line: rgb(0 0 0 / 0.08);
+  --color-line-strong: rgb(0 0 0 / 0.18);
+  --color-ink: #1c1c1c;
+  --color-hi: #000000;
+  --color-dim: #5e5e5e;
+  --color-faint: #858585;
+  --color-on-accent: #ffffff;
+  --color-on-sys: #ffffff;
+  --color-sys: #1c1c1c;
+  --color-sys-deep: #000000;
+  --color-mana: #6b6b6b;
+  --color-gold: #a16207;
+  --color-easy: #15803d;
+  --color-medium: #b45309;
+  --color-hard: #b91c1c;
+  --radius-window: 10px;
+  --window-bg: #ffffff;
+  --surface-card: #ffffff;
+  --shadow-window: 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-lift: 0 18px 40px -24px rgb(0 0 0 / 0.25);
+  --corner: transparent;
+  --text-glow: none;
+  --accent-glow: transparent;
+  --btn-accent: #1c1c1c;
+  --heading-tracking: -0.01em;
+  --tone: 70%;
+  --bg-image: none;
+}
+
+/* Matrix — terminal green on black. */
+:root[data-theme='matrix'] {
+  --font-display: 'JetBrains Mono', ui-monospace, monospace;
+  --color-void: #010401;
+  --color-abyss: #020803;
+  --color-panel: #041007;
+  --color-panel-2: #06170b;
+  --color-line: rgb(34 197 94 / 0.14);
+  --color-line-strong: rgb(34 197 94 / 0.34);
+  --color-ink: #c8f7d4;
+  --color-hi: #ecfff1;
+  --color-dim: #6fa77f;
+  --color-faint: #3f6b4c;
+  --color-on-accent: #021a08;
+  --color-on-sys: #021a08;
+  --color-sys: #22c55e;
+  --color-sys-deep: #15803d;
+  --color-mana: #10b981;
+  --color-gold: #eab308;
+  --color-easy: #4ade80;
+  --color-medium: #facc15;
+  --color-hard: #f87171;
+  --radius-window: 4px;
+  --window-bg: linear-gradient(180deg, rgb(5 20 9 / 0.95), rgb(2 10 4 / 0.96));
+  --surface-card: rgb(4 16 7 / 0.92);
+  --btn-accent: linear-gradient(180deg, #34d36c, #16a34a);
+  --heading-tracking: 0;
+  --bg-image:
+    repeating-linear-gradient(0deg, rgb(34 197 94 / 0.025) 0 1px, transparent 1px 3px),
+    radial-gradient(900px 500px at 80% -10%, rgb(34 197 94 / 0.1), transparent 60%);
+}
+
+/* Nord — calm arctic slate, low contrast, easy on the eyes. */
+:root[data-theme='nord'] {
+  --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-void: #242933;
+  --color-abyss: #2a303b;
+  --color-panel: #2e3440;
+  --color-panel-2: #363d4b;
+  --color-line: rgb(216 222 233 / 0.08);
+  --color-line-strong: rgb(216 222 233 / 0.18);
+  --color-ink: #e5e9f0;
+  --color-hi: #eceff4;
+  --color-dim: #a3adbf;
+  --color-faint: #6c7689;
+  --color-on-accent: #1f242d;
+  --color-on-sys: #1f242d;
+  --color-sys: #88c0d0;
+  --color-sys-deep: #5e81ac;
+  --color-mana: #b48ead;
+  --color-gold: #ebcb8b;
+  --color-easy: #a3be8c;
+  --color-medium: #ebcb8b;
+  --color-hard: #e0868d;
+  --radius-window: 12px;
+  --window-bg: linear-gradient(180deg, #2f3542, #2b313c);
+  --surface-card: #2e3440;
+  --shadow-window: 0 12px 30px -22px rgb(0 0 0 / 0.6);
+  --corner: rgb(136 192 208 / 0.4);
+  --text-glow: none;
+  --btn-accent: linear-gradient(180deg, #93c9d8, #7fb1c2);
+  --heading-tracking: -0.005em;
+  --bg-image: none;
+}
+
+/* ------------------------------------------------------------ components */
+
 @layer components {
   /* The signature "System window": a panel with corner brackets. */
   .sys-window {
     position: relative;
-    background: linear-gradient(180deg, rgb(14 23 45 / 0.92), rgb(8 13 27 / 0.94));
+    background: var(--window-bg);
     border: 1px solid var(--color-line);
-    border-radius: 14px;
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.03), 0 18px 40px -24px rgb(0 0 0 / 0.8);
+    border-radius: var(--radius-window);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-hi) 3%, transparent), var(--shadow-window);
   }
   .sys-window::before,
   .sys-window::after {
@@ -74,12 +269,12 @@
     position: absolute;
     width: 14px;
     height: 14px;
-    border-color: rgb(76 194 255 / 0.55);
+    border-color: var(--corner);
     border-style: solid;
     pointer-events: none;
   }
-  .sys-window::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-top-left-radius: 14px; }
-  .sys-window::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-bottom-right-radius: 14px; }
+  .sys-window::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-top-left-radius: var(--radius-window); }
+  .sys-window::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-bottom-right-radius: var(--radius-window); }
 
   .sys-label {
     font-family: var(--font-display);
@@ -93,18 +288,21 @@
   .sys-heading {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: var(--heading-tracking);
+    text-transform: var(--heading-case);
   }
 
-  .glow-text { text-shadow: 0 0 18px rgb(76 194 255 / 0.55); }
+  .glow-text { text-shadow: var(--text-glow); }
+  .glow-sm { box-shadow: 0 0 14px -2px var(--accent-glow); }
+  .glow-md { box-shadow: 0 0 26px -6px var(--accent-glow); }
 
   .card {
-    background: rgb(10 17 34 / 0.85);
+    background: var(--surface-card);
     border: 1px solid var(--color-line);
-    border-radius: 12px;
+    border-radius: calc(var(--radius-window) - 2px);
     transition: border-color 160ms var(--ease-snap), background-color 160ms var(--ease-snap), transform 160ms var(--ease-snap);
   }
-  .card-hover:hover { border-color: var(--color-line-strong); background: rgb(14 23 45 / 0.95); }
+  .card-hover:hover { border-color: var(--color-line-strong); background: var(--color-panel-2); }
 
   .btn {
     display: inline-flex;
@@ -113,25 +311,25 @@
     gap: 8px;
     height: 36px;
     padding: 0 14px;
-    border-radius: 10px;
+    border-radius: min(10px, var(--radius-window));
     font-size: 13px;
     font-weight: 600;
     border: 1px solid var(--color-line);
-    background: rgb(255 255 255 / 0.03);
+    background: color-mix(in srgb, var(--color-ink) 3%, transparent);
     color: var(--color-ink);
     transition: background-color 140ms, border-color 140ms, transform 100ms, box-shadow 140ms;
     white-space: nowrap;
   }
-  .btn:hover { background: rgb(255 255 255 / 0.06); border-color: var(--color-line-strong); }
+  .btn:hover { background: color-mix(in srgb, var(--color-ink) 6%, transparent); border-color: var(--color-line-strong); }
   .btn:active { transform: scale(0.97); }
 
   .btn-sys {
-    background: linear-gradient(180deg, #2a95ff, #1d6fe0);
-    border-color: rgb(140 210 255 / 0.5);
-    color: white;
-    box-shadow: 0 6px 20px -8px rgb(29 124 242 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.25);
+    background: var(--btn-accent);
+    border-color: color-mix(in srgb, var(--color-sys) 60%, transparent);
+    color: var(--color-on-accent);
+    box-shadow: 0 6px 20px -10px var(--accent-glow), inset 0 1px 0 rgb(255 255 255 / 0.2);
   }
-  .btn-sys:hover { background: linear-gradient(180deg, #45a6ff, #2a7ff0); border-color: rgb(160 220 255 / 0.7); }
+  .btn-sys:hover { background: var(--btn-accent); filter: brightness(1.08); border-color: var(--color-sys); }
 
   .chip {
     display: inline-flex;
@@ -149,7 +347,11 @@
     white-space: nowrap;
   }
   .chip:hover { color: var(--color-ink); border-color: var(--color-line-strong); }
-  .chip[data-on='true'] { color: white; background: rgb(76 194 255 / 0.14); border-color: rgb(76 194 255 / 0.55); }
+  .chip[data-on='true'] {
+    color: var(--color-hi);
+    background: color-mix(in srgb, var(--color-sys) 14%, transparent);
+    border-color: color-mix(in srgb, var(--color-sys) 55%, transparent);
+  }
 
   .pill {
     display: inline-flex;
@@ -162,25 +364,29 @@
     letter-spacing: 0.01em;
     white-space: nowrap;
   }
-  .pill-Easy { color: var(--color-easy); background: rgb(52 211 153 / 0.1); }
-  .pill-Medium { color: var(--color-medium); background: rgb(251 191 36 / 0.1); }
-  .pill-Hard { color: var(--color-hard); background: rgb(248 113 113 / 0.1); }
+  .pill-Easy { color: var(--color-easy); background: color-mix(in srgb, var(--color-easy) 12%, transparent); }
+  .pill-Medium { color: var(--color-medium); background: color-mix(in srgb, var(--color-medium) 12%, transparent); }
+  .pill-Hard { color: var(--color-hard); background: color-mix(in srgb, var(--color-hard) 12%, transparent); }
 
   .input {
     height: 38px;
     width: 100%;
     padding: 0 12px;
-    border-radius: 10px;
+    border-radius: min(10px, var(--radius-window));
     border: 1px solid var(--color-line);
-    background: rgb(4 6 12 / 0.6);
+    background: color-mix(in srgb, var(--color-void) 60%, transparent);
     color: var(--color-ink);
     font-size: 14px;
     transition: border-color 140ms, box-shadow 140ms;
   }
   .input::placeholder { color: var(--color-faint); }
-  .input:focus { outline: none; border-color: rgb(76 194 255 / 0.6); box-shadow: 0 0 0 3px rgb(76 194 255 / 0.12); }
+  .input:focus {
+    outline: none;
+    border-color: color-mix(in srgb, var(--color-sys) 60%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-sys) 12%, transparent);
+  }
 
-  .bar { height: 6px; border-radius: 999px; background: rgb(255 255 255 / 0.06); overflow: hidden; }
+  .bar { height: 6px; border-radius: 999px; background: color-mix(in srgb, var(--color-ink) 8%, transparent); overflow: hidden; }
   .bar > span {
     display: block;
     height: 100%;
@@ -206,7 +412,7 @@
 @layer utilities {
   .tabular { font-variant-numeric: tabular-nums; }
   .scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
-  .scroll-thin::-webkit-scrollbar-thumb { background: rgb(96 165 250 / 0.2); border-radius: 8px; }
+  .scroll-thin::-webkit-scrollbar-thumb { background: var(--color-line-strong); border-radius: 8px; }
 }
 
 /* Motion — transform/opacity only so everything stays on the compositor. */
@@ -238,22 +444,25 @@
 /* ---------- Guild & deck cards ---------- */
 .crest { border-radius: 24%; }
 
+.card-art { background: linear-gradient(180deg, var(--color-panel-2), var(--color-void)); }
+
 .card-grid {
   background-image:
-    linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--color-ink) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-ink) 4%, transparent) 1px, transparent 1px);
   background-size: 28px 28px;
   mask-image: linear-gradient(180deg, black, transparent 80%);
 }
 
 .guild-card {
-  border: 1px solid rgb(255 255 255 / 0.08);
+  border: 1px solid var(--color-line);
+  border-radius: calc(var(--radius-window) + 4px);
   transition: transform 240ms var(--ease-snap), border-color 200ms, box-shadow 240ms;
 }
 .guild-card:hover {
   transform: translateY(-5px);
   border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-  box-shadow: 0 24px 50px -24px rgb(0 0 0 / 0.9), 0 0 60px -20px var(--accent);
+  box-shadow: var(--shadow-lift), 0 0 60px -22px var(--accent);
 }
 
 .deck {
@@ -271,10 +480,10 @@
   position: absolute;
   width: 300px;
   height: 430px;
-  border-radius: 20px;
+  border-radius: calc(var(--radius-window) + 6px);
   overflow: hidden;
-  border: 1px solid rgb(255 255 255 / 0.08);
-  background: #070c18;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
   transform:
     translateX(calc(var(--o) * var(--step)))
     rotateY(calc(var(--o) * -24deg))
@@ -286,14 +495,14 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: #02040a;
-  opacity: calc(min(var(--abs), 2) * 0.3);
+  background: var(--color-void);
+  opacity: calc(min(var(--abs), 2) * 0.32);
   transition: opacity 320ms ease;
   pointer-events: none;
 }
 .deck-card.is-center {
   border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-  box-shadow: 0 34px 70px -24px rgb(0 0 0 / 0.9), 0 0 60px -18px var(--accent);
+  box-shadow: var(--shadow-lift), 0 0 60px -20px var(--accent);
 }
 .deck-card.is-center:hover { border-color: var(--accent); }
 .deck-cta { opacity: 0; transition: opacity 240ms ease; }
@@ -309,9 +518,9 @@
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  background: rgb(240 246 255 / 0.95);
-  color: #050911;
-  box-shadow: 0 0 24px rgb(160 210 255 / 0.35);
+  background: var(--color-hi);
+  color: var(--color-void);
+  box-shadow: 0 6px 24px -6px color-mix(in srgb, var(--color-hi) 40%, transparent);
   transition: transform 140ms var(--ease-snap);
 }
 .deck-nav:hover { transform: scale(1.08); }

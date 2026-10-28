@@ -5,6 +5,7 @@ import { reviewState } from '../lib/game';
 import { prettyDate } from '../lib/date';
 import { LIST_STYLE } from '../lib/theme';
 import { Check, DiffPill } from './ui';
+import { tone } from '../lib/themes';
 
 // Group label of a problem inside each curated list, e.g. "Day 7: Linked List and Arrays".
 const groupIndex = Object.fromEntries(
@@ -35,7 +36,7 @@ export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, o
         <div className="sticky top-0 z-10 bg-panel/95 border-b border-line px-6 py-4 flex items-center gap-3">
           <span className="sys-label">Quest Info</span>
           <span className="text-faint text-xs font-mono">#{q.n}</span>
-          <button onClick={onClose} className="ml-auto grid place-items-center w-8 h-8 rounded-lg text-dim hover:text-ink hover:bg-white/5" aria-label="Close">
+          <button onClick={onClose} className="ml-auto grid place-items-center w-8 h-8 rounded-lg text-dim hover:text-ink hover:bg-ink/5" aria-label="Close">
             <X size={18} />
           </button>
         </div>
@@ -80,7 +81,7 @@ export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, o
               <div className="space-y-1.5">
                 {q.lists.map((l) => (
                   <div key={l} className="flex items-center justify-between text-sm card px-3 py-2">
-                    <span className="font-semibold" style={{ color: LIST_STYLE[l].color }}>{LISTS[l].name}</span>
+                    <span className="font-semibold" style={{ color: tone(LIST_STYLE[l].color) }}>{LISTS[l].name}</span>
                     <span className="text-dim text-xs">{groupIndex[l].get(q.id)}</span>
                   </div>
                 ))}
