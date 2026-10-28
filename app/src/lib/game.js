@@ -4,6 +4,8 @@ import { BY_ID, DIFF_XP, LISTS, LIST_KEYS, QUESTIONS, SECTIONS } from './data';
 import { addDays, daysBetween, ymd } from './date';
 
 export const REVIEW_XP = 20;
+export const HINT_COST = 10; // revealing a hint before you've spotted the pattern yourself
+export const INTERVIEW_XP = 60; // solving inside interview mode's 45 minutes
 export const QUEST_XP = 100;
 
 // XP needed to go from level L to L+1. Early levels come fast on purpose.
@@ -87,7 +89,7 @@ export const ACHIEVEMENTS = [
   { id: 'striver', name: 'SDE Ready', desc: 'Clear the whole Striver SDE Sheet', icon: 'Trophy', xp: 750, metric: 'list:striver', target: LISTS.striver.items.length },
 ];
 
-export function computeGame({ completed, reviews, trackedTime }) {
+export function computeGame({ completed, reviews, trackedTime, extras = { hints: {}, problemTime: {}, interviews: {} } }) {
   const today = ymd();
   const days = new Map();
   const day = (d) => {
@@ -177,7 +179,25 @@ export function computeGame({ completed, reviews, trackedTime }) {
   }));
   const achievementXp = achievements.reduce((sum, a) => sum + (a.unlocked ? a.xp : 0), 0);
 
-  const xp = solvedXp + reviewsDone * REVIEW_XP + questDays * QUEST_XP + achievementXp;
+  const hintsUsed = Object.keys(extras.hints).length;
+  const interviewsPassed = Object.values(extras.interviews).filter((i) => i.solved).length;
+  const xp = Math.max(0, solvedXp + reviewsDone * REVIEW_XP + questDays * QUEST_XP + achievementXp
+    + interviewsPassed * INTERVIEW_XP - hintsUsed * HINT_COST);
+
+  // Average fight time per solved problem, per pattern (only patterns with at least 2 timed solves).
+  const timeBySection = new Map();
+  for (const [id, seconds] of Object.entries(extras.problemTime)) {
+    const q = BY_ID.get(id);
+    if (!q || !solvedIds.has(id)) continue;
+    const t = timeBySection.get(q.section) || { total: 0, count: 0 };
+    t.total += seconds;
+    t.count++;
+    timeBySection.set(q.section, t);
+  }
+  const slowest = [...timeBySection]
+    .filter(([, t]) => t.count >= 2)
+    .map(([section, t]) => ({ section, avg: t.total / t.count, count: t.count }))
+    .sort((a, b) => b.avg - a.avg);
   const lvl = levelFromXp(xp);
   const rank = rankForLevel(lvl.level);
   const title = [...achievements].reverse().find((a) => a.unlocked)?.name || 'Unawakened';
@@ -207,6 +227,9 @@ export function computeGame({ completed, reviews, trackedTime }) {
     questDays,
     lists,
     gates,
+    hintsUsed,
+    interviewsPassed,
+    slowest,
     due,
     upcoming,
     achievements,

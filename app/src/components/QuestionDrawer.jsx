@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDialog } from '../lib/useDialog';
-import { CalendarClock, ExternalLink, Lightbulb, Link2, X } from 'lucide-react';
+import { CalendarClock, Eye, ExternalLink, Lightbulb, Link2, Mic, Swords, Timer, X } from 'lucide-react';
 import { BY_ID, DIFF_XP, LISTS } from '../lib/data';
-import { reviewState } from '../lib/game';
+import { HINT_COST, reviewState } from '../lib/game';
+import { clock } from '../lib/fight';
 import { prettyDate } from '../lib/date';
 import { LIST_STYLE } from '../lib/theme';
 import { Check, DiffPill } from './ui';
@@ -14,7 +15,10 @@ const groupIndex = Object.fromEntries(
   Object.entries(LISTS).map(([k, l]) => [k, new Map(l.items.map((i) => [i.id, i.group]))]),
 );
 
-export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, onNote, onClose }) {
+export default function QuestionDrawer({
+  id, solvedOn, review, note, hintRevealed, timeSpent, interview, fightId,
+  onToggle, onNote, onClose, onRevealHint, onStartFight, onStartInterview,
+}) {
   const q = BY_ID.get(id);
   const [draft, setDraft] = useState(note || '');
   const dialogRef = useDialog();
@@ -38,6 +42,9 @@ export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, o
 
   if (!q) return null;
   const next = solvedOn ? reviewState(solvedOn, review) : null;
+  // Hints are free once the monster is defeated; before that, revealing one costs XP.
+  const showHints = !!solvedOn || hintRevealed;
+  const fighting = fightId === q.id;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -58,7 +65,7 @@ export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, o
               <span className="text-xs text-sys font-semibold">+{DIFF_XP[q.difficulty]} XP</span>
             </div>
             <h2 className="sys-heading text-2xl leading-tight">{q.title}</h2>
-            <div className="mt-2 text-sm text-dim">{q.section} · {q.topic}</div>
+            <div className="mt-2 text-sm text-dim">{showHints ? `${q.section} · ${q.topic}` : `${q.section} · pattern hidden`}</div>
             <div className="mt-3 inline-flex items-center gap-2 rounded-lg border border-line px-3 py-1.5 text-[12.5px]">
               <span className="text-hi font-semibold">{monsterOf(q.id).name}</span>
               <span className="text-dim">{monsterOf(q.id).kind}</span>
@@ -75,20 +82,56 @@ export default function QuestionDrawer({ id, solvedOn, review, note, onToggle, o
             </button>
           </div>
 
-          <section className="card p-4">
-            <div className="flex items-center gap-2 text-gold text-xs font-semibold uppercase tracking-wider mb-2">
-              <Lightbulb size={14} /> Spot this in the prompt
+          <div className="grid grid-cols-2 gap-2">
+            <button onClick={() => onStartFight(q.id)} disabled={fighting} className="btn h-10">
+              <Swords size={15} /> {fighting ? 'Fight running' : 'Start fight'}
+            </button>
+            <button onClick={() => onStartInterview(q.id)} className="btn h-10">
+              <Mic size={15} /> Interview mode
+            </button>
+          </div>
+          {(timeSpent > 0 || interview) && (
+            <div className="flex flex-wrap gap-x-5 gap-y-1 text-[12.5px] text-dim -mt-3">
+              {timeSpent > 0 && <span className="flex items-center gap-1.5"><Timer size={13} /> Fought for {clock(timeSpent)}</span>}
+              {interview && (
+                <span className={interview.solved ? 'text-easy' : ''}>
+                  Interview: {interview.solved ? `passed in ${clock(interview.seconds)}` : 'not passed yet'}
+                </span>
+              )}
             </div>
-            <p className="text-[14px] leading-relaxed text-ink/90">{q.trigger || '—'}</p>
-          </section>
+          )}
 
-          <section className="card p-4">
-            <div className="flex items-center gap-2 text-sys text-xs font-semibold uppercase tracking-wider mb-2">
-              <Link2 size={14} /> DSA elements & how they link
-            </div>
-            <p className="text-[14px] leading-relaxed text-ink/90">{q.linker || '—'}</p>
-            <div className="mt-3 text-xs text-faint">Core pattern: <span className="text-dim">{q.pattern}</span></div>
-          </section>
+          {showHints ? (
+            <>
+              <section className="card p-4">
+                <div className="flex items-center gap-2 text-gold text-xs font-semibold uppercase tracking-wider mb-2">
+                  <Lightbulb size={14} /> Spot this in the prompt
+                </div>
+                <p className="text-[14px] leading-relaxed text-ink/90">{q.trigger || '—'}</p>
+              </section>
+
+              <section className="card p-4">
+                <div className="flex items-center gap-2 text-sys text-xs font-semibold uppercase tracking-wider mb-2">
+                  <Link2 size={14} /> DSA elements & how they link
+                </div>
+                <p className="text-[14px] leading-relaxed text-ink/90">{q.linker || '—'}</p>
+                <div className="mt-3 text-xs text-faint">Core pattern: <span className="text-dim">{q.pattern}</span></div>
+              </section>
+            </>
+          ) : (
+            <section className="card p-4 border-dashed">
+              <div className="flex items-center gap-2 text-gold text-xs font-semibold uppercase tracking-wider mb-2">
+                <Lightbulb size={14} /> Hint sealed
+              </div>
+              <p className="text-[13.5px] leading-relaxed text-dim mb-3">
+                Try to spot the pattern yourself first: input type, constraint size, and what you're asked to return.
+                That's the skill interviews test.
+              </p>
+              <button onClick={() => onRevealHint(q.id)} className="btn">
+                <Eye size={15} /> Reveal hint · −{HINT_COST} XP
+              </button>
+            </section>
+          )}
 
           {q.lists.length > 0 && (
             <section>

@@ -8,7 +8,7 @@ export default function SystemLayer() {
   const [banner, setBanner] = useState(null);
 
   useEffect(() => subscribe((e) => {
-    if (e.type === 'level' || e.type === 'rank') {
+    if (e.type === 'level' || e.type === 'rank' || e.type === 'gate') {
       setBanner(e);
       return;
     }
@@ -21,7 +21,7 @@ export default function SystemLayer() {
     const onKey = (e) => (e.key === 'Escape' || e.key === 'Enter') && setBanner(null);
     window.addEventListener('keydown', onKey);
     const off = () => window.removeEventListener('keydown', onKey);
-    const t = setTimeout(() => setBanner(null), banner.type === 'rank' ? 4200 : 2800);
+    const t = setTimeout(() => setBanner(null), banner.type === 'level' ? 2800 : 4200);
     return () => { clearTimeout(t); off(); };
   }, [banner]);
 
@@ -35,7 +35,11 @@ export default function SystemLayer() {
               <div className="sys-label text-[10px] mb-0.5">System</div>
               <div className="text-[13.5px] leading-snug text-ink">{t.text}</div>
             </div>
-            {t.xp ? <div className="ml-auto sys-heading text-sys glow-text text-sm whitespace-nowrap">+{t.xp} XP</div> : null}
+            {t.xp ? (
+              <div className={`ml-auto sys-heading text-sm whitespace-nowrap ${t.xp > 0 ? 'text-sys glow-text' : 'text-hard'}`}>
+                {t.xp > 0 ? '+' : '−'}{Math.abs(t.xp)} XP
+              </div>
+            ) : null}
           </div>
         ))}
       </div>
@@ -44,8 +48,14 @@ export default function SystemLayer() {
         <div role="alertdialog" aria-live="assertive" className="fixed inset-0 z-[70] grid place-items-center bg-void/70 anim-fade px-4" onClick={() => setBanner(null)}>
           <div className="sys-window anim-pop overflow-hidden w-[min(420px,100%)] px-8 py-10 text-center">
             <div className="absolute inset-x-0 h-24 -top-24 bg-gradient-to-b from-transparent via-sys/10 to-transparent" style={{ animation: 'scan 1.6s ease-in-out 1' }} />
-            <div className="sys-label mb-3">{banner.type === 'rank' ? 'Rank Reassessment' : 'Notification'}</div>
-            {banner.type === 'level' ? (
+            <div className="sys-label mb-3">{banner.type === 'rank' ? 'Rank Reassessment' : banner.type === 'gate' ? 'Gate Cleared' : 'Notification'}</div>
+            {banner.type === 'gate' ? (
+              <>
+                <div className="seal seal-static mx-auto mb-5">Cleared</div>
+                <div className="sys-heading text-3xl text-hi glow-text leading-tight">{banner.gate}</div>
+                <div className="mt-3 text-dim text-sm">Every monster in {banner.section} is defeated. The seal is permanent.</div>
+              </>
+            ) : banner.type === 'level' ? (
               <>
                 <div className="sys-heading text-4xl text-hi glow-text tracking-[0.12em]">LEVEL UP!</div>
                 <div className="mt-4 text-dim text-sm">You have reached</div>

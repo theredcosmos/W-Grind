@@ -43,9 +43,18 @@ Auth & preferences (localStorage):
   "offlineAccounts": { "<lowercased name>": { "username": "string", "salt": "hex", "hash": "hex (PBKDF2-SHA256, 210k iterations)" } },
   "uiTheme": "system | gotham | sakura | tide | aurora | zen",
   "ambientMotion": "on | off",
-  "u:<username>:<key>": "per-user progress (completedQuestions, reviews, notes, trackedTime, randomSeen, equippedTitle)"
+  "u:<username>:<key>": "per-user progress (completedQuestions, reviews, removed, notes, trackedTime, extras, fight, lcUser, reminder, randomSeen, equippedTitle)"
 }
 ```
+Per-user details:
+- `removed` `{ id: { date, review } }` — un-solved tombstones (server deletes the row; re-solve restores date/reviews).
+- `extras` `{ hints: { id: date }, problemTime: { id: seconds }, interviews: { id: { date, seconds, solved } } }` — device-local.
+  XP: −10 per revealed hint (`HINT_COST`), +60 per interview passed within 45:00 (`INTERVIEW_XP`).
+- `fight` `{ id, mode: 'fight'|'interview', acc, since, seen }` — the running per-problem timer.
+- `lcUser` LeetCode username; `reminder` `{ enabled, time: 'HH:MM', lastShown }`.
+
+LeetCode import: `GET /api/leetcode/:lcUser/recent` (auth, 10/min/user, 60 s cache) proxies LeetCode's public GraphQL
+→ `{ username, solves: [{ slug, at: ms }] }`. LeetCode exposes only the latest 20 accepted submissions publicly.
 Lore (derived in `app/src/lib/lore.js`, never stored): section → Gate (`GATE_NAMES`), topic → Floor N (sheet order),
 question → Monster `{ name, kind }` generated deterministically from the slug (names unique, original — no franchise terms).
 

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Check, Cloud, CloudOff, LogOut, X } from 'lucide-react';
 import { THEMES } from '../lib/themes';
 import { useDialog } from '../lib/useDialog';
+import { InstallSettings, LeetCodeSettings, ReminderSettings } from './SettingsExtras';
 
 // Miniature of the theme: its background, a panel, its accent and its heading font.
 const Preview = ({ t }) => (
@@ -30,7 +31,7 @@ const Switch = ({ on, onChange, label }) => (
   </button>
 );
 
-export default function ThemePicker({ theme, onChange, motion, onMotion, onClose, account }) {
+export default function ThemePicker({ theme, onChange, motion, onMotion, onClose, account, lc, reminder, install }) {
   const dialogRef = useDialog();
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
@@ -79,6 +80,13 @@ export default function ThemePicker({ theme, onChange, motion, onMotion, onClose
             <div className="text-xs text-dim">Drifting petals, waves, rain and lights. Turn off for a completely still screen.</div>
           </div>
           <Switch on={motion} onChange={onMotion} label="Ambient motion" />
+        </div>
+
+        <div className="mt-6 pt-5 border-t border-line space-y-3">
+          <div className="sys-label">Training</div>
+          {lc && <LeetCodeSettings lc={lc} />}
+          {reminder && <ReminderSettings {...reminder} />}
+          {install && <InstallSettings install={install} />}
         </div>
 
         {account && (

@@ -131,14 +131,14 @@
   color-scheme: light;
   --font-display: 'Shippori Mincho B1', 'Zen Kaku Gothic New', serif;
   --font-sans: 'Zen Kaku Gothic New', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #f1dde3;
-  --color-abyss: #fbf1f4;
-  --color-panel: #ffffff;
-  --color-panel-2: #fcebf0;
+  --color-void: #e6cfd6;
+  --color-abyss: #eedce2;
+  --color-panel: #f8f0f3;
+  --color-panel-2: #f1e1e7;
   --color-line: #d0abbb;
   --color-line-strong: #a8798f;
   --control-border: #a8798f;
-  --input-bg: #ffffff;
+  --input-bg: #fcf7f9;
   --color-ink: #2b1720;
   --color-hi: #170910;
   --color-dim: #5e3f4d;
@@ -148,14 +148,14 @@
   --color-sys: #c23a6c;
   --color-sys-deep: #a32d5a;
   --color-mana: #8a6bb8;
-  --color-gold: #a8680a;
-  --color-easy: #23845b;
-  --color-medium: #a8680a;
+  --color-gold: #915808;
+  --color-easy: #1b7550;
+  --color-medium: #915808;
   --color-hard: #c8323a;
   --radius-window: 20px;
   --radius-btn: 12px;
-  --window-bg: #ffffff;
-  --surface-card: #ffffff;
+  --window-bg: #f8f0f3;
+  --surface-card: #f8f0f3;
   --shadow-window: 0 1px 2px rgb(120 40 70 / 0.08), 0 14px 34px -20px rgb(120 40 70 / 0.38);
   --shadow-lift: 0 26px 50px -28px rgb(150 60 90 / 0.45);
   --corner: transparent;
@@ -244,14 +244,14 @@
 :root[data-theme='zen'] {
   color-scheme: light;
   --font-display: 'Instrument Serif', Georgia, serif;
-  --color-void: #ebe6dc;
-  --color-abyss: #f3f0e8;
-  --color-panel: #fffdf8;
-  --color-panel-2: #efebe2;
+  --color-void: #e0d9cb;
+  --color-abyss: #e8e2d6;
+  --color-panel: #f5f1e8;
+  --color-panel-2: #ebe5d9;
   --color-line: #c8bfb0;
   --color-line-strong: #8f877a;
   --control-border: #8f877a;
-  --input-bg: #ffffff;
+  --input-bg: #faf8f2;
   --color-ink: #22201c;
   --color-hi: #0d0c0a;
   --color-dim: #5f5a52;
@@ -267,8 +267,8 @@
   --color-hard: #b42318;
   --radius-window: 10px;
   --radius-btn: 8px;
-  --window-bg: #fffdf8;
-  --surface-card: #fffdf8;
+  --window-bg: #f5f1e8;
+  --surface-card: #f5f1e8;
   --shadow-window: 0 1px 0 rgb(40 30 20 / 0.04);
   --shadow-lift: 0 18px 40px -26px rgb(40 30 20 / 0.3);
   --corner: transparent;
@@ -472,6 +472,28 @@
 }
 
 /* ---------- Guild & deck cards ---------- */
+/* Permanent "cleared" stamp on gate and guild cards. */
+.seal {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%) rotate(-14deg);
+  padding: 6px 16px;
+  border: 2px solid var(--color-sys);
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-sys);
+  background: color-mix(in srgb, var(--color-panel) 70%, transparent);
+  box-shadow: 0 0 22px -6px var(--accent-glow), inset 0 0 0 3px color-mix(in srgb, var(--color-sys) 18%, transparent);
+  pointer-events: none;
+}
+.seal-static { position: relative; top: auto; left: auto; transform: rotate(-8deg); display: inline-block; animation: pop 600ms var(--ease-snap) both; }
+
 .crest { border-radius: 24%; }
 
 .card-art { background: linear-gradient(180deg, var(--color-panel-2), var(--color-void)); }

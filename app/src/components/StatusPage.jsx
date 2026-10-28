@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, CheckCircle2, Circle, Dices, Flame, Pause, Play, Timer } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Circle, Dices, DoorOpen, Flame, Hourglass, Mic, Pause, Play, RotateCcw, Timer } from 'lucide-react';
 import { BY_ID, LISTS, LIST_KEYS } from '../lib/data';
 import { DAILY_QUESTS, QUEST_XP, RANKS } from '../lib/game';
 import { addDays, formatDuration, parseYmd, ymd } from '../lib/date';
@@ -7,6 +7,10 @@ import { LIST_STYLE } from '../lib/theme';
 import { distinctNextTargets, drawRandom } from '../lib/random';
 import { Bar, DiffPill, Ring } from './ui';
 import { tone } from '../lib/themes';
+import { GUILD_BY_KEY } from '../lib/guilds';
+import { floorOf, gateName, monsterOf } from '../lib/lore';
+import { todaysGate } from '../lib/today';
+import { clock } from '../lib/fight';
 
 const STAT_INFO = {
   STR: 'Hard problems defeated',
@@ -258,7 +262,88 @@ function Heatmap({ heatmap, streak, bestStreak }) {
   );
 }
 
-export default function StatusPage({ game, username, title, completed, onOpen, onAddTime }) {
+function TodaysGate({ game, completed, onOpen, onInterview }) {
+  const t = todaysGate(game, completed);
+  if (t.kind === 'done') {
+    return (
+      <section className="sys-window p-5 flex items-center gap-4">
+        <DoorOpen size={22} className="text-sys" />
+        <div className="flex-1">
+          <div className="sys-label">Today's gate</div>
+          <div className="text-sm text-dim mt-0.5">Every gate in {GUILD_BY_KEY[t.guildKey].name} is cleared. Pick another guild to keep climbing.</div>
+        </div>
+        <a href="#/guilds" className="btn">Guild hall <ArrowRight size={14} /></a>
+      </section>
+    );
+  }
+  if (t.kind === 'review') {
+    const q = t.item.q;
+    return (
+      <section className="sys-window p-5 flex flex-wrap items-center gap-4">
+        <div className="grid place-items-center w-12 h-12 rounded-xl bg-gold/10 text-gold shrink-0"><RotateCcw size={22} /></div>
+        <div className="min-w-0 flex-1">
+          <div className="sys-label">Today's gate · re-entry</div>
+          <div className="sys-heading text-lg leading-tight truncate mt-0.5">{q.title}</div>
+          <div className="text-[12.5px] text-dim">
+            {t.item.stage === 'r7' ? '7-day' : '14-day'} review{t.count > 1 ? ` · ${t.count - 1} more waiting` : ''}. Re-solve it from scratch.
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <a href="#/reviews" className="btn btn-sys h-11 px-5">Enter gate <ArrowRight size={15} /></a>
+        </div>
+      </section>
+    );
+  }
+  const m = monsterOf(t.q.id);
+  return (
+    <section className="sys-window p-5 flex flex-wrap items-center gap-4">
+      <div className="grid place-items-center w-12 h-12 rounded-xl bg-sys/12 text-sys shrink-0 glow-sm"><DoorOpen size={22} /></div>
+      <div className="min-w-0 flex-1">
+        <div className="sys-label">Today's gate · {GUILD_BY_KEY[t.guildKey].name}</div>
+        <div className="sys-heading text-lg leading-tight truncate mt-0.5">{m.name}, {m.kind}</div>
+        <div className="text-[12.5px] text-dim truncate">
+          {gateName(t.pattern)} · Floor {floorOf(t.pattern, t.topic)} · {t.resumed ? 'your weakest floor in progress' : 'next floor on the roadmap'}
+        </div>
+      </div>
+      <div className="flex gap-2">
+        <button onClick={() => onInterview(t.q.id)} className="btn h-11"><Mic size={15} /> Interview</button>
+        <button onClick={() => onOpen(t.q.id)} className="btn btn-sys h-11 px-5">Enter gate <ArrowRight size={15} /></button>
+      </div>
+    </section>
+  );
+}
+
+function TimeInsights({ slowest }) {
+  return (
+    <section className="card p-4 flex flex-col min-h-0">
+      <div className="flex items-center justify-between mb-3">
+        <span className="sys-label">Where your time goes</span>
+        <Hourglass size={14} className="text-faint" />
+      </div>
+      {slowest.length ? (
+        <ul className="space-y-2.5">
+          {slowest.slice(0, 4).map((s, i) => (
+            <li key={s.section}>
+              <div className="flex justify-between text-[12.5px] mb-1">
+                <span className={i === 0 ? 'text-hi font-semibold' : 'text-ink'}>{s.section}</span>
+                <span className="text-dim tabular">{clock(s.avg)} avg · {s.count} timed</span>
+              </div>
+              <Bar value={s.avg} total={slowest[0].avg} color={i === 0 ? 'var(--color-medium)' : undefined} className="h-1.5" />
+            </li>
+          ))}
+          <li className="text-[11.5px] text-faint pt-1">Slowest first. Practise the top one next.</li>
+        </ul>
+      ) : (
+        <p className="text-[13px] text-dim leading-relaxed">
+          Use <span className="text-ink font-semibold">Start fight</span> on a problem to time it. After two timed clears in a pattern,
+          your slowest patterns show up here.
+        </p>
+      )}
+    </section>
+  );
+}
+
+export default function StatusPage({ game, username, title, completed, onOpen, onAddTime, onInterview }) {
   const pickRandom = () => {
     const q = drawRandom(username, completed);
     if (q) onOpen(q.id);
@@ -275,9 +360,11 @@ export default function StatusPage({ game, username, title, completed, onOpen, o
           {game.due.length > 0 && (
             <a href="#/reviews" className="btn border-gold/40 text-gold">{game.due.length} reviews due <ArrowRight size={14} /></a>
           )}
-          <button onClick={pickRandom} className="btn btn-sys"><Dices size={16} /> Random Gate</button>
+          <button onClick={pickRandom} className="btn"><Dices size={16} /> Random gate</button>
         </div>
       </header>
+
+      <TodaysGate game={game} completed={completed} onOpen={onOpen} onInterview={onInterview} />
 
       <div className="grid lg:grid-cols-12 gap-4 shrink-0 stagger">
         <HunterCard game={game} username={username} title={title} />
@@ -286,9 +373,10 @@ export default function StatusPage({ game, username, title, completed, onOpen, o
 
       <GuildStrip game={game} completed={completed} onOpen={onOpen} />
 
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-3 gap-4">
         <FocusDungeon todaySeconds={game.quest.today.seconds} onAddTime={onAddTime} />
         <Heatmap heatmap={game.heatmap} streak={game.streak} bestStreak={game.bestStreak} />
+        <TimeInsights slowest={game.slowest} />
       </div>
     </div>
   );

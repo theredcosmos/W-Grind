@@ -4,6 +4,7 @@ import { GUILDS, GUILD_QUESTIONS, DECKS } from '../lib/guilds';
 import { go } from '../lib/useHashRoute';
 import { tone } from '../lib/themes';
 import CardDeck from './CardDeck';
+import { LAST_GUILD_KEY } from '../lib/today';
 import { Bar } from './ui';
 
 const GuildCard = memo(function GuildCard({ guild, done, total }) {
@@ -14,6 +15,7 @@ const GuildCard = memo(function GuildCard({ guild, done, total }) {
       <div className="absolute inset-0" style={{ background: `radial-gradient(120% 70% at 50% 0%, ${c}33, transparent 60%), linear-gradient(180deg, var(--color-panel-2), var(--color-void))` }} />
       <div className="absolute inset-0 card-grid opacity-60" />
 
+      {total > 0 && done === total && <div className="seal">Cleared</div>}
       {guild.unique && (
         <div className="absolute top-4 right-4 flex items-center gap-1 pill" style={{ color: tone(c), background: `${c}1a` }}>
           <BadgeCheck size={12} /> UNIQUE
@@ -52,7 +54,7 @@ const GuildCard = memo(function GuildCard({ guild, done, total }) {
 });
 
 const keyOf = (g) => g.key;
-const LAST_KEY = 'lastGuild';
+const LAST_KEY = LAST_GUILD_KEY;
 
 export default function GuildsPage({ completed }) {
   const len = GUILDS.length;

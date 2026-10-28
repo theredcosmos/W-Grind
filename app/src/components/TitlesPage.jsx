@@ -1,6 +1,7 @@
 import { Check, Lock } from 'lucide-react';
 import { ACHIEVEMENT_ICONS } from '../lib/theme';
 import { Bar, PageHeader } from './ui';
+import Bestiary from './Bestiary';
 
 const GROUPS = [
   { name: 'Clears', metrics: ['solved', 'hard'] },
@@ -40,14 +41,21 @@ const Tile = ({ a, equipped, onEquip }) => {
   );
 };
 
-export default function TitlesPage({ achievements, equippedId, title, onEquip }) {
+export default function TitlesPage({ tab, achievements, equippedId, title, onEquip, completed, extras, onOpen }) {
+  const bestiary = tab === 'bestiary';
   const unlocked = achievements.filter((a) => a.unlocked).length;
   return (
     <div className="flex flex-col md:h-full min-h-0">
-      <PageHeader kicker="Hall of Titles" title="Titles & Achievements">
-        <div className="text-sm text-dim"><span className="text-ink font-semibold tabular">{unlocked}</span> / {achievements.length} earned</div>
+      <PageHeader kicker="Hall of Titles" title={bestiary ? 'Bestiary' : 'Titles & Achievements'}>
+        {!bestiary && <div className="text-sm text-dim"><span className="text-ink font-semibold tabular">{unlocked}</span> / {achievements.length} earned</div>}
       </PageHeader>
 
+      <div className="flex gap-2 mb-5 shrink-0 anim-rise">
+        <a href="#/titles" className="chip h-9" data-on={!bestiary}>Titles</a>
+        <a href="#/titles/bestiary" className="chip h-9" data-on={bestiary}>Bestiary</a>
+      </div>
+
+      {bestiary ? <Bestiary completed={completed} extras={extras} onOpen={onOpen} /> : (<>
       <div className="sys-window p-5 mb-5 flex items-center gap-4 shrink-0 anim-rise">
         <div className="sys-label">Equipped</div>
         <div className="sys-heading text-2xl text-hi glow-text truncate">{title}</div>
@@ -66,6 +74,7 @@ export default function TitlesPage({ achievements, equippedId, title, onEquip })
           </section>
         ))}
       </div>
+      </>)}
     </div>
   );
 }

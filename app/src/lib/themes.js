@@ -4,10 +4,10 @@ import { useCallback, useState } from 'react';
 export const THEMES = [
   { id: 'system', name: 'Abyssal Gate', note: 'Gate portal · mana motes', bg: '#04060c', panel: '#0e172d', accent: '#4cc2ff', ink: '#e6edf8', meta: '#04060c', font: "'Chakra Petch'" },
   { id: 'noir', name: 'Noir City', note: 'Skyline · searchlight · grain', bg: '#07080a', panel: '#18191d', accent: '#ffd60a', ink: '#e8e6e3', meta: '#07080a', font: "'Bebas Neue'" },
-  { id: 'sakura', name: 'Sakura', note: 'Blossoms · drifting petals', bg: '#fbf3f4', panel: '#ffffff', accent: '#c23a6c', ink: '#3a2430', meta: '#fbf3f4', font: "'Shippori Mincho B1'" },
+  { id: 'sakura', name: 'Sakura', note: 'Blossoms · drifting petals', bg: '#e6cfd6', panel: '#f8f0f3', accent: '#c23a6c', ink: '#3a2430', meta: '#e6cfd6', font: "'Shippori Mincho B1'" },
   { id: 'tide', name: 'Tide', note: 'Rolling ocean waves', bg: '#031a26', panel: '#0a3349', accent: '#3ee0d0', ink: '#dff6fb', meta: '#031a26', font: "'Sora'" },
   { id: 'aurora', name: 'Aurora', note: 'Northern lights · mountains', bg: '#060912', panel: '#121a30', accent: '#6ef2b4', ink: '#e7eefc', meta: '#060912', font: "'Space Grotesk'" },
-  { id: 'zen', name: 'Zen Paper', note: 'Still · ink on paper', bg: '#ebe6dc', panel: '#fffdf8', accent: '#22201c', ink: '#22201c', meta: '#ebe6dc', font: "'Instrument Serif'" },
+  { id: 'zen', name: 'Zen Paper', note: 'Still · ink on paper', bg: '#e0d9cb', panel: '#f5f1e8', accent: '#22201c', ink: '#22201c', meta: '#e0d9cb', font: "'Instrument Serif'" },
 ];
 
 // Themes from earlier builds that no longer exist.

@@ -4,6 +4,7 @@ import { DECKS, GUILD_BY_KEY, GUILD_QUESTIONS } from '../lib/guilds';
 import { RANK_COLOR, SECTION_ICONS } from '../lib/theme';
 import { go } from '../lib/useHashRoute';
 import { gateName } from '../lib/lore';
+import { LAST_GUILD_KEY } from '../lib/today';
 import { tone } from '../lib/themes';
 import CardDeck from './CardDeck';
 import GuildList from './GuildList';
@@ -30,6 +31,7 @@ const PatternCard = memo(function PatternCard({ pattern, done, guildColor }) {
       <div className="absolute inset-0" style={{ background: `radial-gradient(110% 60% at 50% 0%, ${rc}30, transparent 65%), linear-gradient(180deg, var(--color-panel-2), var(--color-void))` }} />
       <div className="absolute inset-0 card-grid opacity-50" />
       {Icon && <Icon className="absolute -right-10 top-16 opacity-[0.07] rotate-12" size={240} strokeWidth={1} style={{ color: tone(rc) }} />}
+      {pct === 100 && <div className="seal" aria-label="Gate cleared">Cleared</div>}
 
       <div className="relative h-full flex flex-col p-6 text-left">
         <div className="flex items-center justify-between">
@@ -87,6 +89,11 @@ export default function GuildDeck({ guildKey, openPattern, completed, dueIds, no
     try { localStorage.setItem(VIEW_KEY, v); } catch { /* private mode */ }
   };
   const q = useDeferredValue(query.trim().toLowerCase());
+
+  // Today's gate draws from the guild you were last in.
+  useEffect(() => {
+    try { localStorage.setItem(LAST_GUILD_KEY, guildKey); } catch { /* storage blocked */ }
+  }, [guildKey]);
 
   const openAt = useCallback((i) => go(`guilds/${guildKey}?p=${encodeURIComponent(deck[i].name)}`), [guildKey, deck]);
 

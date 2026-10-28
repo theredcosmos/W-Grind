@@ -28,6 +28,8 @@ const write = (key, value) => {
  *               keeps the login merge from resurrecting it, and restores date + reviews on re-solve
  *   notes       { questionId: string }
  *   trackedTime { 'YYYY-MM-DD': seconds }
+ *   extras      { hints: { id: date }, problemTime: { id: seconds }, interviews: { id: { date, seconds, solved } } }
+ *               (device-local: hint reveals cost XP, per-problem time, interview-mode results)
  * Writes to localStorage are debounced; the backend gets a debounced POST
  * instead of one request per click. Both are flushed on sign-out and tab close.
  */
@@ -45,6 +47,7 @@ export function useProgress(session, onExpired) {
   });
   const [notes, setNotes] = useState(() => read(key('notes'), {}));
   const [trackedTime, setTrackedTime] = useState(() => read(key('trackedTime'), {}));
+  const [extras, setExtras] = useState(() => ({ hints: {}, problemTime: {}, interviews: {}, ...read(key('extras'), {}) }));
   const { completed, reviews, removed } = solve;
   const hydrated = useRef(false);
   const token = session.mode === 'cloud' ? session.token : null;
@@ -52,8 +55,8 @@ export function useProgress(session, onExpired) {
   // Latest values for the flush-on-exit path (effects below can't see future renders).
   const latest = useRef(null);
   useEffect(() => {
-    latest.current = { completed, reviews, removed, notes, trackedTime };
-  }, [completed, reviews, removed, notes, trackedTime]);
+    latest.current = { completed, reviews, removed, notes, trackedTime, extras };
+  }, [completed, reviews, removed, notes, trackedTime, extras]);
 
   // Pull server state once per login and merge it in.
   useEffect(() => {
@@ -92,6 +95,7 @@ export function useProgress(session, onExpired) {
     write(userKey(username, 'removed'), s.removed);
     write(userKey(username, 'notes'), s.notes);
     write(userKey(username, 'trackedTime'), s.trackedTime);
+    write(userKey(username, 'extras'), s.extras);
   }, [username]);
 
   const push = useCallback((s, { keepalive = false } = {}) => fetch(`${API_URL}/sync`, {
@@ -102,9 +106,9 @@ export function useProgress(session, onExpired) {
   }), [token]);
 
   useEffect(() => {
-    const t = setTimeout(() => saveLocal({ completed, reviews, removed, notes, trackedTime }), 250);
+    const t = setTimeout(() => saveLocal({ completed, reviews, removed, notes, trackedTime, extras }), 250);
     return () => clearTimeout(t);
-  }, [completed, reviews, removed, notes, trackedTime, saveLocal]);
+  }, [completed, reviews, removed, notes, trackedTime, extras, saveLocal]);
 
   useEffect(() => {
     if (!token || !hydrated.current) return;
@@ -171,5 +175,58 @@ export function useProgress(session, onExpired) {
     setTrackedTime((prev) => ({ ...prev, [today]: (prev[today] || 0) + Math.round(seconds) }));
   }, []);
 
-  return { completed, reviews, notes, trackedTime, toggleSolved, markReviewed, setNote, addTime };
+  /** Mark solved without toggling (fight / interview "Done"); never un-solves. */
+  const markSolved = useCallback((id) => {
+    setSolve((prev) => {
+      if (prev.completed[id]) return prev;
+      const removedNext = { ...prev.removed };
+      delete removedNext[id];
+      return { ...prev, completed: { ...prev.completed, [id]: ymd() }, removed: removedNext };
+    });
+  }, []);
+
+  /**
+   * Solves found on LeetCode: { id: 'YYYY-MM-DD' }. Skips problems already ticked and problems
+   * you deliberately un-ticked here. Returns the ids actually added.
+   */
+  const importSolved = useCallback((found) => {
+    const cur = latest.current;
+    if (!cur) return [];
+    const added = Object.keys(found).filter((id) => !cur.completed[id] && !cur.removed[id]);
+    if (added.length) {
+      setSolve((prev) => {
+        const completedNext = { ...prev.completed };
+        for (const id of added) if (!completedNext[id] && !prev.removed[id]) completedNext[id] = found[id];
+        return { ...prev, completed: completedNext };
+      });
+    }
+    return added;
+  }, []);
+
+  const revealHint = useCallback((id) => {
+    setExtras((prev) => (prev.hints[id] ? prev : { ...prev, hints: { ...prev.hints, [id]: ymd() } }));
+  }, []);
+
+  /** Time spent fighting one problem; also counts toward today's focus time. */
+  const addProblemTime = useCallback((id, seconds) => {
+    const s = Math.round(seconds);
+    if (s <= 0) return;
+    setExtras((prev) => ({ ...prev, problemTime: { ...prev.problemTime, [id]: (prev.problemTime[id] || 0) + s } }));
+    const today = ymd();
+    setTrackedTime((prev) => ({ ...prev, [today]: (prev[today] || 0) + s }));
+  }, []);
+
+  const recordInterview = useCallback((id, seconds, solved) => {
+    setExtras((prev) => {
+      const best = prev.interviews[id];
+      // Keep the best attempt: a pass beats a fail, then the faster time.
+      if (best && (best.solved && !solved || best.solved === solved && best.seconds <= seconds)) return prev;
+      return { ...prev, interviews: { ...prev.interviews, [id]: { date: ymd(), seconds: Math.round(seconds), solved } } };
+    });
+  }, []);
+
+  return {
+    completed, reviews, notes, trackedTime, extras,
+    toggleSolved, markSolved, importSolved, markReviewed, setNote, addTime, revealHint, addProblemTime, recordInterview,
+  };
 }
