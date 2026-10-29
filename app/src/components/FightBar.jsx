@@ -1,10 +1,10 @@
-import { Check, Maximize2, Pause, Play, Swords, X } from 'lucide-react';
+import { Check, Maximize2, Pause, PictureInPicture2, Play, Swords, X } from 'lucide-react';
 import { BY_ID } from '../lib/data';
 import { INTERVIEW_SECONDS, clock, elapsedOf, useTick } from '../lib/fight';
 import { monsterOf } from '../lib/lore';
 
 // Floating timer for the problem you're fighting; follows you across pages.
-export default function FightBar({ fight, onPause, onResume, onDefeated, onRetreat, onExpand }) {
+export default function FightBar({ fight, onPause, onResume, onDefeated, onRetreat, onExpand, onPopOut }) {
   useTick(!!fight?.since);
   if (!fight) return null;
   const q = BY_ID.get(fight.id);
@@ -26,6 +26,11 @@ export default function FightBar({ fight, onPause, onResume, onDefeated, onRetre
           </div>
         </div>
         <div className="flex items-center gap-1 ml-1">
+          {onPopOut && (
+            <button onClick={onPopOut} className="grid place-items-center w-8 h-8 rounded-lg text-dim hover:text-ink hover:bg-ink/5" aria-label="Pop out" title="Pop out a floating window that stays on top of LeetCode">
+              <PictureInPicture2 size={15} />
+            </button>
+          )}
           {interview && (
             <button onClick={onExpand} className="grid place-items-center w-8 h-8 rounded-lg text-dim hover:text-ink hover:bg-ink/5" aria-label="Open interview mode" title="Open interview mode">
               <Maximize2 size={15} />

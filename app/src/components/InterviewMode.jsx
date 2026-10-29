@@ -1,39 +1,24 @@
-import { useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { Check, ExternalLink, Eye, Lightbulb, Lock, Minimize2, Pause, Play, X } from 'lucide-react';
-import manual from '../data/manual.json';
+import { Check, ExternalLink, Minimize2, Pause, PictureInPicture2, Play, X } from 'lucide-react';
 import { BY_ID } from '../lib/data';
-import { HINT_COST, INTERVIEW_XP } from '../lib/game';
-import { HINT_UNLOCK_SECONDS, INTERVIEW_SECONDS, clock, elapsedOf, useTick } from '../lib/fight';
+import { INTERVIEW_XP } from '../lib/game';
+import { INTERVIEW_SECONDS, clock, elapsedOf, useTick } from '../lib/fight';
+import { PHASES, phaseAt } from '../lib/interview';
 import { monsterOf } from '../lib/lore';
 import { useDialog } from '../lib/useDialog';
 import { DiffPill, Ring } from './ui';
+import HintLadder from './HintLadder';
+import { INTERVIEW_GATES } from '../data/hintGuides';
 
-// Phases come from the Codex: "How to solve a question in a live 45-min interview".
-const PHASES = (() => {
-  const rows = manual.antiBlank.rows.filter((r) => r[0].startsWith('3.'));
-  const phases = rows.map((r) => {
-    const m = r[1].match(/Min\s*(\d+)\s*[–-]\s*(\d+)\s*:?\s*(.*)/);
-    return m ? { from: +m[1], to: +m[2], title: m[3], say: r[3] } : null;
-  }).filter(Boolean);
-  phases.push({ from: 40, to: 45, title: 'Edge cases & wrap-up', say: 'Walk through empty input, one element, duplicates and the largest N. Then state time and space complexity.' });
-  return phases;
-})();
-
-export default function InterviewMode({ fight, solvedOn, hintRevealed, onRevealHint, onPause, onResume, onMinimize, onFinish }) {
+export default function InterviewMode({ fight, solvedOn, hintLevel, hintPaid, onRevealHint, onPause, onResume, onMinimize, onPopOut, onFinish }) {
   const dialogRef = useDialog();
   useTick(!!fight.since);
   const q = BY_ID.get(fight.id);
   const m = monsterOf(fight.id);
   const seconds = elapsedOf(fight);
   const left = INTERVIEW_SECONDS - seconds;
-  const minute = seconds / 60;
-  const phaseIndex = Math.max(0, PHASES.findIndex((p) => minute >= p.from && minute < p.to));
-  const current = minute >= 45 ? PHASES.length - 1 : phaseIndex;
-  const hintUnlocked = seconds >= HINT_UNLOCK_SECONDS;
-  const showHint = hintRevealed || !!solvedOn;
+  const current = phaseAt(seconds);
   const ringColor = left < 0 ? 'var(--color-hard)' : left < 5 * 60 ? 'var(--color-medium)' : 'var(--color-sys)';
-  const phases = useMemo(() => PHASES, []);
 
   return createPortal(
     <div className="fixed inset-0 z-50 grid place-items-center p-3 sm:p-6">
@@ -48,6 +33,11 @@ export default function InterviewMode({ fight, solvedOn, hintRevealed, onRevealH
               <DiffPill difficulty={q.difficulty} /> {m.name} · {m.kind}
             </div>
           </div>
+          {onPopOut && (
+            <button onClick={onPopOut} className="grid place-items-center w-9 h-9 rounded-lg text-dim hover:text-ink hover:bg-ink/5" aria-label="Pop out" title="Pop out a floating window that stays on top of LeetCode">
+              <PictureInPicture2 size={17} />
+            </button>
+          )}
           <button onClick={onMinimize} className="grid place-items-center w-9 h-9 rounded-lg text-dim hover:text-ink hover:bg-ink/5" aria-label="Minimise" title="Minimise (timer keeps running)">
             <Minimize2 size={17} />
           </button>
@@ -78,7 +68,7 @@ export default function InterviewMode({ fight, solvedOn, hintRevealed, onRevealH
 
           <div className="min-w-0 space-y-4">
             <ol className="space-y-2">
-              {phases.map((p, i) => {
+              {PHASES.map((p, i) => {
                 const state = i < current ? 'done' : i === current ? 'now' : 'next';
                 return (
                   <li key={p.title} className={`rounded-xl border px-4 py-3 transition-colors ${state === 'now' ? 'border-sys/60 bg-sys/[0.07]' : 'border-line'} ${state === 'done' ? 'opacity-55' : ''}`}>
@@ -92,21 +82,18 @@ export default function InterviewMode({ fight, solvedOn, hintRevealed, onRevealH
               })}
             </ol>
 
-            <div className="card p-4">
-              <div className="flex items-center gap-2 text-gold text-xs font-semibold uppercase tracking-wider mb-2">
-                <Lightbulb size={14} /> Hint
-              </div>
-              {showHint ? (
-                <p className="text-[13.5px] leading-relaxed">{q.trigger || '—'}</p>
-              ) : hintUnlocked ? (
-                <button onClick={() => onRevealHint(q.id)} className="btn"><Eye size={15} /> Reveal hint · −{HINT_COST} XP</button>
-              ) : (
-                <p className="text-[13px] text-dim flex items-center gap-2">
-                  <Lock size={14} /> Locked until 20:00. Strip the costume first: input, constraint, goal.
-                  <span className="ml-auto font-mono text-faint tabular">{clock(HINT_UNLOCK_SECONDS - seconds)}</span>
-                </p>
-              )}
-            </div>
+            <section>
+              <div className="sys-label mb-2">Hints</div>
+              <HintLadder
+                q={q}
+                level={hintLevel}
+                paid={hintPaid}
+                solved={!!solvedOn}
+                gates={INTERVIEW_GATES}
+                seconds={seconds}
+                onReveal={(n) => onRevealHint(q.id, n)}
+              />
+            </section>
           </div>
         </div>
       </div>
