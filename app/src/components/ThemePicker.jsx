@@ -7,14 +7,14 @@ import { InstallSettings, LeetCodeSettings, ReminderSettings } from './SettingsE
 
 // Miniature of the theme: its background, a panel, its accent and its heading font.
 const Preview = ({ t }) => (
-  <div className="relative h-[92px] rounded-lg overflow-hidden p-3 flex flex-col justify-between" style={{ background: t.bg }}>
-    <div className="absolute -right-6 -top-6 w-20 h-20 rounded-full" style={{ background: `radial-gradient(closest-side, ${t.accent}55, transparent)` }} />
-    <div className="relative text-[22px] leading-none" style={{ fontFamily: t.font, color: t.ink }}>Aa</div>
-    <div className="relative rounded-md px-2 py-1.5 flex items-center gap-2" style={{ background: t.panel, boxShadow: `inset 0 0 0 1px ${t.ink}14` }}>
+  <div className="relative h-[54px] rounded-md overflow-hidden p-2 flex flex-col justify-between" style={{ background: t.bg }}>
+    <div className="absolute -right-5 -top-5 w-14 h-14 rounded-full" style={{ background: `radial-gradient(closest-side, ${t.accent}55, transparent)` }} />
+    <div className="relative text-[15px] leading-none" style={{ fontFamily: t.font, color: t.ink }}>Aa</div>
+    <div className="relative rounded px-1.5 py-1 flex items-center gap-1.5" style={{ background: t.panel, boxShadow: `inset 0 0 0 1px ${t.ink}14` }}>
       <span className="h-1.5 flex-1 rounded-full" style={{ background: `${t.ink}1f` }}>
         <span className="block h-full w-3/5 rounded-full" style={{ background: t.accent }} />
       </span>
-      <span className="w-2.5 h-2.5 rounded-full" style={{ background: t.accent }} />
+      <span className="w-2 h-2 rounded-full" style={{ background: t.accent }} />
     </div>
   </div>
 );
@@ -51,7 +51,7 @@ export default function ThemePicker({ theme, onChange, motion, onMotion, onClose
         </div>
         <h2 className="sys-heading text-xl mb-4">Choose your world</h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
           {THEMES.map((t) => {
             const on = t.id === theme;
             return (
@@ -59,15 +59,13 @@ export default function ThemePicker({ theme, onChange, motion, onMotion, onClose
                 key={t.id}
                 onClick={() => onChange(t.id)}
                 aria-pressed={on}
-                className={`text-left rounded-xl border p-2 transition-colors ${on ? 'border-sys bg-sys/[0.06]' : 'border-line hover:border-line-strong'}`}
+                title={t.note}
+                className={`text-left rounded-lg border p-1.5 transition-colors ${on ? 'border-sys bg-sys/[0.06]' : 'border-line hover:border-line-strong'}`}
               >
                 <Preview t={t} />
-                <div className="flex items-center gap-2 px-1 pt-2 pb-0.5">
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[13px] font-semibold text-ink truncate">{t.name}</div>
-                    <div className="text-[11px] text-faint truncate">{t.note}</div>
-                  </div>
-                  {on && <Check size={16} className="text-sys shrink-0" />}
+                <div className="flex items-center gap-1 px-0.5 pt-1.5">
+                  <div className="min-w-0 flex-1 text-[12px] font-semibold text-ink truncate">{t.name}</div>
+                  {on && <Check size={14} className="text-sys shrink-0" />}
                 </div>
               </button>
             );

@@ -34,11 +34,12 @@ export function useCompanion() {
   const open = useCallback(() => {
     if (!companionSupported) return Promise.resolve(null);
     const existing = window.documentPictureInPicture.window;
-    if (existing) return Promise.resolve(existing);
+    if (existing) { setWin(existing); return Promise.resolve(existing); }
     return window.documentPictureInPicture.requestWindow({ width: 380, height: 600 })
       .then((w) => {
         w.document.title = 'W-Grind · fight';
         adoptStyles(w.document);
+        w.document.body.style.overflow = 'hidden'; // the companion scrolls inside its own panel
         const observer = mirrorRoot(w.document);
         w.addEventListener('pagehide', () => { observer.disconnect(); setWin(null); }, { once: true });
         setWin(w);
