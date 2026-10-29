@@ -67,6 +67,8 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const game = useMemo(() => computeGame({ completed, reviews, trackedTime, extras }), [completed, reviews, trackedTime, extras, today]);
   const dueIds = useMemo(() => new Set(game.due.map((d) => d.id)), [game.due]);
+  const dueRef = useRef(game.due);
+  useEffect(() => { dueRef.current = game.due; }, [game.due]);
   const equipped = game.achievements.find((a) => a.id === equippedId && a.unlocked);
   const title = equipped?.name || game.title;
 
@@ -132,12 +134,15 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
         : { text: solved ? `Solved “${q.title}”, but over the 45-minute limit. Run it again soon.` : `Interview ended after ${clock(result.seconds)}. The monster will be waiting.` });
     }
     if (solved) {
+      // Beating a problem whose spaced review is due counts as that review.
+      const dueReview = dueRef.current.find((d) => d.id === result.id);
       if (!completedRef.current[result.id]) onToggle(result.id);
+      else if (dueReview) onReview(result.id, dueReview.stage);
       else markSolved(result.id);
     } else if (result.mode === 'fight') {
       notify({ text: `Retreated from “${q.title}” after ${clock(result.seconds)}. Time logged.` });
     }
-  }, [addProblemTime, recordInterview, markSolved, onToggle]);
+  }, [addProblemTime, recordInterview, markSolved, onToggle, onReview]);
 
   const startFight = useCallback((id, mode = 'fight') => {
     if (fight) bankFight(finishFight(), false); // only one fight at a time: bank the previous one
@@ -255,6 +260,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
           interview={extras.interviews[openId]}
           fightId={fight?.id}
           onToggle={onToggle}
+          onReview={onReview}
           onNote={setNote}
           onClose={onClose}
           onRevealHint={onRevealHint}

@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, CheckCircle2, Circle, Dices, DoorOpen, Flame, Hourglass, Mic, Pause, Play, RotateCcw, Timer } from 'lucide-react';
 import { BY_ID, LISTS, LIST_KEYS } from '../lib/data';
-import { DAILY_QUESTS, QUEST_XP, RANKS } from '../lib/game';
+import { DAILY_QUESTS, QUEST_XP, RANKS, STAGE_LABEL } from '../lib/game';
 import { addDays, formatDuration, parseYmd, ymd } from '../lib/date';
 import { LIST_STYLE } from '../lib/theme';
 import { distinctNextTargets, drawRandom } from '../lib/random';
@@ -285,7 +285,7 @@ function TodaysGate({ game, completed, onOpen, onInterview }) {
           <div className="sys-label">Today's gate · re-entry</div>
           <div className="sys-heading text-lg leading-tight truncate mt-0.5">{q.title}</div>
           <div className="text-[12.5px] text-dim">
-            {t.item.stage === 'r7' ? '7-day' : '14-day'} review{t.count > 1 ? ` · ${t.count - 1} more waiting` : ''}. Re-solve it from scratch.
+            {STAGE_LABEL[t.item.stage]} review{t.count > 1 ? ` · ${t.count - 1} more waiting` : ''}. Re-solve it from scratch.
           </div>
         </div>
         <div className="flex gap-2">

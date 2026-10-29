@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { migrateCompleted } from './data';
+import { migrateReviews } from './game';
 import { ymd } from './date';
 import { API_URL, claimLegacyProgress, userKey } from './session';
 
@@ -23,7 +24,7 @@ const write = (key, value) => {
 /**
  * All user progress in one place.
  *   completed   { questionId: 'YYYY-MM-DD' }
- *   reviews     { questionId: { r7?: date, r14?: date } }
+ *   reviews     { questionId: { r1?: date, r2?: date } }  (4 days after solving, then 7 after that)
  *   removed     { questionId: { date, review } }  un-solved problems: tells the server to delete the row,
  *               keeps the login merge from resurrecting it, and restores date + reviews on re-solve
  *   notes       { questionId: string }
@@ -41,7 +42,7 @@ export function useProgress(session, onExpired) {
     claimLegacyProgress(username);
     return {
       completed: migrateCompleted(read(key('completedQuestions'), {})),
-      reviews: read(key('reviews'), {}),
+      reviews: migrateReviews(read(key('reviews'), {})),
       removed: read(key('removed'), {}),
     };
   });

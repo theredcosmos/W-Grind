@@ -7,6 +7,9 @@ export const THEMES = [
   { id: 'sakura', name: 'Sakura', note: 'Blossoms · drifting petals', bg: '#e6cfd6', panel: '#f8f0f3', accent: '#c23a6c', ink: '#3a2430', meta: '#e6cfd6', font: "'Shippori Mincho B1'" },
   { id: 'tide', name: 'Tide', note: 'Rolling ocean waves', bg: '#031a26', panel: '#0a3349', accent: '#3ee0d0', ink: '#dff6fb', meta: '#031a26', font: "'Sora'" },
   { id: 'aurora', name: 'Aurora', note: 'Northern lights · mountains', bg: '#060912', panel: '#121a30', accent: '#6ef2b4', ink: '#e7eefc', meta: '#060912', font: "'Space Grotesk'" },
+  { id: 'space', name: 'Deep Space', note: 'Ringed planet · shooting stars', bg: '#05030f', panel: '#151034', accent: '#c4a3ff', ink: '#ece8ff', meta: '#05030f', font: "'Exo 2'" },
+  { id: 'forest', name: 'Forest', note: 'Moonlit pines · fireflies', bg: '#050d09', panel: '#11251b', accent: '#c9ec6a', ink: '#e6efe2', meta: '#050d09', font: "'Fraunces'" },
+  { id: 'anime', name: 'Anime Sky', note: 'Summer clouds · power lines', bg: '#a9d0f3', panel: '#f7fbff', accent: '#d1365a', ink: '#1b2440', meta: '#74b4ee', font: "'M PLUS Rounded 1c'" },
   { id: 'zen', name: 'Zen Paper', note: 'Still · ink on paper', bg: '#e0d9cb', panel: '#f5f1e8', accent: '#22201c', ink: '#22201c', meta: '#e0d9cb', font: "'Instrument Serif'" },
 ];
 
