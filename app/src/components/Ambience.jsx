@@ -345,8 +345,8 @@ function Forest() {
 // ---------------------------------------------------------------- Anime Sky
 const Cloud = ({ style }) => (
   <svg className="amb-cloud" viewBox="0 0 320 140" style={style} aria-hidden="true">
-    <path d="M30 118 C 4 118 0 86 26 80 C 22 52 58 40 78 58 C 86 22 140 10 160 44 C 176 18 230 22 232 62 C 262 50 300 70 290 100 C 312 104 312 120 294 120 Z" fill="#ffffff" />
-    <path d="M30 118 C 70 108 250 108 294 120 Z" fill="#c9dcf2" fillOpacity="0.8" />
+    <path d="M30 118 C 4 118 0 86 26 80 C 22 52 58 40 78 58 C 86 22 140 10 160 44 C 176 18 230 22 232 62 C 262 50 300 70 290 100 C 312 104 312 120 294 120 Z" fill="#eef3f9" />
+    <path d="M30 118 C 70 108 250 108 294 120 Z" fill="#b6cbe2" fillOpacity="0.8" />
   </svg>
 );
 
