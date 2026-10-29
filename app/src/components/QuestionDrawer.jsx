@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDialog } from '../lib/useDialog';
-import { CalendarClock, Eye, ExternalLink, Lightbulb, Link2, Mic, Swords, Timer, X } from 'lucide-react';
+import { CalendarClock, ExternalLink, Mic, Swords, Timer, X } from 'lucide-react';
 import { BY_ID, DIFF_XP, LISTS } from '../lib/data';
-import { HINT_COST, REVIEW_XP, STAGE_LABEL, reviewState } from '../lib/game';
+import { REVIEW_XP, STAGE_LABEL, reviewState } from '../lib/game';
 import { clock } from '../lib/fight';
 import { prettyDate, ymd } from '../lib/date';
 import { LIST_STYLE } from '../lib/theme';
 import { Check, DiffPill } from './ui';
+import HintLadder from './HintLadder';
+import { PAID_RUNG } from '../data/hintGuides';
 import { floorOf, gateName, monsterOf } from '../lib/lore';
 import { tone } from '../lib/themes';
 
@@ -16,7 +18,7 @@ const groupIndex = Object.fromEntries(
 );
 
 export default function QuestionDrawer({
-  id, solvedOn, review, note, hintRevealed, timeSpent, interview, fightId,
+  id, solvedOn, review, note, hintLevel, hintPaid, timeSpent, interview, fightId,
   onToggle, onReview, onNote, onClose, onRevealHint, onStartFight, onStartInterview,
 }) {
   const q = BY_ID.get(id);
@@ -43,8 +45,8 @@ export default function QuestionDrawer({
   if (!q) return null;
   const next = solvedOn ? reviewState(solvedOn, review) : null;
   const reviewDue = next && next.due <= ymd();
-  // Hints are free once the monster is defeated; before that, revealing one costs XP.
-  const showHints = !!solvedOn || hintRevealed;
+  // The pattern name is part of the paid hint rung, so keep it hidden until then (or until solved).
+  const showHints = !!solvedOn || hintLevel >= PAID_RUNG;
   const fighting = fightId === q.id;
 
   return (
@@ -109,37 +111,16 @@ export default function QuestionDrawer({
             </div>
           )}
 
-          {showHints ? (
-            <>
-              <section className="card p-4">
-                <div className="flex items-center gap-2 text-gold text-xs font-semibold uppercase tracking-wider mb-2">
-                  <Lightbulb size={14} /> Spot this in the prompt
-                </div>
-                <p className="text-[14px] leading-relaxed text-ink/90">{q.trigger || '—'}</p>
-              </section>
-
-              <section className="card p-4">
-                <div className="flex items-center gap-2 text-sys text-xs font-semibold uppercase tracking-wider mb-2">
-                  <Link2 size={14} /> DSA elements & how they link
-                </div>
-                <p className="text-[14px] leading-relaxed text-ink/90">{q.linker || '—'}</p>
-                <div className="mt-3 text-xs text-faint">Core pattern: <span className="text-dim">{q.pattern}</span></div>
-              </section>
-            </>
-          ) : (
-            <section className="card p-4 border-dashed">
-              <div className="flex items-center gap-2 text-gold text-xs font-semibold uppercase tracking-wider mb-2">
-                <Lightbulb size={14} /> Hint sealed
-              </div>
-              <p className="text-[13.5px] leading-relaxed text-dim mb-3">
-                Try to spot the pattern yourself first: input type, constraint size, and what you're asked to return.
-                That's the skill interviews test.
-              </p>
-              <button onClick={() => onRevealHint(q.id)} className="btn">
-                <Eye size={15} /> Reveal hint · −{HINT_COST} XP
-              </button>
-            </section>
-          )}
+          <section>
+            <div className="sys-label mb-2">Hints</div>
+            <HintLadder
+              q={q}
+              level={hintLevel}
+              paid={hintPaid}
+              solved={!!solvedOn}
+              onReveal={(n) => onRevealHint(q.id, n)}
+            />
+          </section>
 
           {q.lists.length > 0 && (
             <section>

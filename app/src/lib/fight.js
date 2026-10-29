@@ -8,7 +8,6 @@ import { userKey } from './session';
  */
 
 export const INTERVIEW_SECONDS = 45 * 60;
-export const HINT_UNLOCK_SECONDS = 20 * 60;
 const MAX_GAP_MS = 2 * 60 * 1000; // a longer jump means the laptop slept: don't count it
 
 const read = (key) => {

@@ -29,7 +29,8 @@ const write = (key, value) => {
  *               keeps the login merge from resurrecting it, and restores date + reviews on re-solve
  *   notes       { questionId: string }
  *   trackedTime { 'YYYY-MM-DD': seconds }
- *   extras      { hints: { id: date }, problemTime: { id: seconds }, interviews: { id: { date, seconds, solved } } }
+ *   extras      { hints: { id: date }, hintLevel: { id: 0-4 }, problemTime: { id: seconds }, interviews: { id: { date, seconds, solved } } }
+ *               hints = the day the paid hint rung was first opened (costs XP once); hintLevel = rungs revealed
  *               (device-local: hint reveals cost XP, per-problem time, interview-mode results)
  * Writes to localStorage are debounced; the backend gets a debounced POST
  * instead of one request per click. Both are flushed on sign-out and tab close.
@@ -48,7 +49,7 @@ export function useProgress(session, onExpired) {
   });
   const [notes, setNotes] = useState(() => read(key('notes'), {}));
   const [trackedTime, setTrackedTime] = useState(() => read(key('trackedTime'), {}));
-  const [extras, setExtras] = useState(() => ({ hints: {}, problemTime: {}, interviews: {}, ...read(key('extras'), {}) }));
+  const [extras, setExtras] = useState(() => ({ hints: {}, hintLevel: {}, problemTime: {}, interviews: {}, ...read(key('extras'), {}) }));
   const { completed, reviews, removed } = solve;
   const hydrated = useRef(false);
   const token = session.mode === 'cloud' ? session.token : null;
@@ -204,8 +205,13 @@ export function useProgress(session, onExpired) {
     return added;
   }, []);
 
-  const revealHint = useCallback((id) => {
-    setExtras((prev) => (prev.hints[id] ? prev : { ...prev, hints: { ...prev.hints, [id]: ymd() } }));
+  /** Reveal hint rungs up to `level`; the first paid rung records the XP charge. */
+  const revealHint = useCallback((id, level, paidFrom) => {
+    setExtras((prev) => {
+      if ((prev.hintLevel[id] || 0) >= level) return prev;
+      const hints = level >= paidFrom && !prev.hints[id] ? { ...prev.hints, [id]: ymd() } : prev.hints;
+      return { ...prev, hints, hintLevel: { ...prev.hintLevel, [id]: level } };
+    });
   }, []);
 
   /** Time spent fighting one problem; also counts toward today's focus time. */

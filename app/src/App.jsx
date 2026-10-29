@@ -1,7 +1,9 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { BY_ID, DIFF_XP } from './lib/data';
 import { computeGame, HINT_COST, INTERVIEW_XP, QUEST_XP, REVIEW_XP } from './lib/game';
 import { INTERVIEW_SECONDS, clock, useFight } from './lib/fight';
+import { companionSupported, useCompanion } from './lib/companion';
 import { useLeetCodeSync } from './lib/leetcode';
 import { useReminder } from './lib/reminder';
 import { useInstall } from './lib/install';
@@ -26,6 +28,8 @@ import TitlesPage from './components/TitlesPage';
 import QuestionDrawer from './components/QuestionDrawer';
 import ThemePicker from './components/ThemePicker';
 import FightBar from './components/FightBar';
+import Companion from './components/Companion';
+import { PAID_RUNG } from './data/hintGuides';
 
 const Login = lazy(() => import('./components/Login'));
 const CodexPage = lazy(() => import('./components/CodexPage'));
@@ -56,6 +60,13 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
   } = progress;
   const { fight, start: startFightRaw, pause: pauseFight, resume: resumeFight, finish: finishFight } = useFight(username);
   const [interviewOpen, setInterviewOpen] = useState(true);
+  const companion = useCompanion();
+  const popOut = companionSupported && !companion.win ? companion.open : undefined;
+
+  // The companion only lives as long as the fight.
+  useEffect(() => {
+    if (!fight) companion.close();
+  }, [fight, companion]);
   const install = useInstall();
   const route = useHashRoute();
   const [openId, setOpenId] = useState(null);
@@ -117,10 +128,13 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
   const reminder = useReminder(username, { questDone: game.quest.done, dueCount: game.due.length });
 
   // ---- Hints, fights and interview mode
-  const onRevealHint = useCallback((id) => {
-    revealHint(id);
-    notify({ text: `Hint revealed for “${BY_ID.get(id)?.title}”. Next time, try spotting the pattern first.`, xp: -HINT_COST });
-  }, [revealHint]);
+  // Old builds stored only "hint revealed" (which showed the approach), so that counts as rung 2.
+  const hintLevelOf = (id) => Math.max(extras.hintLevel?.[id] || 0, extras.hints[id] ? PAID_RUNG : 0);
+  const onRevealHint = useCallback((id, level) => {
+    const charge = level >= PAID_RUNG && !extras.hints[id] && !completedRef.current[id];
+    revealHint(id, level, PAID_RUNG);
+    if (charge) notify({ text: `Approach revealed for “${BY_ID.get(id)?.title}”. Pseudocode and edge cases are free from here.`, xp: -HINT_COST });
+  }, [revealHint, extras.hints]);
 
   const bankFight = useCallback((result, solved) => {
     if (!result) return;
@@ -149,7 +163,11 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
     startFightRaw(id, mode);
     setInterviewOpen(true);
     setOpenId(null);
-  }, [fight, bankFight, finishFight, startFightRaw]);
+    // Chrome/Edge: a floating companion that stays on top of LeetCode (it has the problem link).
+    // Elsewhere: open the problem straight away; the in-app panel keeps the timer and hints.
+    if (companionSupported) companion.open();
+    else window.open(BY_ID.get(id)?.url, '_blank', 'noopener');
+  }, [fight, bankFight, finishFight, startFightRaw, companion]);
   const startInterview = useCallback((id) => startFight(id, 'interview'), [startFight]);
   const endFight = useCallback((solved) => bankFight(finishFight(), solved), [bankFight, finishFight]);
 
@@ -255,7 +273,8 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
           solvedOn={completed[openId]}
           review={reviews[openId]}
           note={notes[openId]}
-          hintRevealed={!!extras.hints[openId]}
+          hintLevel={hintLevelOf(openId)}
+          hintPaid={!!extras.hints[openId]}
           timeSpent={extras.problemTime[openId] || 0}
           interview={extras.interviews[openId]}
           fightId={fight?.id}
@@ -286,11 +305,13 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
           <InterviewMode
             fight={fight}
             solvedOn={completed[fight.id]}
-            hintRevealed={!!extras.hints[fight.id]}
+            hintLevel={hintLevelOf(fight.id)}
+            hintPaid={!!extras.hints[fight.id]}
             onRevealHint={onRevealHint}
             onPause={pauseFight}
             onResume={resumeFight}
             onMinimize={() => setInterviewOpen(false)}
+            onPopOut={popOut}
             onFinish={endFight}
           />
         </Suspense>
@@ -302,7 +323,21 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
           onDefeated={() => endFight(true)}
           onRetreat={() => endFight(false)}
           onExpand={() => setInterviewOpen(true)}
+          onPopOut={popOut}
         />
+      )}
+      {fight && companion.win && createPortal(
+        <Companion
+          fight={fight}
+          solvedOn={completed[fight.id]}
+          hintLevel={hintLevelOf(fight.id)}
+          hintPaid={!!extras.hints[fight.id]}
+          onRevealHint={onRevealHint}
+          onPause={pauseFight}
+          onResume={resumeFight}
+          onFinish={endFight}
+        />,
+        companion.win.document.body,
       )}
       <SystemLayer />
     </>
