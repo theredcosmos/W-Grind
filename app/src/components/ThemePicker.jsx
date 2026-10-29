@@ -77,7 +77,7 @@ export default function ThemePicker({ theme, onChange, motion, onMotion, onClose
         <div className="mt-5 flex items-center gap-4 card px-4 py-3">
           <div className="min-w-0 flex-1">
             <div className="text-sm font-semibold">Ambient motion</div>
-            <div className="text-xs text-dim">Drifting petals, waves, rain and lights. Turn off for a completely still screen.</div>
+            <div className="text-xs text-dim">Drifting petals, waves, rain, clouds, fireflies and lights. Turn off for a completely still screen.</div>
           </div>
           <Switch on={motion} onChange={onMotion} label="Ambient motion" />
         </div>

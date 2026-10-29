@@ -53,15 +53,27 @@ const questDone = (day) => {
   return DAILY_QUESTS.every((q) => p[q.id] >= q.target);
 };
 
-/** Review schedule for one solved problem: 7 days after solving, then 14. */
+/**
+ * Review schedule for one solved problem, so it gets solved three times in all:
+ * first review 4 days after solving (r1), second review 7 days after the first (r2).
+ */
+export const REVIEW_STAGES = ['r1', 'r2'];
+export const STAGE_LABEL = { r1: '4-day', r2: '7-day' };
 export const reviewState = (solvedOn, rev = {}) => {
-  if (!rev.r7) return { stage: 'r7', due: addDays(solvedOn, 7) };
-  if (!rev.r14) {
-    const due = addDays(solvedOn, 14);
-    const gap = addDays(rev.r7, 7);
-    return { stage: 'r14', due: due > gap ? due : gap };
-  }
+  if (!rev.r1) return { stage: 'r1', due: addDays(solvedOn, 4) };
+  if (!rev.r2) return { stage: 'r2', due: addDays(rev.r1, 7) };
   return null;
+};
+
+/** Earlier builds stored the 7-day and 14-day reviews as r7 / r14: they become review 1 / review 2. */
+export const migrateReviews = (raw) => {
+  const out = {};
+  for (const [id, rev] of Object.entries(raw || {})) {
+    const r1 = rev.r1 || rev.r7;
+    const r2 = rev.r2 || rev.r14;
+    out[id] = { ...(r1 && { r1 }), ...(r2 && { r2 }) };
+  }
+  return out;
 };
 
 export const ACHIEVEMENTS = [
@@ -116,7 +128,7 @@ export function computeGame({ completed, reviews, trackedTime, extras = { hints:
   const upcoming = [];
   for (const id of solvedIds) {
     const rev = reviews[id] || {};
-    for (const stage of ['r7', 'r14']) {
+    for (const stage of REVIEW_STAGES) {
       if (rev[stage]) { reviewsDone++; day(rev[stage]).reviews++; }
     }
     const state = reviewState(completed[id], rev);

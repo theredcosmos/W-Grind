@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useDialog } from '../lib/useDialog';
 import { CalendarClock, Eye, ExternalLink, Lightbulb, Link2, Mic, Swords, Timer, X } from 'lucide-react';
 import { BY_ID, DIFF_XP, LISTS } from '../lib/data';
-import { HINT_COST, reviewState } from '../lib/game';
+import { HINT_COST, REVIEW_XP, STAGE_LABEL, reviewState } from '../lib/game';
 import { clock } from '../lib/fight';
-import { prettyDate } from '../lib/date';
+import { prettyDate, ymd } from '../lib/date';
 import { LIST_STYLE } from '../lib/theme';
 import { Check, DiffPill } from './ui';
 import { floorOf, gateName, monsterOf } from '../lib/lore';
@@ -17,7 +17,7 @@ const groupIndex = Object.fromEntries(
 
 export default function QuestionDrawer({
   id, solvedOn, review, note, hintRevealed, timeSpent, interview, fightId,
-  onToggle, onNote, onClose, onRevealHint, onStartFight, onStartInterview,
+  onToggle, onReview, onNote, onClose, onRevealHint, onStartFight, onStartInterview,
 }) {
   const q = BY_ID.get(id);
   const [draft, setDraft] = useState(note || '');
@@ -42,6 +42,7 @@ export default function QuestionDrawer({
 
   if (!q) return null;
   const next = solvedOn ? reviewState(solvedOn, review) : null;
+  const reviewDue = next && next.due <= ymd();
   // Hints are free once the monster is defeated; before that, revealing one costs XP.
   const showHints = !!solvedOn || hintRevealed;
   const fighting = fightId === q.id;
@@ -77,9 +78,16 @@ export default function QuestionDrawer({
             <a href={q.url} target="_blank" rel="noopener noreferrer" className="btn btn-sys flex-1 h-11">
               Enter Gate <ExternalLink size={15} />
             </a>
-            <button onClick={() => onToggle(q.id)} className="btn h-11 group">
-              <Check on={!!solvedOn} /> {solvedOn ? 'Cleared' : 'Mark cleared'}
-            </button>
+            {/* A due review is finished here, not by toggling "Cleared" (that would un-solve it). */}
+            {reviewDue ? (
+              <button onClick={() => onReview(q.id, next.stage)} className="btn h-11">
+                <Check on={false} /> Review done · +{REVIEW_XP} XP
+              </button>
+            ) : (
+              <button onClick={() => onToggle(q.id)} className="btn h-11 group">
+                <Check on={!!solvedOn} /> {solvedOn ? 'Cleared' : 'Mark cleared'}
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -166,7 +174,7 @@ export default function QuestionDrawer({
                 <div>Cleared on <span className="text-ink font-medium">{prettyDate(solvedOn)}</span></div>
                 <div className="text-dim mt-0.5">
                   {next
-                    ? `${next.stage === 'r7' ? '7-day' : '14-day'} review due ${prettyDate(next.due)}`
+                    ? `${STAGE_LABEL[next.stage]} review ${reviewDue ? 'due now' : `due ${prettyDate(next.due)}`}`
                     : 'Both spaced reviews done — locked into long-term memory.'}
                 </div>
               </div>

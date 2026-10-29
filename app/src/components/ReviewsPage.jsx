@@ -1,5 +1,5 @@
 import { CalendarCheck, ExternalLink, Lightbulb } from 'lucide-react';
-import { REVIEW_XP } from '../lib/game';
+import { REVIEW_XP, STAGE_LABEL } from '../lib/game';
 import { prettyDate } from '../lib/date';
 import { DiffPill, Empty, PageHeader } from './ui';
 
@@ -9,7 +9,7 @@ function ReviewCard({ item, note, onReview, onOpen }) {
     <div className="card p-4 flex flex-col sm:flex-row sm:items-center gap-4">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="pill bg-gold/10 text-gold">{item.stage === 'r7' ? '7-DAY' : '14-DAY'}</span>
+          <span className="pill bg-gold/10 text-gold">{STAGE_LABEL[item.stage].toUpperCase()}</span>
           <DiffPill difficulty={q.difficulty} />
           {item.overdue > 0 && <span className="text-[11px] text-hard">{item.overdue}d overdue</span>}
         </div>
@@ -32,14 +32,14 @@ export default function ReviewsPage({ due, upcoming, notes, onReview, onOpen }) 
     <div className="flex flex-col md:h-full min-h-0">
       <PageHeader kicker="Re-entry Queue" title="Spaced Reviews" />
       <p className="text-dim text-sm max-w-2xl -mt-3 mb-5 shrink-0 anim-rise">
-        Solving once builds episodic memory. Re-entering a cleared dungeon 7 and 14 days later builds trigger memory,
+        Solving once builds episodic memory. Re-entering a cleared dungeon 4 days later, then 7 days after that, builds trigger memory,
         the part that fires in an interview. Re-solve from scratch, then mark it done.
       </p>
 
       <div className="flex-1 min-h-0 overflow-y-auto scroll-thin -mx-1 px-1 pb-2">
       <h2 className="sys-label mb-3">Due now · {due.length}</h2>
       {due.length === 0 ? (
-        <Empty icon={CalendarCheck} title="Queue clear">Nothing to review today. Clear new problems and they will come back here in 7 days.</Empty>
+        <Empty icon={CalendarCheck} title="Queue clear">Nothing to review today. Clear new problems and they will come back here in 4 days.</Empty>
       ) : (
         <div className="space-y-2.5 stagger">
           {due.map((item) => (
@@ -56,7 +56,7 @@ export default function ReviewsPage({ due, upcoming, notes, onReview, onOpen }) 
               <button key={item.id + item.stage} onClick={() => onOpen(item.id)} className="w-full flex items-center gap-3 px-4 h-12 text-left hover:bg-ink/[0.02]">
                 <span className="text-xs text-dim w-16 tabular">{prettyDate(item.due)}</span>
                 <span className="text-sm flex-1 truncate">{item.q.title}</span>
-                <span className="text-[11px] text-faint">{item.stage === 'r7' ? '7-day' : '14-day'}</span>
+                <span className="text-[11px] text-faint">{STAGE_LABEL[item.stage]}</span>
               </button>
             ))}
           </div>
