@@ -5,7 +5,6 @@ import { INTERVIEW_SECONDS, clock, elapsedOf, useTick } from '../lib/fight';
 import { PHASES, phaseAt } from '../lib/interview';
 import { DiffPill } from './ui';
 import HintLadder from './HintLadder';
-import { INTERVIEW_GATES } from '../data/hintGuides';
 
 /*
  * Contents of the floating fight companion (lib/companion.js). Built for focus: one big clock,
@@ -64,7 +63,7 @@ const PillButton = ({ label, onClick, danger = false, children }) => (
   </button>
 );
 
-export default function Companion({ fight, solvedOn, hintLevel, hintPaid, onRevealHint, onPause, onResume, onFinish }) {
+export default function Companion({ fight, hintOpened, onRevealHint, onPause, onResume, onFinish }) {
   useTick(!!fight.since);
   const [opened, setOpened] = useState(false);
   const [mini, setMini] = useState(false);
@@ -151,10 +150,7 @@ export default function Companion({ fight, solvedOn, hintLevel, hintPaid, onReve
         <div className="sys-label mb-2">Hints</div>
         <HintLadder
           q={q}
-          level={hintLevel}
-          paid={hintPaid}
-          solved={!!solvedOn}
-          gates={interview ? INTERVIEW_GATES : null}
+          opened={hintOpened}
           seconds={seconds}
           onReveal={(n) => onRevealHint(q.id, n)}
           compact

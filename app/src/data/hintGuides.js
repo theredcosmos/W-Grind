@@ -674,10 +674,13 @@ export const HINT_GUIDES = {
   },
 };
 
-// The first rung that costs XP (Approach); everything before it is free.
-export const PAID_RUNG = 2;
-// Interview mode only: when each rung unlocks (seconds into the 45 minutes).
-export const INTERVIEW_GATES = [0, 10 * 60, 20 * 60, 30 * 60];
+// Seconds into a fight / interview at which each rung opens by itself (all four within 15 minutes).
+// Opening one before its time costs XP (unless the problem is already solved).
+export const HINT_GATES = [4 * 60, 8 * 60, 12 * 60, 15 * 60];
+// The rung that also reveals the pattern name (shown in the drawer header once it is open).
+export const PATTERN_RUNG = 2;
+/** How many rungs the clock has opened after `seconds`. */
+export const timeLevel = (seconds) => HINT_GATES.filter((g) => seconds >= g).length;
 
 // Pattern labels in questions.json that were cut off at a "/" or "-" and say nothing on their own.
 const USABLE_PATTERN = (p) => p && p.length > 3 && !/^\d+$/.test(p);

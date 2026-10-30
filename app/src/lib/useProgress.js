@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { migrateCompleted } from './data';
-import { migrateReviews } from './game';
+import { HINT_COST, migrateReviews } from './game';
 import { ymd } from './date';
 import { API_URL, claimLegacyProgress, userKey } from './session';
 
@@ -29,8 +29,8 @@ const write = (key, value) => {
  *               keeps the login merge from resurrecting it, and restores date + reviews on re-solve
  *   notes       { questionId: string }
  *   trackedTime { 'YYYY-MM-DD': seconds }
- *   extras      { hints: { id: date }, hintLevel: { id: 0-4 }, problemTime: { id: seconds }, interviews: { id: { date, seconds, solved } } }
- *               hints = the day the paid hint rung was first opened (costs XP once); hintLevel = rungs revealed
+ *   extras      { hints: { id: date }, hintXp: { id: xp }, problemTime: { id: seconds }, interviews: { id: { date, seconds, solved } } }
+ *               hints = the day a hint was first opened early; hintXp = total XP spent opening hints early
  *               (device-local: hint reveals cost XP, per-problem time, interview-mode results)
  * Writes to localStorage are debounced; the backend gets a debounced POST
  * instead of one request per click. Both are flushed on sign-out and tab close.
@@ -49,7 +49,7 @@ export function useProgress(session, onExpired) {
   });
   const [notes, setNotes] = useState(() => read(key('notes'), {}));
   const [trackedTime, setTrackedTime] = useState(() => read(key('trackedTime'), {}));
-  const [extras, setExtras] = useState(() => ({ hints: {}, hintLevel: {}, problemTime: {}, interviews: {}, ...read(key('extras'), {}) }));
+  const [extras, setExtras] = useState(() => ({ hints: {}, hintXp: {}, problemTime: {}, interviews: {}, ...read(key('extras'), {}) }));
   const { completed, reviews, removed } = solve;
   const hydrated = useRef(false);
   const token = session.mode === 'cloud' ? session.token : null;
@@ -205,12 +205,16 @@ export function useProgress(session, onExpired) {
     return added;
   }, []);
 
-  /** Reveal hint rungs up to `level`; the first paid rung records the XP charge. */
-  const revealHint = useCallback((id, level, paidFrom) => {
+  /** Record XP spent opening a hint rung early. Which rungs are open is session state (App). */
+  const chargeHint = useCallback((id, xp) => {
     setExtras((prev) => {
-      if ((prev.hintLevel[id] || 0) >= level) return prev;
-      const hints = level >= paidFrom && !prev.hints[id] ? { ...prev.hints, [id]: ymd() } : prev.hints;
-      return { ...prev, hints, hintLevel: { ...prev.hintLevel, [id]: level } };
+      // A problem charged under the old one-off rule already paid HINT_COST once.
+      const before = prev.hintXp?.[id] ?? (prev.hints[id] ? HINT_COST : 0);
+      return {
+        ...prev,
+        hints: prev.hints[id] ? prev.hints : { ...prev.hints, [id]: ymd() },
+        hintXp: { ...prev.hintXp, [id]: before + xp },
+      };
     });
   }, []);
 
@@ -234,6 +238,6 @@ export function useProgress(session, onExpired) {
 
   return {
     completed, reviews, notes, trackedTime, extras,
-    toggleSolved, markSolved, importSolved, markReviewed, setNote, addTime, revealHint, addProblemTime, recordInterview,
+    toggleSolved, markSolved, importSolved, markReviewed, setNote, addTime, chargeHint, addProblemTime, recordInterview,
   };
 }
