@@ -4,7 +4,7 @@ import { BY_ID, DIFF_XP, LISTS, LIST_KEYS, QUESTIONS, SECTIONS } from './data';
 import { addDays, daysBetween, ymd } from './date';
 
 export const REVIEW_XP = 20;
-export const HINT_COST = 10; // revealing a hint before you've spotted the pattern yourself
+export const HINT_COST = 10; // opening one hint rung before its time (see HINT_GATES)
 export const INTERVIEW_XP = 60; // solving inside interview mode's 45 minutes
 export const QUEST_XP = 100;
 
@@ -191,10 +191,12 @@ export function computeGame({ completed, reviews, trackedTime, extras = { hints:
   }));
   const achievementXp = achievements.reduce((sum, a) => sum + (a.unlocked ? a.xp : 0), 0);
 
+  // Each hint rung opened early costs HINT_COST (hintXp); older saves only recorded one charge per problem.
   const hintsUsed = Object.keys(extras.hints).length;
+  const hintXp = Object.keys(extras.hints).reduce((sum, id) => sum + (extras.hintXp?.[id] ?? HINT_COST), 0);
   const interviewsPassed = Object.values(extras.interviews).filter((i) => i.solved).length;
   const xp = Math.max(0, solvedXp + reviewsDone * REVIEW_XP + questDays * QUEST_XP + achievementXp
-    + interviewsPassed * INTERVIEW_XP - hintsUsed * HINT_COST);
+    + interviewsPassed * INTERVIEW_XP - hintXp);
 
   // Average fight time per solved problem, per pattern (only patterns with at least 2 timed solves).
   const timeBySection = new Map();

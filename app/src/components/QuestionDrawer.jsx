@@ -8,7 +8,7 @@ import { prettyDate, ymd } from '../lib/date';
 import { LIST_STYLE } from '../lib/theme';
 import { Check, DiffPill } from './ui';
 import HintLadder from './HintLadder';
-import { PAID_RUNG } from '../data/hintGuides';
+import { PATTERN_RUNG, timeLevel } from '../data/hintGuides';
 import { floorOf, gateName, monsterOf } from '../lib/lore';
 import { tone } from '../lib/themes';
 
@@ -18,7 +18,7 @@ const groupIndex = Object.fromEntries(
 );
 
 export default function QuestionDrawer({
-  id, solvedOn, review, note, hintLevel, hintPaid, timeSpent, interview, fightId,
+  id, solvedOn, review, note, hintOpened, fightSeconds, timeSpent, interview, fightId,
   onToggle, onReview, onNote, onClose, onRevealHint, onStartFight, onStartInterview,
 }) {
   const q = BY_ID.get(id);
@@ -45,8 +45,8 @@ export default function QuestionDrawer({
   if (!q) return null;
   const next = solvedOn ? reviewState(solvedOn, review) : null;
   const reviewDue = next && next.due <= ymd();
-  // The pattern name is part of the paid hint rung, so keep it hidden until then (or until solved).
-  const showHints = !!solvedOn || hintLevel >= PAID_RUNG;
+  // The pattern name is part of the Approach rung, so keep it hidden until that is open (or solved).
+  const showHints = !!solvedOn || Math.max(hintOpened, timeLevel(fightSeconds)) >= PATTERN_RUNG;
   const fighting = fightId === q.id;
 
   return (
@@ -115,9 +115,8 @@ export default function QuestionDrawer({
             <div className="sys-label mb-2">Hints</div>
             <HintLadder
               q={q}
-              level={hintLevel}
-              paid={hintPaid}
-              solved={!!solvedOn}
+              opened={hintOpened}
+              seconds={fightSeconds}
               onReveal={(n) => onRevealHint(q.id, n)}
             />
           </section>

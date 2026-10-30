@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } fro
 import { createPortal } from 'react-dom';
 import { BY_ID, DIFF_XP } from './lib/data';
 import { computeGame, HINT_COST, INTERVIEW_XP, QUEST_XP, REVIEW_XP } from './lib/game';
-import { INTERVIEW_SECONDS, clock, useFight } from './lib/fight';
+import { INTERVIEW_SECONDS, clock, elapsedOf, useFight } from './lib/fight';
 import { companionSupported, useCompanion } from './lib/companion';
 import { useLeetCodeSync } from './lib/leetcode';
 import { useReminder } from './lib/reminder';
@@ -29,7 +29,6 @@ import QuestionDrawer from './components/QuestionDrawer';
 import ThemePicker from './components/ThemePicker';
 import FightBar from './components/FightBar';
 import Companion from './components/Companion';
-import { PAID_RUNG } from './data/hintGuides';
 
 const Login = lazy(() => import('./components/Login'));
 const CodexPage = lazy(() => import('./components/CodexPage'));
@@ -56,7 +55,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
   const openSettings = useCallback(() => setSettingsOpen(true), []);
   const {
     completed, reviews, notes, trackedTime, extras,
-    toggleSolved, markSolved, importSolved, markReviewed, setNote, addTime, revealHint, addProblemTime, recordInterview,
+    toggleSolved, markSolved, importSolved, markReviewed, setNote, addTime, chargeHint, addProblemTime, recordInterview,
   } = progress;
   const { fight, start: startFightRaw, pause: pauseFight, resume: resumeFight, finish: finishFight } = useFight(username);
   const [interviewOpen, setInterviewOpen] = useState(true);
@@ -128,13 +127,14 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
   const reminder = useReminder(username, { questDone: game.quest.done, dueCount: game.due.length });
 
   // ---- Hints, fights and interview mode
-  // Old builds stored only "hint revealed" (which showed the approach), so that counts as rung 2.
-  const hintLevelOf = (id) => Math.max(extras.hintLevel?.[id] || 0, extras.hints[id] ? PAID_RUNG : 0);
+  // Hint rungs opened early, per problem. Session-only: every new fight starts with hints closed,
+  // and the clock (HINT_GATES) opens them again.
+  const [openedHints, setOpenedHints] = useState({});
   const onRevealHint = useCallback((id, level) => {
-    const charge = level >= PAID_RUNG && !extras.hints[id] && !completedRef.current[id];
-    revealHint(id, level, PAID_RUNG);
-    if (charge) notify({ text: `Approach revealed for “${BY_ID.get(id)?.title}”. Pseudocode and edge cases are free from here.`, xp: -HINT_COST });
-  }, [revealHint, extras.hints]);
+    setOpenedHints((prev) => ({ ...prev, [id]: Math.max(prev[id] || 0, level) }));
+    chargeHint(id, HINT_COST);
+    notify({ text: `Hint opened early for “${BY_ID.get(id)?.title}”. Next time, give it a few more minutes first.`, xp: -HINT_COST });
+  }, [chargeHint]);
 
   const bankFight = useCallback((result, solved) => {
     if (!result) return;
@@ -161,6 +161,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
   const startFight = useCallback((id, mode = 'fight') => {
     if (fight) bankFight(finishFight(), false); // only one fight at a time: bank the previous one
     startFightRaw(id, mode);
+    setOpenedHints((prev) => ({ ...prev, [id]: 0 }));
     setInterviewOpen(true);
     setOpenId(null);
     // Chrome/Edge: a floating companion that stays on top of LeetCode (it has the problem link).
@@ -273,8 +274,8 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
           solvedOn={completed[openId]}
           review={reviews[openId]}
           note={notes[openId]}
-          hintLevel={hintLevelOf(openId)}
-          hintPaid={!!extras.hints[openId]}
+          hintOpened={openedHints[openId] || 0}
+          fightSeconds={fight?.id === openId ? elapsedOf(fight) : 0}
           timeSpent={extras.problemTime[openId] || 0}
           interview={extras.interviews[openId]}
           fightId={fight?.id}
@@ -304,9 +305,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
         <Suspense fallback={null}>
           <InterviewMode
             fight={fight}
-            solvedOn={completed[fight.id]}
-            hintLevel={hintLevelOf(fight.id)}
-            hintPaid={!!extras.hints[fight.id]}
+            hintOpened={openedHints[fight.id] || 0}
             onRevealHint={onRevealHint}
             onPause={pauseFight}
             onResume={resumeFight}
@@ -329,9 +328,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
       {fight && companion.win && createPortal(
         <Companion
           fight={fight}
-          solvedOn={completed[fight.id]}
-          hintLevel={hintLevelOf(fight.id)}
-          hintPaid={!!extras.hints[fight.id]}
+          hintOpened={openedHints[fight.id] || 0}
           onRevealHint={onRevealHint}
           onPause={pauseFight}
           onResume={resumeFight}

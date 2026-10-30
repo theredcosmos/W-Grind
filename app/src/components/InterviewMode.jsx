@@ -8,9 +8,8 @@ import { monsterOf } from '../lib/lore';
 import { useDialog } from '../lib/useDialog';
 import { DiffPill, Ring } from './ui';
 import HintLadder from './HintLadder';
-import { INTERVIEW_GATES } from '../data/hintGuides';
 
-export default function InterviewMode({ fight, solvedOn, hintLevel, hintPaid, onRevealHint, onPause, onResume, onMinimize, onPopOut, onFinish }) {
+export default function InterviewMode({ fight, hintOpened, onRevealHint, onPause, onResume, onMinimize, onPopOut, onFinish }) {
   const dialogRef = useDialog();
   useTick(!!fight.since);
   const q = BY_ID.get(fight.id);
@@ -86,10 +85,7 @@ export default function InterviewMode({ fight, solvedOn, hintLevel, hintPaid, on
               <div className="sys-label mb-2">Hints</div>
               <HintLadder
                 q={q}
-                level={hintLevel}
-                paid={hintPaid}
-                solved={!!solvedOn}
-                gates={INTERVIEW_GATES}
+                opened={hintOpened}
                 seconds={seconds}
                 onReveal={(n) => onRevealHint(q.id, n)}
               />
