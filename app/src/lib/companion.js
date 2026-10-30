@@ -35,7 +35,9 @@ export function useCompanion() {
     if (!companionSupported) return Promise.resolve(null);
     const existing = window.documentPictureInPicture.window;
     if (existing) { setWin(existing); return Promise.resolve(existing); }
-    return window.documentPictureInPicture.requestWindow({ width: 380, height: 600 })
+    // preferInitialWindowPlacement: the browser otherwise reuses the window's last size, and since
+    // it usually closes as the small pill, the next fight would open the full panel squeezed into it.
+    return window.documentPictureInPicture.requestWindow({ width: 380, height: 600, preferInitialWindowPlacement: true })
       .then((w) => {
         w.document.title = 'W-Grind · fight';
         adoptStyles(w.document);

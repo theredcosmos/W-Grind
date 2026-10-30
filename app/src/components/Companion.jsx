@@ -13,7 +13,9 @@ import HintLadder from './HintLadder';
  * pill (unlit bulb, timer, pause, quit). Opening LeetCode from here shrinks it automatically. Click
  * the pill's bulb to get the full panel back at its normal size.
  */
-const PILL = [228, 76]; // outer size, including the browser's title bar
+// Outer size, including the browser's title bar. Browsers enforce a minimum, so the pill fills the
+// whole window rather than floating inside it.
+const PILL = [200, 60];
 const FULL = [380, 600]; // the size it opens at (lib/companion.js)
 
 // Resize the floating window itself (allowed during a click). The in-page fallback ignores it.
@@ -80,8 +82,8 @@ export default function Companion({ fight, hintOpened, onRevealHint, onPause, on
 
   if (mini) {
     return (
-      <div className="h-screen grid place-items-center px-1.5 text-ink">
-        <div className="w-full h-10 rounded-full border border-line bg-panel flex items-center gap-1 px-1.5">
+      <div className="h-screen bg-panel text-ink flex items-center">
+        <div className="w-full flex items-center gap-1 px-1.5">
           <Bulb on={false} onClick={restore} small />
           <span className={`font-mono text-[15px] leading-none tabular px-1 ${clockTone}`} title={interview ? 'Time left' : 'Time fighting'}>
             {interview ? clock(Math.abs(left)) : clock(seconds)}
