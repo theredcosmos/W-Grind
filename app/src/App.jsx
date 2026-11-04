@@ -240,7 +240,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
       );
       break;
     case 'codex':
-      page = <CodexPage tab={route.arg} />;
+      page = <CodexPage tab={route.arg} section={route.params.get('s')} />;
       break;
     default:
       page = <StatusPage game={game} username={username} title={title} completed={completed} onOpen={setOpenId} onAddTime={addTime} onInterview={startInterview} />;
