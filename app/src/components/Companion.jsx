@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Check, ExternalLink, Mic, Pause, Play, Swords, X } from 'lucide-react';
 import { BY_ID } from '../lib/data';
 import { INTERVIEW_SECONDS, clock, elapsedOf, useTick } from '../lib/fight';
@@ -54,6 +54,17 @@ const Bulb = ({ on, onClick, small = false }) => (
   </button>
 );
 
+// Quitting ends the fight, so it takes two taps: the first arms it for 3 seconds.
+function useConfirm(action) {
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (!armed) return undefined;
+    const t = setTimeout(() => setArmed(false), 3000);
+    return () => clearTimeout(t);
+  }, [armed]);
+  return [armed, () => (armed ? action() : setArmed(true))];
+}
+
 const PillButton = ({ label, onClick, danger = false, children }) => (
   <button
     onClick={onClick}
@@ -65,8 +76,9 @@ const PillButton = ({ label, onClick, danger = false, children }) => (
   </button>
 );
 
-export default function Companion({ fight, hintOpened, onRevealHint, onPause, onResume, onFinish }) {
-  useTick(!!fight.since);
+export default function Companion({ win, fight, hintOpened, onRevealHint, onPause, onResume, onFinish }) {
+  useTick(!!fight.since, win || window);
+  const [quitArmed, quit] = useConfirm(() => onFinish(false));
   const [opened, setOpened] = useState(false);
   const [mini, setMini] = useState(false);
   const q = BY_ID.get(fight.id);
@@ -92,9 +104,15 @@ export default function Companion({ fight, hintOpened, onRevealHint, onPause, on
             <PillButton label={fight.since ? 'Pause' : 'Resume'} onClick={fight.since ? onPause : onResume}>
               {fight.since ? <Pause size={14} /> : <Play size={14} />}
             </PillButton>
-            <PillButton label={interview ? 'Give up' : 'Retreat (keep the time, not solved)'} onClick={() => onFinish(false)} danger>
-              <X size={15} />
-            </PillButton>
+            {quitArmed ? (
+              <button onClick={quit} className="h-7 px-2 shrink-0 rounded-full text-[11.5px] font-semibold text-hard bg-hard/10" aria-label="Tap again to end">
+                End?
+              </button>
+            ) : (
+              <PillButton label={interview ? 'Give up' : 'Retreat (keep the time, not solved)'} onClick={quit} danger>
+                <X size={15} />
+              </PillButton>
+            )}
           </span>
         </div>
       </div>
@@ -161,7 +179,7 @@ export default function Companion({ fight, hintOpened, onRevealHint, onPause, on
 
       <div className="grid grid-cols-2 gap-2 mt-auto pt-2">
         <button onClick={() => onFinish(true)} className="btn h-11 border-easy/50 text-easy"><Check size={15} /> {interview ? 'Solved' : 'Defeated'}</button>
-        <button onClick={() => onFinish(false)} className="btn h-11"><X size={15} /> {interview ? 'Give up' : 'Retreat'}</button>
+        <button onClick={quit} className={`btn h-11 ${quitArmed ? 'text-hard border-hard/50' : ''}`}><X size={15} /> {quitArmed ? 'Tap again to end' : interview ? 'Give up' : 'Retreat'}</button>
       </div>
     </div>
   );

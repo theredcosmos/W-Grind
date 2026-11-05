@@ -4,6 +4,8 @@ import { BY_ID, DIFF_XP } from './lib/data';
 import { computeGame, HINT_COST, INTERVIEW_XP, QUEST_XP, REVIEW_XP } from './lib/game';
 import { INTERVIEW_SECONDS, clock, elapsedOf, useFight } from './lib/fight';
 import { companionSupported, useCompanion } from './lib/companion';
+import { useExtensionBridge } from './lib/extBridge';
+import { attachFallback as attachFocusFallback, load as loadFocus } from './lib/focus/timer';
 import { useLeetCodeSync } from './lib/leetcode';
 import { useReminder } from './lib/reminder';
 import { useInstall } from './lib/install';
@@ -32,7 +34,11 @@ import Companion from './components/Companion';
 
 const Login = lazy(() => import('./components/Login'));
 const CodexPage = lazy(() => import('./components/CodexPage'));
+const FocusPage = lazy(() => import('./components/FocusPage'));
 const InterviewMode = lazy(() => import('./components/InterviewMode'));
+
+// A fight given up within this many seconds was started by mistake: it is dropped, not logged.
+const ACCIDENTAL_SECONDS = 10;
 
 function useEquippedTitle(username) {
   const key = userKey(username, 'equippedTitle');
@@ -138,6 +144,11 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
 
   const bankFight = useCallback((result, solved) => {
     if (!result) return;
+    // Started by mistake and stopped within seconds: nothing to log.
+    if (!solved && result.seconds < ACCIDENTAL_SECONDS) {
+      notify({ text: 'Fight cancelled. Nothing was logged.' });
+      return;
+    }
     addProblemTime(result.id, result.seconds);
     const q = BY_ID.get(result.id);
     if (result.mode === 'interview') {
@@ -159,18 +170,47 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
   }, [addProblemTime, recordInterview, markSolved, onToggle, onReview]);
 
   const startFight = useCallback((id, mode = 'fight') => {
+    // Same problem, same mode, already running: bring it back instead of restarting the clock.
+    const resuming = fight?.id === id && fight.mode === mode;
+    if (resuming) {
+      setInterviewOpen(true);
+      setOpenId(null);
+      return;
+    }
     if (fight) bankFight(finishFight(), false); // only one fight at a time: bank the previous one
     startFightRaw(id, mode);
     setOpenedHints((prev) => ({ ...prev, [id]: 0 }));
     setInterviewOpen(true);
     setOpenId(null);
-    // Chrome/Edge: a floating companion that stays on top of LeetCode (it has the problem link).
-    // Elsewhere: open the problem straight away; the in-app panel keeps the timer and hints.
-    if (companionSupported) companion.open();
-    else window.open(BY_ID.get(id)?.url, '_blank', 'noopener');
-  }, [fight, bankFight, finishFight, startFightRaw, companion]);
+    // Open the problem straight away. With the Stillpoint extension, its panel appears on the
+    // LeetCode tab by itself; without it, the in-app panel (and the optional pop-out) has the timer.
+    window.open(BY_ID.get(id)?.url, '_blank', 'noopener');
+  }, [fight, bankFight, finishFight, startFightRaw]);
   const startInterview = useCallback((id) => startFight(id, 'interview'), [startFight]);
   const endFight = useCallback((solved) => bankFight(finishFight(), solved), [bankFight, finishFight]);
+
+  // Clicks on the Stillpoint extension's LeetCode panel (lib/extBridge.js).
+  const onPanelAction = useCallback((a) => {
+    if (!fight) return;
+    if (a.action === 'pause') pauseFight();
+    else if (a.action === 'resume') resumeFight();
+    else if (a.action === 'solved') endFight(true);
+    else if (a.action === 'giveup') endFight(false);
+    else if (a.action === 'reveal' && a.level > (openedHints[fight.id] || 0)) onRevealHint(fight.id, a.level);
+  }, [fight, openedHints, pauseFight, resumeFight, endFight, onRevealHint]);
+  useExtensionBridge({ fight, opened: fight ? openedHints[fight.id] || 0 : 0, onAction: onPanelAction });
+
+  // The Stillpoint focus timer runs app-wide, so a session finishes and is credited on any page.
+  useEffect(() => {
+    loadFocus({ timer: userKey(username, 'focusTimer'), log: userKey(username, 'focusLog') });
+    attachFocusFallback({
+      onFocusDone: ({ minutes, seconds, late }) => {
+        addTime(seconds);
+        notify({ text: `${late ? 'A focus session finished while you were away' : 'Focus complete'}: ${minutes} minute${minutes === 1 ? '' : 's'}. Counted toward today’s training.` });
+      },
+      onBreakDone: () => notify({ text: 'Break over. Ready when you are.' }),
+    });
+  }, [username, addTime]);
 
   // Level, rank, quest and title celebrations.
   const seen = useRef(null);
@@ -202,7 +242,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
   }, [route.page, route.arg]);
 
   // The dashboard scrolls; the other pages fit the screen and scroll inside their own panels.
-  const fitsScreen = ['guilds', 'reviews', 'titles', 'codex'].includes(route.page);
+  const fitsScreen = ['guilds', 'reviews', 'titles', 'codex', 'focus'].includes(route.page);
 
   let page;
   switch (route.page) {
@@ -241,6 +281,9 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
       break;
     case 'codex':
       page = <CodexPage tab={route.arg} section={route.params.get('s')} />;
+      break;
+    case 'focus':
+      page = <FocusPage username={username} onAddTime={addTime} />;
       break;
     default:
       page = <StatusPage game={game} username={username} title={title} completed={completed} onOpen={setOpenId} onAddTime={addTime} onInterview={startInterview} />;
@@ -295,7 +338,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
           motion={motion}
           onMotion={setMotion}
           onClose={closeSettings}
-          account={{ username, mode: session.mode, onSignOut }}
+          account={{ username, mode: session.mode, token: session.token, google: session.google, onSignOut }}
           lc={lc}
           reminder={reminder}
           install={install}
@@ -327,6 +370,7 @@ function Tracker({ session, onSignOut, onExpired, theme, onTheme }) {
       )}
       {fight && companion.win && createPortal(
         <Companion
+          win={companion.win}
           fight={fight}
           hintOpened={openedHints[fight.id] || 0}
           onRevealHint={onRevealHint}

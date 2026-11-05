@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Check, Cloud, CloudOff, LogOut, X } from 'lucide-react';
 import { THEMES } from '../lib/themes';
 import { useDialog } from '../lib/useDialog';
-import { InstallSettings, LeetCodeSettings, ReminderSettings } from './SettingsExtras';
+import { InstallSettings, LeetCodeSettings, PasswordSettings, ReminderSettings } from './SettingsExtras';
 
 // Miniature of the theme: its background, a panel, its accent and its heading font.
 const Preview = ({ t }) => (
@@ -101,6 +101,7 @@ export default function ThemePicker({ theme, onChange, motion, onMotion, onClose
             <button onClick={account.onSignOut} className="btn hover:text-hard"><LogOut size={15} /> Sign out</button>
           </div>
         )}
+        {account && !account.google && <div className="mt-3"><PasswordSettings account={account} /></div>}
       </div>
     </div>,
     document.body,

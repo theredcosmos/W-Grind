@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { BellRing, Download, Loader2, RefreshCw } from 'lucide-react';
+import { BellRing, Check, Download, Eye, EyeOff, KeyRound, Loader2, RefreshCw } from 'lucide-react';
+import { cloudChangePassword, offlineChangePassword } from '../lib/session';
+
+const MIN_PASSWORD = 8; // same rule as sign-up (server/auth.js)
 
 const ago = (ms) => {
   const s = Math.round((Date.now() - ms) / 1000);
@@ -110,6 +113,81 @@ export function InstallSettings({ install }) {
         </div>
       </div>
       {install.canInstall && <button onClick={install.install} className="btn btn-sys shrink-0">Install</button>}
+    </div>
+  );
+}
+
+/** Change password for the signed-in account: cloud accounts on the server, offline profiles on this device. */
+export function PasswordSettings({ account }) {
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ current: '', next: '', confirm: '' });
+  const [show, setShow] = useState(false);
+  const [state, setState] = useState({ busy: false, error: '', done: false });
+  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const tooShort = form.next.length > 0 && form.next.length < MIN_PASSWORD;
+  const mismatch = form.confirm.length > 0 && form.confirm !== form.next;
+  const ready = form.current && form.next.length >= MIN_PASSWORD && form.confirm === form.next;
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!ready || state.busy) return;
+    setState({ busy: true, error: '', done: false });
+    try {
+      if (account.mode === 'cloud') await cloudChangePassword(account.token, form.current, form.next);
+      else await offlineChangePassword(account.username, form.current, form.next);
+      setForm({ current: '', next: '', confirm: '' });
+      setState({ busy: false, error: '', done: true });
+      setOpen(false);
+    } catch (err) {
+      setState({ busy: false, error: err.message || 'Could not change the password.', done: false });
+    }
+  };
+
+  const field = (k, label, autoComplete, hint) => (
+    <label className="block">
+      <span className="text-xs text-dim">{label}</span>
+      <input
+        type={show ? 'text' : 'password'}
+        value={form[k]}
+        onChange={set(k)}
+        autoComplete={autoComplete}
+        className="input mt-1"
+      />
+      {hint && <span className="block text-[11.5px] text-hard mt-1">{hint}</span>}
+    </label>
+  );
+
+  return (
+    <div className="card px-4 py-3">
+      <div className="flex items-center gap-3">
+        <KeyRound size={17} className="text-sys shrink-0" />
+        <div className="min-w-0 flex-1">
+          <div className="text-sm font-semibold">Password</div>
+          <div className="text-xs text-dim">
+            {state.done ? <span className="text-easy inline-flex items-center gap-1"><Check size={12} /> Password changed.</span>
+              : account.mode === 'cloud' ? 'Change the password you sign in with.' : 'Change the password of this offline profile (this device only).'}
+          </div>
+        </div>
+        <button onClick={() => { setOpen((o) => !o); setState((s) => ({ ...s, error: '', done: false })); }} className="btn h-9 text-[13px]">
+          {open ? 'Cancel' : 'Change'}
+        </button>
+      </div>
+      {open && (
+        <form onSubmit={submit} className="mt-3 space-y-2.5">
+          {field('current', 'Current password', 'current-password')}
+          {field('next', 'New password', 'new-password', tooShort ? `At least ${MIN_PASSWORD} characters` : '')}
+          {field('confirm', 'Repeat new password', 'new-password', mismatch ? "Doesn't match the new password" : '')}
+          {state.error && <p className="text-[12.5px] text-hard">{state.error}</p>}
+          <div className="flex items-center gap-2 pt-1">
+            <button type="submit" disabled={!ready || state.busy} className="btn btn-sys h-9 text-[13px] disabled:opacity-50">
+              {state.busy ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />} Save new password
+            </button>
+            <button type="button" onClick={() => setShow((v) => !v)} className="btn h-9 text-[13px]" aria-label={show ? 'Hide passwords' : 'Show passwords'}>
+              {show ? <EyeOff size={14} /> : <Eye size={14} />}
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react';
-import { CheckCircle2, ChevronDown, Circle, Loader2, Search, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, Circle, Footprints, Layers, Loader2, Play, Search, X, Zap } from 'lucide-react';
 import manual from '../data/manual.json';
 import { CODEX_TABS, loadAllTabs, loadTab, sectionText } from '../data/codex';
 import { PageHeader } from './ui';
@@ -9,6 +9,9 @@ import CodexBlocks, { Inline } from './CodexBlocks';
  * The Codex: the gym where you train before fighting problems. Content tabs (data/codex/*.js) are
  * collapsible sections you can tick off as "trained"; search runs across every tab. The three
  * Classic tabs are the original manual.json tables.
+ *
+ * Built for an ADHD brain: an opened section shows a Quick view by default (the gist, what to
+ * remember, one list, the drill), a Step-by-step view (one card at a time), or Everything.
  */
 
 const ACRONYMS = /\b(Adhd|Dsa|Lru|Bfs|Dfs|Dp)\b/g;
@@ -37,6 +40,71 @@ function useTrained() {
     });
   }, []);
   return [trained, toggle];
+}
+
+// ---------------------------------------------------------------- how an opened section reads
+const VIEWS = [
+  { id: 'quick', label: 'Quick', icon: Zap },
+  { id: 'steps', label: 'Step by step', icon: Footprints },
+  { id: 'full', label: 'Everything', icon: Layers },
+];
+const VIEW_KEY = 'codexView';
+function useCodexView() {
+  const [view, setViewState] = useState(() => {
+    try { return localStorage.getItem(VIEW_KEY) || 'quick'; } catch { return 'quick'; }
+  });
+  const setView = useCallback((v) => {
+    setViewState(v);
+    try { localStorage.setItem(VIEW_KEY, v); } catch { /* private mode */ }
+  }, []);
+  return [view, setView];
+}
+
+// The few blocks worth reading first: the opening idea, what to remember, one list, the drill.
+const quickBlocks = (blocks) => {
+  const pick = new Set();
+  const first = (test) => { const i = blocks.findIndex(test); if (i >= 0) pick.add(i); };
+  first((b) => b.type === 'text');
+  blocks.forEach((b, i) => { if (b.type === 'callout' && b.tone === 'key') pick.add(i); });
+  first((b) => b.type === 'steps' || b.type === 'list');
+  first((b) => b.type === 'callout' && b.tone === 'drill');
+  if (pick.size < 2) blocks.slice(0, 3).forEach((_, i) => pick.add(i));
+  return blocks.filter((_, i) => pick.has(i));
+};
+
+const PART_LABEL = { text: 'The idea', list: 'Key points', steps: 'Steps', table: 'Table', code: 'Code', qa: 'Questions' };
+const CALLOUT_LABEL = { key: 'Remember', tip: 'Tip', warn: 'Trap', drill: 'Drill' };
+const partLabel = (b) => b.title || (b.type === 'callout' ? CALLOUT_LABEL[b.tone] : PART_LABEL[b.type]);
+
+// One block at a time, with a progress bar. Arrow keys move too.
+function StepView({ blocks, done, onTrained }) {
+  const [i, setI] = useState(0);
+  const last = i === blocks.length - 1;
+  const onKey = (e) => {
+    if (e.key === 'ArrowRight' && !last) setI(i + 1);
+    if (e.key === 'ArrowLeft' && i > 0) setI(i - 1);
+  };
+  return (
+    <div onKeyDown={onKey} tabIndex={-1} className="outline-none">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-sys shrink-0">Part {i + 1} of {blocks.length} · {partLabel(blocks[i])}</span>
+        <div className="flex-1 h-1.5 rounded-full bg-ink/10 overflow-hidden">
+          <div className="h-full bg-sys transition-[width]" style={{ width: `${((i + 1) / blocks.length) * 100}%` }} />
+        </div>
+      </div>
+      <div className="min-h-[120px] anim-fade" key={i}><CodexBlocks blocks={[blocks[i]]} /></div>
+      <div className="flex items-center gap-2 mt-4">
+        <button onClick={() => setI(i - 1)} disabled={i === 0} className="btn h-10 disabled:opacity-40"><ArrowLeft size={15} /> Back</button>
+        {last ? (
+          <button onClick={done ? undefined : onTrained} disabled={done} className={`btn h-10 ml-auto ${done ? 'text-easy' : 'btn-sys'}`}>
+            <CheckCircle2 size={15} /> {done ? 'Trained' : 'Done · mark trained'}
+          </button>
+        ) : (
+          <button onClick={() => setI(i + 1)} className="btn btn-sys h-10 ml-auto">Next <ArrowRight size={15} /></button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 // ---------------------------------------------------------------- classic tabs (manual.json)
@@ -129,7 +197,9 @@ function useTab(key) {
   return state.key === key ? state.tab : undefined; // undefined while loading
 }
 
-function Section({ s, open, done, onToggle, onTrained }) {
+function Section({ s, open, done, view, onView, onToggle, onTrained }) {
+  const quick = useMemo(() => quickBlocks(s.blocks), [s.blocks]);
+  const more = s.blocks.length - quick.length;
   return (
     <section id={`codex-${s.id}`} className={`card scroll-mt-2 ${open ? 'border-line-strong' : ''}`}>
       <div className="flex items-start gap-3 px-4 py-3.5">
@@ -151,13 +221,36 @@ function Section({ s, open, done, onToggle, onTrained }) {
           {done ? <CheckCircle2 size={14} /> : <Circle size={14} />} <span className="hidden sm:inline">{done ? 'Trained' : 'Train'}</span>
         </button>
       </div>
-      {open && <div className="px-4 pb-4 pt-1 border-t border-line"><div className="pt-3"><CodexBlocks blocks={s.blocks} /></div></div>}
+      {open && (
+        <div className="px-4 pb-4 border-t border-line">
+          <div className="flex flex-wrap gap-1.5 py-3" role="tablist" aria-label="How to read this section">
+            {VIEWS.map((v) => (
+              <button key={v.id} role="tab" aria-selected={view === v.id} onClick={() => onView(v.id)} className="chip h-7 text-[12px]" data-on={view === v.id}>
+                <v.icon size={12} /> {v.label}
+              </button>
+            ))}
+          </div>
+          {view === 'steps' && <StepView key={s.id} blocks={s.blocks} done={done} onTrained={onTrained} />}
+          {view === 'quick' && (
+            <>
+              <CodexBlocks blocks={quick} />
+              {more > 0 && (
+                <button onClick={() => onView('full')} className="mt-3 text-[12.5px] text-sys hover:underline">
+                  + {more} more part{more === 1 ? '' : 's'} (tables, code, traps) · show everything
+                </button>
+              )}
+            </>
+          )}
+          {view === 'full' && <CodexBlocks blocks={s.blocks} />}
+        </div>
+      )}
     </section>
   );
 }
 
 function ContentTab({ tabKey, focusId, trained, onTrained }) {
   const tab = useTab(tabKey);
+  const [view, setView] = useCodexView();
   const [open, setOpen] = useState(() => new Set(focusId ? [focusId] : []));
   const done = useMemo(() => new Set(trained[tabKey] || []), [trained, tabKey]);
 
@@ -187,6 +280,11 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
     requestAnimationFrame(() => document.getElementById(`codex-${id}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' }));
   };
   const allOpen = open.size >= tab.sections.length;
+  const nextUp = tab.sections.find((s) => !done.has(s.id));
+  const startNext = () => {
+    setView('steps');
+    jump(nextUp.id);
+  };
 
   return (
     <div className="lg:grid lg:grid-cols-[210px_1fr] lg:gap-6">
@@ -214,6 +312,19 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
             {allOpen ? 'Collapse all' : 'Expand all'}
           </button>
         </div>
+        {/* One small next step instead of a wall of sections. */}
+        {nextUp ? (
+          <div className="card px-4 py-3 mb-4 flex flex-wrap items-center gap-3 border-sys/40">
+            <Footprints size={18} className="text-sys shrink-0" />
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-sys">Next up · about 10 minutes</div>
+              <div className="text-[14.5px] font-semibold truncate">{nextUp.title}</div>
+            </div>
+            <button onClick={startNext} className="btn btn-sys h-9 text-[13px]"><Play size={14} /> Start step by step</button>
+          </div>
+        ) : (
+          <div className="card px-4 py-3 mb-4 text-[13.5px] text-easy flex items-center gap-2"><CheckCircle2 size={16} /> Every section here is trained. Revisit any in Quick view.</div>
+        )}
         <div className="space-y-2.5">
           {tab.sections.map((s) => (
             <Section
@@ -221,6 +332,8 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
               s={s}
               open={open.has(s.id)}
               done={done.has(s.id)}
+              view={view}
+              onView={setView}
               onToggle={() => toggle(s.id)}
               onTrained={() => onTrained(tabKey, s.id)}
             />
