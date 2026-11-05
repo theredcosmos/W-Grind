@@ -69,13 +69,15 @@ export function useFight(username) {
 }
 
 /** Re-renders the caller once per second while `on` (keeps ticking local to small components). */
-export function useTick(on) {
+export function useTick(on, win = window) {
   const [, setN] = useState(0);
   useEffect(() => {
     if (!on) return undefined;
-    const t = setInterval(() => setN((n) => n + 1), 1000);
-    return () => clearInterval(t);
-  }, [on]);
+    // `win` lets the floating companion tick on its own (visible) window: the app's tab is in the
+    // background while you're on LeetCode, and browsers slow background timers to once a minute.
+    const t = win.setInterval(() => setN((n) => n + 1), 1000);
+    return () => win.clearInterval(t);
+  }, [on, win]);
 }
 
 export const clock = (seconds) => {

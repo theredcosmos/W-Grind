@@ -42,6 +42,7 @@ const authLimiter = rateLimit({
 const ipLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 40, key: (req) => req.ip }); // many usernames from one IP
 const signupLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, key: (req) => req.ip });
 const syncLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, key: (req) => `sync|${req.user.id}` });
+const passwordLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, key: (req) => `pw|${req.user.id}` });
 
 const session = (user) => ({ username: user.username, token: signToken(user) });
 
@@ -163,6 +164,35 @@ app.post('/api/google-auth', ipLimiter, authLimiter, async (req, res) => {
 });
 
 app.get('/api/me', requireAuth, (req, res) => res.json({ username: req.user.username }));
+
+// Change the password of the signed-in account. The current password is required, so a stolen
+// session token alone cannot take the account over. Errors use 400 (not 401) so the client does
+// not mistake a wrong current password for an expired session.
+app.post('/api/change-password', requireAuth, passwordLimiter, async (req, res) => {
+  const current = String(req.body?.currentPassword || '');
+  const next = String(req.body?.newPassword || '');
+  if (next.length < MIN_PASSWORD) {
+    return res.status(400).json({ error: `New password must be at least ${MIN_PASSWORD} characters.` });
+  }
+  if (next === current) return res.status(400).json({ error: 'The new password must be different from the current one.' });
+
+  try {
+    const [rows] = await pool.query('SELECT password_hash FROM users WHERE id = ?', [req.user.id]);
+    const user = rows[0];
+    if (!user) return res.status(401).json({ error: 'This account no longer exists. Please sign in again.' });
+    if (!user.password_hash) {
+      return res.status(400).json({ error: 'This account signs in with Google, so it has no password to change.' });
+    }
+    if (!(await bcrypt.compare(current, user.password_hash))) {
+      return res.status(400).json({ error: 'Your current password is wrong.' });
+    }
+    await pool.query('UPDATE users SET password_hash = ? WHERE id = ?', [await bcrypt.hash(next, 12), req.user.id]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error while changing the password.' });
+  }
+});
 
 // Old clients call /api/sync/:username; the token must belong to that user.
 const ownSync = (req, res, next) => {

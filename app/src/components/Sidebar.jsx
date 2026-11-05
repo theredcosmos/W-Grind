@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { BookOpenText, CloudOff, LayoutGrid, Palette, RotateCcw, Shield, Trophy } from 'lucide-react';
+import { BookOpenText, CloudOff, LayoutGrid, Palette, RotateCcw, Shield, Timer, Trophy } from 'lucide-react';
 import { tone } from '../lib/themes';
 
 const NAV = [
@@ -7,6 +7,7 @@ const NAV = [
   { id: 'guilds', label: 'Guilds', icon: Shield },
   { id: 'reviews', label: 'Reviews', icon: RotateCcw },
   { id: 'codex', label: 'Codex', icon: BookOpenText },
+  { id: 'focus', label: 'Focus', icon: Timer },
 ];
 
 const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, dueCount, onSettings }) {
@@ -91,18 +92,18 @@ const Sidebar = memo(function Sidebar({ page, username, offline, level, rank, du
           <a
             key={id}
             href={`#/${id}`}
-            className={`relative flex flex-col items-center gap-1 py-2.5 px-2 text-[10.5px] font-medium ${page === id ? 'text-sys' : 'text-dim'}`}
+            className={`relative flex flex-col items-center min-w-0 gap-1 py-2.5 px-1.5 text-[10.5px] font-medium ${page === id ? 'text-sys' : 'text-dim'}`}
           >
             <Icon size={20} />
             {label}
             {id === 'reviews' && dueCount > 0 && <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full bg-hard" />}
           </a>
         ))}
-        <a href="#/titles" className={`flex flex-col items-center gap-1 py-2.5 px-2 text-[10.5px] font-medium ${page === 'titles' ? 'text-sys' : 'text-dim'}`}>
+        <a href="#/titles" className={`flex flex-col items-center min-w-0 gap-1 py-2.5 px-1.5 text-[10.5px] font-medium ${page === 'titles' ? 'text-sys' : 'text-dim'}`}>
           <Trophy size={20} />
           Titles
         </a>
-        <button onClick={onSettings} className="flex flex-col items-center gap-1 py-2.5 px-2 text-[10.5px] font-medium text-dim">
+        <button onClick={onSettings} className="flex flex-col items-center min-w-0 gap-1 py-2.5 px-1.5 text-[10.5px] font-medium text-dim">
           <Palette size={20} />
           Themes
         </button>

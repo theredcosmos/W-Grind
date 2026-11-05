@@ -1,5 +1,5 @@
 // Login session + offline (this-device-only) accounts.
-//   session = { username, token, mode: 'cloud' | 'offline' }
+//   session = { username, token, mode: 'cloud' | 'offline', google?: true }
 // Offline passwords are stored as salted PBKDF2 hashes, never in plain text.
 
 const SESSION_KEY = 'session';
@@ -86,7 +86,24 @@ const post = async (path, body) => {
 
 export const cloudSignIn = (username, password) => post('/login', { username, password });
 export const cloudSignUp = (username, password, email) => post('/register', { username, password, email });
-export const cloudGoogle = (idToken) => post('/google-auth', { idToken });
+// Google sessions are tagged so Settings can hide the password form (those accounts have no password).
+export const cloudGoogle = (idToken) => post('/google-auth', { idToken }).then((s) => ({ ...s, google: true }));
+
+/** Change a signed-in cloud account's password (the server checks the current one). */
+export const cloudChangePassword = async (token, currentPassword, newPassword) => {
+  let res;
+  try {
+    res = await fetch(`${API_URL}/change-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+  } catch {
+    throw new NetworkError("Can't reach the server. Try again when you're online.");
+  }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Request failed (${res.status}).`);
+}
 
 // ---------- Offline ----------
 
@@ -114,6 +131,21 @@ export const offlineSignUp = async (username, password, email) => {
   accounts[id] = { username, salt: toHex(salt), hash: await derive(password, salt), email: email || undefined };
   localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
   return { username, mode: 'offline' };
+};
+
+/** Change an offline profile's password; it never leaves this device. */
+export const offlineChangePassword = async (username, currentPassword, newPassword) => {
+  try {
+    await offlineSignIn(username, currentPassword); // also upgrades legacy plain-text profiles
+  } catch {
+    throw new Error('Your current password is wrong.');
+  }
+  const accounts = readJson(ACCOUNTS_KEY, {});
+  const acct = accounts[username.toLowerCase()];
+  if (!acct) throw new Error('This device has no offline profile with that name.');
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  accounts[username.toLowerCase()] = { ...acct, salt: toHex(salt), hash: await derive(newPassword, salt) };
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
 };
 
 export const hasOfflineAccount = (username) =>
