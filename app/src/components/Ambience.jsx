@@ -507,6 +507,25 @@ function Lanterns() {
   );
 }
 
+// ---------------------------------------------------------------- Red Cosmos
+// Flat poster shapes in the post's palette: a big hot-pink sun, a charcoal ring, a forest-green hill.
+function Cosmos() {
+  return (
+    <svg className="amb-cosmos" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <circle cx="1310" cy="70" r="250" fill="#fc4398" fillOpacity="0.16" />
+      <circle cx="1310" cy="70" r="150" fill="#fc4398" fillOpacity="0.22" />
+      <circle cx="1120" cy="300" r="46" fill="none" stroke="#2c302e" strokeOpacity="0.14" strokeWidth="6" />
+      <path d="M0 900 V760 Q180 650 380 720 T760 760 V900 Z" fill="#3d594b" fillOpacity="0.1" />
+      <circle cx="210" cy="190" r="10" fill="#fc4398" fillOpacity="0.45" />
+      <circle cx="250" cy="226" r="5" fill="#2c302e" fillOpacity="0.25" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------- Studio
+// Deliberately empty: a calm, flat page so the cards carry the design.
+const Studio = () => null;
+
 // ---------------------------------------------------------------- Holo
 function Holo() {
   return (
@@ -534,7 +553,7 @@ function Holo() {
 
 
 const SCENES = {
-  system: Monarch, sakura: Sakura, space: Space, anime: Anime, lofi: Lofi, nighttrain: NightTrain, lanterns: Lanterns, holo: Holo,
+  system: Monarch, sakura: Sakura, space: Space, anime: Anime, lofi: Lofi, nighttrain: NightTrain, lanterns: Lanterns, holo: Holo, cosmos: Cosmos, studio: Studio,
 };
 
 const Ambience = memo(function Ambience({ theme }) {

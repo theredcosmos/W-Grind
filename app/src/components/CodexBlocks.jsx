@@ -16,7 +16,7 @@ export function Inline({ text }) {
   });
 }
 
-const BlockTitle = ({ children }) => <div className="text-[11px] font-semibold uppercase tracking-wider text-faint mb-2">{children}</div>;
+const BlockTitle = ({ children }) => <div className="text-[12px] font-semibold text-faint mb-2">{children}</div>;
 
 const CALLOUTS = {
   key: { icon: KeyRound, label: 'Remember', cls: 'border-gold/40 bg-gold/[0.07]', tone: 'text-gold' },
@@ -36,7 +36,7 @@ function CodeBlock({ title, code }) {
   return (
     <div className="rounded-lg border border-line bg-void/60 overflow-hidden">
       <div className="flex items-center gap-2 px-3 h-8 border-b border-line">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-faint truncate">{title || 'Code'}</span>
+        <span className="text-[12px] font-semibold text-faint truncate">{title || 'Code'}</span>
         <button onClick={copy} className="ml-auto flex items-center gap-1 text-[11px] text-faint hover:text-ink" aria-label="Copy code">
           {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
         </button>
@@ -157,7 +157,7 @@ function Block({ b }) {
       const c = CALLOUTS[b.tone] || CALLOUTS.tip;
       return (
         <div className={`rounded-lg border px-3.5 py-3 ${c.cls}`}>
-          <div className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider mb-1 ${c.tone}`}>
+          <div className={`flex items-center gap-1.5 text-[12px] font-semibold mb-1 ${c.tone}`}>
             <c.icon size={13} /> {b.title || c.label}
           </div>
           <p className="text-[13.5px] leading-relaxed text-ink/90"><Inline text={b.text} /></p>

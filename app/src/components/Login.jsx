@@ -83,21 +83,23 @@ export default function Login({ onLogin, notice }) {
   const onKey = (e) => setCaps(e.getModifierState?.('CapsLock') ?? false);
 
   return (
-    <div className="h-full overflow-y-auto grid place-items-center px-4 py-6">
-      <div className="w-full max-w-[420px] anim-pop">
-        <div className="text-center mb-6">
-          <div className="inline-grid place-items-center w-14 h-14 rounded-2xl bg-gradient-to-br from-sys-deep to-mana glow-md mb-4">
-            <span className="sys-heading text-on-accent text-xl">W</span>
+    // Sized so both Sign in and Create account fit a laptop-height window without scrolling; on very
+    // short screens (phone with keyboard open) it can still scroll, so nothing is ever cut off.
+    <div className="h-full overflow-y-auto scroll-thin grid place-items-center px-4 py-6 short:py-3">
+      <div className="w-full max-w-[420px] anim-rise">
+        <div className="text-center mb-6 short:mb-4">
+          <div className="inline-grid place-items-center w-14 h-14 short:w-11 short:h-11 rounded-2xl bg-sys mb-4 short:mb-3">
+            <span className="sys-heading text-on-sys text-xl">W</span>
           </div>
-          <div className="sys-label mb-2">Notification</div>
-          <h1 className="sys-heading text-2xl leading-snug">
+          <div className="sys-label mb-2 short:hidden">Notification</div>
+          <h1 className="sys-heading text-2xl short:text-xl leading-snug">
             A new gate has opened.<br />Step through, <span className="text-sys glow-text">challenger</span>.
           </h1>
-          <p className="text-dim text-sm mt-3">{QUESTIONS.length} problems · 5 guilds</p>
+          <p className="text-dim text-sm mt-3 short:mt-1.5">{QUESTIONS.length} problems · 5 guilds</p>
         </div>
 
-        <div className="sys-window p-6">
-          <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-ink/[0.04] border border-[color:var(--control-border)] mb-5" role="tablist">
+        <div className="sys-window p-6 short:p-5">
+          <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-ink/[0.04] border border-[color:var(--control-border)] mb-5 short:mb-4" role="tablist">
             {[['signin', 'Sign in'], ['signup', 'Create account']].map(([k, label]) => (
               <button
                 key={k}
@@ -121,12 +123,11 @@ export default function Login({ onLogin, notice }) {
           <form onSubmit={submit} className="space-y-3" noValidate>
             <Field
               icon={User}
-              placeholder="Hunter name"
+              placeholder={signup ? 'Hunter name (what the System calls you)' : 'Hunter name'}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
               autoFocus={!username}
-              hint={signup && !nameError ? 'This is how the System will address you.' : ''}
               error={nameError}
             />
             {signup && (
@@ -167,7 +168,7 @@ export default function Login({ onLogin, notice }) {
 
           {googleEnabled && (
             <>
-              <div className="flex items-center gap-3 my-5 text-[11px] text-faint uppercase tracking-wider">
+              <div className="flex items-center gap-3 my-5 short:my-3.5 text-[12px] text-faint">
                 <span className="h-px flex-1 bg-line" /> or <span className="h-px flex-1 bg-line" />
               </div>
               <button type="button" onClick={google} disabled={busy} className="btn w-full h-11">

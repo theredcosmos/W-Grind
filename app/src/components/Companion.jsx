@@ -158,7 +158,7 @@ export default function Companion({ win, fight, hintOpened, onRevealHint, onPaus
       {interview && (
         <section className="rounded-xl border border-sys/50 bg-sys/[0.07] px-3.5 py-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-sys">Now · step {phaseNo}/{PHASES.length}</span>
+            <span className="text-[12px] font-semibold text-sys">Now · step {phaseNo}/{PHASES.length}</span>
             <span className="ml-auto font-mono text-[11px] text-faint">{phase.from}–{phase.to} min</span>
           </div>
           <div className="text-[14px] font-semibold text-hi mt-1">{phase.title}</div>

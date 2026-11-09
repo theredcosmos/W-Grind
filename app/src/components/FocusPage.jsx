@@ -350,7 +350,7 @@ function ParkingLot({ t, notes, setNotes, listOpen, setListOpen, inputRef }) {
             <div className="min-h-0 flex-1 overflow-y-auto scroll-thin -mr-2 pr-2">
             {[['This session', thisRound], ['Earlier', earlier]].map(([name, items]) => items.length > 0 && (
               <div key={name}>
-                <div className="text-[11px] text-faint uppercase tracking-wider mt-1">{name} · {items.filter(isOpen).length}</div>
+                <div className="text-[12px] text-faint mt-1">{name} · {items.filter(isOpen).length}</div>
                 <ul className="divide-y divide-line">
                   {[...items].sort(order).map((n) => <ParkItem key={n.id} n={n} onAct={onAct} />)}
                 </ul>
@@ -480,7 +480,7 @@ function MixDialog({ prefs, setPrefs, running, onClose }) {
           </div>
           {SOUNDS.map(([group, items]) => (
             <div key={group}>
-              <div className="text-[11px] text-faint uppercase tracking-wider mb-2">{group}</div>
+              <div className="text-[12px] text-faint mb-2">{group}</div>
               <div className="grid sm:grid-cols-2 gap-x-6 gap-y-3">
                 {items.map(([id, name, hint]) => (
                   <label key={id} className="flex flex-col gap-1.5">

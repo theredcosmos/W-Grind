@@ -67,7 +67,7 @@ export default function HintLadder({ q, opened = 0, seconds = 0, onReveal, compa
             <li key={title} className={`rounded-xl border px-3.5 py-2.5 ${open ? 'border-line bg-ink/[0.02]' : 'border-dashed border-line'}`}>
               <div className="flex items-center gap-2">
                 <Icon size={14} className={open ? 'text-gold' : 'text-faint'} />
-                <span className={`text-[12px] font-semibold uppercase tracking-wider ${open ? 'text-gold' : 'text-faint'}`}>{n}. {title}</span>
+                <span className={`text-[12px] font-semibold ${open ? 'text-gold' : 'text-faint'}`}>{n}. {title}</span>
                 {!open && (
                   <span className="ml-auto flex items-center gap-1 font-mono text-[11px] text-faint tabular">
                     {n > next && <Lock size={11} />}
