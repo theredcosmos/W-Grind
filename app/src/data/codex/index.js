@@ -1,6 +1,6 @@
 /*
  * Codex tabs, in display order. Content tabs live in their own files (format: schema.js) and load
- * only when opened; the three "Classic" tabs render the original manual.json tables.
+ * only when opened; the three "Classic" tabs are built from the original manual.json (./classic.js).
  */
 export const CODEX_TABS = [
   { key: 'focus', label: 'Unfreeze', group: 'Fight', load: () => import('./focus.js') },
@@ -13,9 +13,9 @@ export const CODEX_TABS = [
   { key: 'lld', label: 'LLD', group: 'Design', load: () => import('./lld.js') },
   { key: 'hld', label: 'HLD', group: 'Design', load: () => import('./hld.js') },
   { key: 'sdbook', label: 'SD Book Notes', group: 'Design', load: () => import('./sdbook/index.js') },
-  { key: 'antiBlank', label: 'Anti-Blank Protocol', group: 'Classic' },
-  { key: 'decoder', label: 'Pattern Decoder', group: 'Classic' },
-  { key: 'linker', label: 'Element Linker', group: 'Classic' },
+  { key: 'antiBlank', label: 'Anti-Blank Protocol', group: 'Classic', load: () => import('./classic.js').then((m) => ({ default: m.antiBlank })) },
+  { key: 'decoder', label: 'Pattern Decoder', group: 'Classic', load: () => import('./classic.js').then((m) => ({ default: m.decoder })) },
+  { key: 'linker', label: 'Element Linker', group: 'Classic', load: () => import('./classic.js').then((m) => ({ default: m.linker })) },
 ];
 
 const cache = new Map();
@@ -27,31 +27,8 @@ export const loadTab = (key) => {
   return cache.get(key);
 };
 
-// The Classic decoder and linker tables, shaped like tabs so search covers them too.
-const classicTabs = () => import('../manual.json').then(({ default: manual }) => [
-  {
-    key: 'decoder',
-    label: 'Pattern Decoder',
-    sections: manual.decoder.rows.map((r, i) => ({
-      id: `decoder-${i}`, title: r[1], summary: `${r[2]} → ${r[3]}`, tags: [],
-      blocks: [{ type: 'text', text: r[4] }],
-    })),
-  },
-  {
-    key: 'linker',
-    label: 'Element Linker',
-    sections: manual.linker.rows.map((r, i) => ({
-      id: `linker-${i}`, title: r[0].replace(/^\d+\.\s*/, ''), summary: r[4], tags: [],
-      blocks: [{ type: 'text', text: [r[1], r[2], r[3]].join(' ') }],
-    })),
-  },
-]);
-
 /** Every tab, for search across the whole Codex. */
-export const loadAllTabs = () => Promise.all([
-  ...CODEX_TABS.filter((t) => t.load).map((t) => loadTab(t.key).catch(() => null)),
-  classicTabs(),
-]).then((all) => all.flat());
+export const loadAllTabs = () => Promise.all(CODEX_TABS.map((t) => loadTab(t.key).catch(() => null)));
 
 // Plain text of a section, for search.
 export const sectionText = (s) => [

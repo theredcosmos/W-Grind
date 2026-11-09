@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* `short:` — laptop-height windows and below (used to keep the sign-in page scroll-free). */
+@custom-variant short (@media (max-height: 800px));
+
 /*
  * Default theme ("System" — Solo Leveling). Every other theme in this file only
  * overrides these variables, so switching themes is a single repaint.
@@ -43,9 +46,6 @@
     --shadow-window: 0 18px 40px -24px rgb(0 0 0 / 0.8);
     --shadow-lift: 0 30px 60px -24px rgb(0 0 0 / 0.85);
     --corner: color-mix(in srgb, var(--color-sys) 55%, transparent);
-    --text-glow: 0 0 18px color-mix(in srgb, var(--color-sys) 55%, transparent);
-    --accent-glow: color-mix(in srgb, var(--color-sys) 70%, transparent);
-    --btn-accent: linear-gradient(180deg, #2a95ff, #1d6fe0);
     --heading-case: none;
     --heading-tracking: 0.02em;
     --heading-weight: 700;
@@ -122,9 +122,6 @@
   --shadow-window: 0 1px 2px rgb(120 40 70 / 0.08), 0 14px 34px -20px rgb(120 40 70 / 0.38);
   --shadow-lift: 0 26px 50px -28px rgb(150 60 90 / 0.45);
   --corner: transparent;
-  --text-glow: none;
-  --accent-glow: rgb(194 58 108 / 0.35);
-  --btn-accent: linear-gradient(180deg, #d4568a, #bb3a6a);
   --heading-tracking: 0.01em;
   --ease-snap: cubic-bezier(0.22, 0.8, 0.24, 1);
   --tone: 72%;
@@ -161,8 +158,6 @@
   --window-bg: linear-gradient(180deg, rgb(20 15 50 / 0.86), rgb(10 8 28 / 0.9));
   --surface-card: rgb(14 10 36 / 0.82);
   --corner: rgb(196 163 255 / 0.5);
-  --text-glow: 0 0 20px rgb(196 163 255 / 0.4);
-  --btn-accent: linear-gradient(135deg, #c4a3ff, #ff9ec7);
   --heading-tracking: 0.03em;
   --bg-image:
     radial-gradient(900px 600px at 82% 8%, rgb(120 60 200 / 0.22), transparent 60%),
@@ -201,9 +196,6 @@
   --shadow-window: 0 1px 2px rgb(30 60 110 / 0.08), 0 14px 34px -20px rgb(30 60 110 / 0.4);
   --shadow-lift: 0 26px 50px -28px rgb(30 60 110 / 0.45);
   --corner: rgb(191 44 80 / 0.6);
-  --text-glow: none;
-  --accent-glow: rgb(191 44 80 / 0.3);
-  --btn-accent: linear-gradient(180deg, #d0466e, #b52a4f);
   --heading-tracking: 0;
   --heading-weight: 800;
   --tone: 72%;
@@ -238,9 +230,6 @@
   --window-bg: linear-gradient(180deg, rgb(33 31 50 / 0.92), rgb(22 20 34 / 0.94));
   --surface-card: rgb(27 26 43 / 0.88);
   --corner: transparent;
-  --text-glow: 0 0 18px rgb(242 167 195 / 0.22);
-  --accent-glow: rgb(242 167 195 / 0.4);
-  --btn-accent: linear-gradient(180deg, #f7bcd2, #e48fb1);
   --heading-tracking: 0;
   --heading-weight: 800;
   --ease-snap: cubic-bezier(0.3, 0.75, 0.3, 1);
@@ -277,9 +266,6 @@
   --window-bg: linear-gradient(180deg, rgb(28 24 62 / 0.9), rgb(18 15 42 / 0.93));
   --surface-card: rgb(21 18 46 / 0.88);
   --corner: transparent;
-  --text-glow: 0 0 16px rgb(195 176 255 / 0.25);
-  --accent-glow: rgb(195 176 255 / 0.4);
-  --btn-accent: linear-gradient(180deg, #d2c2ff, #ab96ff);
   --heading-tracking: 0.01em;
   --ease-snap: cubic-bezier(0.3, 0.75, 0.3, 1);
   --bg-image: linear-gradient(180deg, #0c0a24 0%, #1e1948 34%, #43397a 52%, #8a6f9e 58%, #d6a5a4 66%);
@@ -312,9 +298,6 @@
   --window-bg: linear-gradient(180deg, rgb(34 22 38 / 0.9), rgb(22 14 27 / 0.93));
   --surface-card: rgb(23 15 28 / 0.88);
   --corner: rgb(255 174 92 / 0.45);
-  --text-glow: 0 0 18px rgb(255 174 92 / 0.3);
-  --accent-glow: rgb(255 174 92 / 0.45);
-  --btn-accent: linear-gradient(180deg, #ffbf74, #f58c3c);
   --heading-tracking: 0.01em;
   --ease-snap: cubic-bezier(0.3, 0.75, 0.3, 1);
   --bg-image: linear-gradient(180deg, #0c0a1e 0%, #221838 38%, #4f2f4c 56%, #a5584a 68%, #2a1b2e 100%);
@@ -348,11 +331,91 @@
   --surface-card: rgb(16 16 28 / 0.76);
   --shadow-window: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 20px 44px -26px rgb(0 0 0 / 0.9);
   --corner: transparent;
-  --text-glow: 0 0 16px rgb(127 240 255 / 0.3);
-  --accent-glow: rgb(127 240 255 / 0.4);
-  --btn-accent: linear-gradient(120deg, #a5f6ff, #c59bff);
   --heading-tracking: -0.01em;
   --ease-snap: cubic-bezier(0.25, 0.9, 0.25, 1);
+  --bg-image: none;
+}
+
+/* Red Cosmos — from the_red_cosmos "Your mental health matters" post: white page, hot pink,
+   charcoal text, a touch of forest green. Flat, calm, poster-like. Pink is deepened for text
+   and buttons so it passes contrast on white; the bright pink stays in the scenery. */
+:root[data-theme='cosmos'] {
+  color-scheme: light;
+  --font-display: 'Poppins', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-void: #f6f5f2;
+  --color-abyss: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel-2: #f4f2ef;
+  --color-line: #e4e1dc;
+  --color-line-strong: #bdb8b1;
+  --control-border: #8f8a83;
+  --input-bg: #ffffff;
+  --color-ink: #2c302e;
+  --color-hi: #151816;
+  --color-dim: #565b58;
+  --color-faint: #767b78;
+  --color-on-accent: #ffffff;
+  --color-on-sys: #ffffff;
+  --color-sys: #d6246f;
+  --color-sys-deep: #b01a5b;
+  --color-mana: #3d594b;
+  --color-gold: #9a6400;
+  --color-easy: #2c7a52;
+  --color-medium: #9a6400;
+  --color-hard: #c7303c;
+  --radius-window: 16px;
+  --radius-btn: 10px;
+  --window-bg: #ffffff;
+  --surface-card: #ffffff;
+  --shadow-window: 0 1px 2px rgb(44 48 46 / 0.06), 0 10px 28px -18px rgb(44 48 46 / 0.3);
+  --shadow-lift: 0 22px 44px -26px rgb(44 48 46 / 0.4);
+  --corner: transparent;
+  --heading-tracking: -0.01em;
+  --heading-weight: 700;
+  --ease-snap: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --tone: 72%;
+  --bg-image: none;
+}
+
+/* Studio — in the spirit of BRIX Templates' FAQ accordions: soft lavender-grey page, white
+   rounded cards with gentle shadows, deep navy headings, one confident indigo accent. */
+:root[data-theme='studio'] {
+  color-scheme: light;
+  --font-display: 'DM Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'DM Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-void: #f7f7fb;
+  --color-abyss: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel-2: #f3f2fb;
+  --color-line: #e9e8f3;
+  --color-line-strong: #c9c6e0;
+  --control-border: #8e8ab0;
+  --input-bg: #ffffff;
+  --color-ink: #2b2650;
+  --color-hi: #170f49;
+  --color-dim: #6f6c90;
+  --color-faint: #7f7c9c;
+  --color-on-accent: #ffffff;
+  --color-on-sys: #ffffff;
+  --color-sys: #4a3aff;
+  --color-sys-deep: #3a2bd6;
+  --color-mana: #7a6cff;
+  --color-gold: #a15c07;
+  --color-easy: #14804a;
+  --color-medium: #a15c07;
+  --color-hard: #d92d4b;
+  --radius-window: 22px;
+  --radius-btn: 14px;
+  --window-bg: #ffffff;
+  --surface-card: #ffffff;
+  --shadow-window: 0 2px 6px rgb(20 20 43 / 0.06), 0 8px 28px -12px rgb(20 20 43 / 0.12);
+  --shadow-lift: 0 18px 40px -20px rgb(20 20 43 / 0.25);
+  --corner: transparent;
+  --heading-tracking: -0.01em;
+  --heading-weight: 700;
+  --ease-snap: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --tone: 70%;
   --bg-image: none;
 }
 
@@ -370,8 +433,9 @@
     border-radius: var(--radius-window);
     box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-hi) 3%, transparent), var(--shadow-window);
   }
-  .sys-window::before,
-  .sys-window::after {
+  /* Corner brackets are Abyssal Gate's signature only; the other themes use a plain panel. */
+  :root:not([data-theme]) .sys-window::before,
+  :root:not([data-theme]) .sys-window::after {
     content: '';
     position: absolute;
     width: 14px;
@@ -383,14 +447,15 @@
   .sys-window::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-top-left-radius: var(--radius-window); }
   .sys-window::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-bottom-right-radius: var(--radius-window); }
 
+  /* Small section label: quiet, sentence case, readable (not spaced-out shouting caps). */
   .sys-label {
-    font-family: var(--font-display);
-    font-size: 11px;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
     font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--color-sys);
+    letter-spacing: 0;
+    color: var(--color-dim);
   }
+  :root:not([data-theme]) .sys-label { font-family: var(--font-display); color: var(--color-sys); letter-spacing: 0.04em; }
 
   .sys-heading {
     font-family: var(--font-display);
@@ -399,9 +464,10 @@
     text-transform: var(--heading-case);
   }
 
-  .glow-text { text-shadow: var(--text-glow); }
-  .glow-sm { box-shadow: 0 0 14px -2px var(--accent-glow); }
-  .glow-md { box-shadow: 0 0 26px -6px var(--accent-glow); }
+  /* No neon halos: emphasis comes from colour and weight; raised things get a plain soft shadow. */
+  .glow-text { text-shadow: none; }
+  .glow-sm { box-shadow: 0 1px 2px rgb(0 0 0 / 0.18); }
+  .glow-md { box-shadow: 0 2px 6px -2px rgb(0 0 0 / 0.25); }
 
   .card {
     background: var(--surface-card);
@@ -411,6 +477,9 @@
   }
   .card-hover:hover { border-color: var(--color-line-strong); background: var(--color-panel-2); }
   :root[data-theme='sakura'] .card, :root[data-theme='anime'] .card { box-shadow: 0 1px 2px rgb(60 20 35 / 0.06); }
+  /* The two flat light themes lift cards with a soft neutral shadow instead of a border. */
+  :root:is([data-theme='cosmos'], [data-theme='studio']) .card { box-shadow: 0 1px 2px rgb(20 20 43 / 0.05), 0 4px 14px -8px rgb(20 20 43 / 0.12); }
+  :root:is([data-theme='cosmos'], [data-theme='studio']) .card-hover:hover { background: var(--color-panel); box-shadow: 0 2px 4px rgb(20 20 43 / 0.06), 0 12px 28px -12px rgb(20 20 43 / 0.2); }
 
   .btn {
     display: inline-flex;
@@ -431,13 +500,14 @@
   .btn:hover { background: color-mix(in srgb, var(--color-ink) 6%, transparent); border-color: var(--color-line-strong); }
   .btn:active { transform: scale(0.97); }
 
+  /* Primary button: one flat colour, darker on hover, pressed on click. No gradient, no glow. */
   .btn-sys {
-    background: var(--btn-accent);
-    border-color: color-mix(in srgb, var(--color-sys) 60%, transparent);
-    color: var(--color-on-accent);
-    box-shadow: 0 6px 20px -10px var(--accent-glow), inset 0 1px 0 rgb(255 255 255 / 0.2);
+    background: var(--color-sys);
+    border-color: transparent;
+    color: var(--color-on-sys);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.16);
   }
-  .btn-sys:hover { background: var(--btn-accent); filter: brightness(1.08); border-color: var(--color-sys); }
+  .btn-sys:hover { background: color-mix(in srgb, var(--color-sys) 88%, black); border-color: transparent; }
 
   .chip {
     display: inline-flex;
@@ -499,7 +569,7 @@
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, var(--color-sys-deep), var(--color-sys));
+    background: var(--color-sys);
     transform-origin: left;
     transition: width 500ms var(--ease-snap);
   }
@@ -528,7 +598,7 @@
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes drop-in { from { opacity: 0; transform: translateY(-14px) scale(0.98); } to { opacity: 1; transform: none; } }
 @keyframes slide-in { from { transform: translateX(100%); } to { transform: none; } }
-@keyframes pop { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes pop { from { transform: scale(0.97); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes scan { from { transform: translateY(-100%); } to { transform: translateY(100%); } }
 @keyframes check { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
 
@@ -574,7 +644,7 @@
   text-transform: uppercase;
   color: var(--color-sys);
   background: color-mix(in srgb, var(--color-panel) 70%, transparent);
-  box-shadow: 0 0 22px -6px var(--accent-glow), inset 0 0 0 3px color-mix(in srgb, var(--color-sys) 18%, transparent);
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--color-sys) 18%, transparent);
   pointer-events: none;
 }
 .seal-static { position: relative; top: auto; left: auto; transform: rotate(-8deg); display: inline-block; animation: pop 600ms var(--ease-snap) both; }
@@ -858,6 +928,9 @@
   opacity: 0;
   animation: amb-lantern var(--d) linear var(--delay) infinite;
 }
+
+/* Red Cosmos (static flat shapes, like the poster) */
+.amb-cosmos { inset: 0; width: 100%; height: 100%; }
 
 /* Holo */
 @keyframes amb-holo-a { from { transform: translate3d(-6vw, -4vh, 0); } to { transform: translate3d(8vw, 6vh, 0); } }

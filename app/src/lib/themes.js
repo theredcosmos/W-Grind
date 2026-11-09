@@ -9,6 +9,8 @@ export const THEMES = [
   { id: 'lofi', name: 'Lofi Café', note: 'Twilight rain · lamp · steaming mug', bg: '#13121e', panel: '#252339', accent: '#f2a7c3', ink: '#ece8f6', meta: '#13121e', font: "'Nunito'" },
   { id: 'nighttrain', name: 'Night Train', note: 'Moonlit sea · passing train', bg: '#0d0b22', panel: '#1d1940', accent: '#c3b0ff', ink: '#eeeaff', meta: '#0d0b22', font: "'Zen Maru Gothic'" },
   { id: 'holo', name: 'Holo', note: 'Iridescent glow · frosted glass', bg: '#06060b', panel: '#161625', accent: '#7ff0ff', ink: '#eef0ff', meta: '#06060b', font: "'Syne'" },
+  { id: 'cosmos', name: 'Red Cosmos', note: 'White · hot pink · charcoal', bg: '#f6f5f2', panel: '#ffffff', accent: '#d6246f', ink: '#2c302e', meta: '#f6f5f2', font: "'Poppins'" },
+  { id: 'studio', name: 'Studio', note: 'Clean cards · indigo · soft shadows', bg: '#f7f7fb', panel: '#ffffff', accent: '#4a3aff', ink: '#170f49', meta: '#f7f7fb', font: "'DM Sans'" },
   { id: 'lanterns', name: 'Lantern Festival', note: 'Rising lanterns · still water', bg: '#0e0a14', panel: '#211627', accent: '#ffae5c', ink: '#f6ebe0', meta: '#0e0a14', font: "'Alegreya'" },
 ];
 
