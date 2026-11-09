@@ -46,6 +46,71 @@ function CodeBlock({ title, code }) {
   );
 }
 
+// Box colours per node kind (theme tokens, so every theme recolours them).
+const NODE = {
+  user: 'border-ink/30 bg-ink/[0.05] text-ink',
+  svc: 'border-sys/45 bg-sys/[0.08] text-hi',
+  lb: 'border-sys-deep/50 bg-sys-deep/[0.10] text-hi',
+  db: 'border-gold/50 bg-gold/[0.08] text-hi',
+  store: 'border-gold/50 bg-gold/[0.08] text-hi border-dashed',
+  cache: 'border-easy/50 bg-easy/[0.08] text-hi',
+  q: 'border-medium/50 bg-medium/[0.08] text-hi',
+  ext: 'border-hard/45 bg-hard/[0.07] text-hi',
+};
+const KIND_LABEL = { user: 'client', svc: 'service', lb: 'routing', db: 'database', store: 'storage', cache: 'cache', q: 'queue', ext: 'external' };
+const parseNode = (n) => {
+  const m = /^(user|svc|lb|db|cache|q|ext|store):(.*)$/.exec(n);
+  return m ? { kind: m[1], label: m[2] } : { kind: 'svc', label: n };
+};
+
+// A boxes-and-arrows picture: columns left to right on wide screens, top to bottom on phones.
+// Container widths at which a flow of n columns turns into a row (literal classes for Tailwind).
+const FLOW_LAYOUT = {
+  lg: { row: '@lg:flex-row @lg:items-center', col: '@lg:flex-col @lg:flex-1 @lg:min-w-0', gap: '@lg:flex-col @lg:gap-0.5 @lg:px-1 @lg:w-16', down: '@lg:hidden', right: '@lg:block' },
+  xl2: { row: '@2xl:flex-row @2xl:items-center', col: '@2xl:flex-col @2xl:flex-1 @2xl:min-w-0', gap: '@2xl:flex-col @2xl:gap-0.5 @2xl:px-1 @2xl:w-16', down: '@2xl:hidden', right: '@2xl:block' },
+  xl4: { row: '@4xl:flex-row @4xl:items-center', col: '@4xl:flex-col @4xl:flex-1 @4xl:min-w-0', gap: '@4xl:flex-col @4xl:gap-0.5 @4xl:px-1 @4xl:w-16', down: '@4xl:hidden', right: '@4xl:block' },
+};
+
+function Flow({ title, cols, labels = [], note }) {
+  const L = FLOW_LAYOUT[cols.length <= 3 ? 'lg' : cols.length <= 4 ? 'xl2' : 'xl4'];
+  const kinds = [...new Set(cols.flat().map((n) => parseNode(n).kind))];
+  return (
+    <figure className="@container rounded-lg border border-line bg-void/40 p-3">
+      {title && <BlockTitle>{title}</BlockTitle>}
+      {/* Row when the card is wide enough for every column, otherwise a top-to-bottom stack. */}
+      <div className={`flex flex-col gap-1 ${L.row}`}>
+        {cols.map((col, i) => (
+          <div key={i} className="contents">
+            <div className={`flex flex-row flex-wrap gap-1.5 ${L.col}`}>
+              {col.map((n, j) => {
+                const { kind, label } = parseNode(n);
+                return (
+                  <div key={j} className={`rounded-md border px-2.5 py-1.5 text-[12.5px] leading-tight font-medium text-center flex-1 ${NODE[kind]}`}>
+                    <Inline text={label} />
+                  </div>
+                );
+              })}
+            </div>
+            {i < cols.length - 1 && (
+              <div className={`flex items-center justify-center gap-1.5 py-0.5 text-faint shrink-0 ${L.gap}`}>
+                <span aria-hidden className={`text-[15px] leading-none ${L.down}`}>↓</span>
+                <span aria-hidden className={`text-[15px] leading-none hidden ${L.right}`}>→</span>
+                {labels[i] && <span className="text-[10.5px] leading-tight text-dim text-center">{labels[i]}</span>}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <figcaption className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] text-faint">
+        {kinds.map((k) => (
+          <span key={k} className="flex items-center gap-1"><span className={`inline-block w-2.5 h-2.5 rounded-sm border ${NODE[k]}`} />{KIND_LABEL[k]}</span>
+        ))}
+        {note && <span className="basis-full text-[12px] text-dim leading-relaxed"><Inline text={note} /></span>}
+      </figcaption>
+    </figure>
+  );
+}
+
 function Block({ b }) {
   switch (b.type) {
     case 'text':
@@ -86,6 +151,8 @@ function Block({ b }) {
       );
     case 'code':
       return <CodeBlock title={b.title} code={b.code} />;
+    case 'flow':
+      return <Flow title={b.title} cols={b.cols} labels={b.labels} note={b.note} />;
     case 'callout': {
       const c = CALLOUTS[b.tone] || CALLOUTS.tip;
       return (

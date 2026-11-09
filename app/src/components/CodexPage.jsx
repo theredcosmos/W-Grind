@@ -1,5 +1,7 @@
-import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, Circle, Footprints, Layers, Loader2, Play, Search, X, Zap } from 'lucide-react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ExternalLink, Footprints, Layers, Loader2, Maximize2, Play, Search, X, Zap } from 'lucide-react';
+import { useDialog } from '../lib/useDialog';
 import manual from '../data/manual.json';
 import { CODEX_TABS, loadAllTabs, loadTab, sectionText } from '../data/codex';
 import { PageHeader } from './ui';
@@ -65,6 +67,7 @@ const quickBlocks = (blocks) => {
   const pick = new Set();
   const first = (test) => { const i = blocks.findIndex(test); if (i >= 0) pick.add(i); };
   first((b) => b.type === 'text');
+  first((b) => b.type === 'flow');
   blocks.forEach((b, i) => { if (b.type === 'callout' && b.tone === 'key') pick.add(i); });
   first((b) => b.type === 'steps' || b.type === 'list');
   first((b) => b.type === 'callout' && b.tone === 'drill');
@@ -72,7 +75,7 @@ const quickBlocks = (blocks) => {
   return blocks.filter((_, i) => pick.has(i));
 };
 
-const PART_LABEL = { text: 'The idea', list: 'Key points', steps: 'Steps', table: 'Table', code: 'Code', qa: 'Questions' };
+const PART_LABEL = { text: 'The idea', list: 'Key points', steps: 'Steps', table: 'Table', code: 'Code', qa: 'Questions', flow: 'Picture' };
 const CALLOUT_LABEL = { key: 'Remember', tip: 'Tip', warn: 'Trap', drill: 'Drill' };
 const partLabel = (b) => b.title || (b.type === 'callout' ? CALLOUT_LABEL[b.tone] : PART_LABEL[b.type]);
 
@@ -197,93 +200,124 @@ function useTab(key) {
   return state.key === key ? state.tab : undefined; // undefined while loading
 }
 
-function Section({ s, open, done, view, onView, onToggle, onTrained }) {
-  const quick = useMemo(() => quickBlocks(s.blocks), [s.blocks]);
-  const more = s.blocks.length - quick.length;
+const TrainButton = ({ done, onTrained, className = '' }) => (
+  <button
+    onClick={onTrained}
+    aria-pressed={done}
+    title={done ? 'Trained — click to unmark' : 'Mark as trained'}
+    className={`flex items-center gap-1.5 shrink-0 h-8 px-2.5 rounded-lg text-[12px] font-semibold border transition-colors ${
+      done ? 'border-easy/50 text-easy bg-easy/10' : 'border-line text-faint hover:text-ink'
+    } ${className}`}
+  >
+    {done ? <CheckCircle2 size={14} /> : <Circle size={14} />} <span className="hidden sm:inline">{done ? 'Trained' : 'Train'}</span>
+  </button>
+);
+
+// One row in the list; clicking it opens the section in the reading window.
+function SectionCard({ s, done, onOpen, onTrained }) {
   return (
-    <section id={`codex-${s.id}`} className={`card scroll-mt-2 ${open ? 'border-line-strong' : ''}`}>
+    <section className="card card-hover">
       <div className="flex items-start gap-3 px-4 py-3.5">
-        <button onClick={onToggle} aria-expanded={open} className="min-w-0 flex-1 text-left group">
+        <button onClick={onOpen} className="min-w-0 flex-1 text-left group">
           <div className="flex items-center gap-2">
             <h3 className="sys-heading text-[16px] leading-tight group-hover:text-hi">{s.title}</h3>
-            <ChevronDown size={16} className={`text-faint shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+            <Maximize2 size={14} className="text-faint shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
           <p className="text-[13px] text-dim mt-1"><Inline text={s.summary} /></p>
         </button>
-        <button
-          onClick={onTrained}
-          aria-pressed={done}
-          title={done ? 'Trained — click to unmark' : 'Mark as trained'}
-          className={`flex items-center gap-1.5 shrink-0 h-8 px-2.5 rounded-lg text-[12px] font-semibold border transition-colors ${
-            done ? 'border-easy/50 text-easy bg-easy/10' : 'border-line text-faint hover:text-ink'
-          }`}
-        >
-          {done ? <CheckCircle2 size={14} /> : <Circle size={14} />} <span className="hidden sm:inline">{done ? 'Trained' : 'Train'}</span>
-        </button>
+        <TrainButton done={done} onTrained={onTrained} />
       </div>
-      {open && (
-        <div className="px-4 pb-4 border-t border-line">
-          <div className="flex flex-wrap gap-1.5 py-3" role="tablist" aria-label="How to read this section">
-            {VIEWS.map((v) => (
-              <button key={v.id} role="tab" aria-selected={view === v.id} onClick={() => onView(v.id)} className="chip h-7 text-[12px]" data-on={view === v.id}>
-                <v.icon size={12} /> {v.label}
-              </button>
-            ))}
-          </div>
-          {view === 'steps' && <StepView key={s.id} blocks={s.blocks} done={done} onTrained={onTrained} />}
-          {view === 'quick' && (
-            <>
-              <CodexBlocks blocks={quick} />
-              {more > 0 && (
-                <button onClick={() => onView('full')} className="mt-3 text-[12.5px] text-sys hover:underline">
-                  + {more} more part{more === 1 ? '' : 's'} (tables, code, traps) · show everything
-                </button>
-              )}
-            </>
-          )}
-          {view === 'full' && <CodexBlocks blocks={s.blocks} />}
-        </div>
-      )}
     </section>
+  );
+}
+
+// The reading window: a large dialog (like Customize mix) with the section, its views, and
+// previous / next so you can keep going without closing it.
+function SectionDialog({ s, index, total, done, view, onView, onTrained, onClose, onPrev, onNext }) {
+  const dialogRef = useDialog();
+  const bodyRef = useRef(null);
+  const quick = useMemo(() => quickBlocks(s.blocks), [s.blocks]);
+  const more = s.blocks.length - quick.length;
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+  useEffect(() => { bodyRef.current?.scrollTo(0, 0); }, [s.id, view]);
+
+  return createPortal(
+    <div className="fixed inset-0 z-50 grid place-items-center p-2 sm:p-4">
+      <div className="absolute inset-0 bg-void/75 anim-fade" onClick={onClose} />
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label={s.title} tabIndex={-1}
+        className="sys-window anim-drop relative w-full max-w-5xl h-[94dvh] sm:h-[90dvh] flex flex-col">
+        <div className="flex items-start gap-3 px-4 sm:px-6 pt-4 sm:pt-5 pb-3 border-b border-line shrink-0">
+          <div className="min-w-0 flex-1">
+            <div className="sys-label">{index + 1} of {total}</div>
+            <h2 className="sys-heading text-lg sm:text-xl leading-tight">{s.title}</h2>
+            <p className="text-[13px] text-dim mt-1"><Inline text={s.summary} /></p>
+          </div>
+          <TrainButton done={done} onTrained={onTrained} />
+          <button onClick={onClose} className="grid place-items-center w-8 h-8 rounded-lg text-dim hover:text-ink hover:bg-ink/5 shrink-0" aria-label="Close">
+            <X size={18} />
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-1.5 px-4 sm:px-6 py-2.5 border-b border-line shrink-0" role="tablist" aria-label="How to read this section">
+          {VIEWS.map((v) => (
+            <button key={v.id} role="tab" aria-selected={view === v.id} onClick={() => onView(v.id)} className="chip h-7 text-[12px]" data-on={view === v.id}>
+              <v.icon size={12} /> {v.label}
+            </button>
+          ))}
+        </div>
+        <div ref={bodyRef} className="flex-1 min-h-0 overflow-y-auto scroll-thin px-4 sm:px-6 py-4">
+          <div className="max-w-3xl mx-auto">
+            {view === 'steps' && <StepView key={s.id} blocks={s.blocks} done={done} onTrained={onTrained} />}
+            {view === 'quick' && (
+              <>
+                <CodexBlocks blocks={quick} />
+                {more > 0 && (
+                  <button onClick={() => onView('full')} className="mt-3 text-[12.5px] text-sys hover:underline">
+                    + {more} more part{more === 1 ? '' : 's'} (tables, code, traps) · show everything
+                  </button>
+                )}
+              </>
+            )}
+            {view === 'full' && <CodexBlocks blocks={s.blocks} />}
+            {s.source && (
+              <a href={s.source.href} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-[12px] text-faint hover:text-sys">
+                <ExternalLink size={12} /> {s.source.label}
+              </a>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 px-4 sm:px-6 py-3 border-t border-line shrink-0">
+          <button onClick={onPrev} disabled={!onPrev} className="btn h-9 text-[13px] disabled:opacity-40"><ArrowLeft size={15} /> Previous</button>
+          <button onClick={onNext} disabled={!onNext} className="btn btn-sys h-9 text-[13px] ml-auto">Next section <ArrowRight size={15} /></button>
+        </div>
+      </div>
+    </div>,
+    document.body,
   );
 }
 
 function ContentTab({ tabKey, focusId, trained, onTrained }) {
   const tab = useTab(tabKey);
   const [view, setView] = useCodexView();
-  const [open, setOpen] = useState(() => new Set(focusId ? [focusId] : []));
   const done = useMemo(() => new Set(trained[tabKey] || []), [trained, tabKey]);
 
-  // Deep link (#/codex/<tab>?s=<id>): open that section (adjusted during render when the link
-  // changes) and bring it into view once it is on screen.
-  const [linked, setLinked] = useState(focusId);
-  if (focusId !== linked) {
-    setLinked(focusId);
-    if (focusId && !open.has(focusId)) setOpen(new Set(open).add(focusId));
-  }
-  useEffect(() => {
-    if (!tab || !focusId) return;
-    requestAnimationFrame(() => document.getElementById(`codex-${focusId}`)?.scrollIntoView({ block: 'start' }));
-  }, [tab, focusId]);
+  // The open section lives in the URL (#/codex/<tab>?s=<id>): links and search results open it,
+  // and Back closes it.
+  const open = (id) => window.location.assign(`#/codex/${tabKey}?s=${id}`);
+  const close = useCallback(() => window.location.assign(`#/codex/${tabKey}`), [tabKey]);
 
   if (tab === undefined) return <p className="text-dim text-sm flex items-center gap-2"><Loader2 size={15} className="animate-spin" /> Loading…</p>;
   if (!tab) return <p className="text-dim text-sm">This part of the Codex could not be loaded.</p>;
 
-  const toggle = (id) => setOpen((prev) => {
-    const next = new Set(prev);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    return next;
-  });
-  const jump = (id) => {
-    setOpen((prev) => new Set(prev).add(id));
-    requestAnimationFrame(() => document.getElementById(`codex-${id}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' }));
-  };
-  const allOpen = open.size >= tab.sections.length;
+  const openIndex = tab.sections.findIndex((s) => s.id === focusId);
+  const current = tab.sections[openIndex];
   const nextUp = tab.sections.find((s) => !done.has(s.id));
   const startNext = () => {
     setView('steps');
-    jump(nextUp.id);
+    open(nextUp.id);
   };
 
   return (
@@ -293,7 +327,7 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
         <ul className="space-y-0.5">
           {tab.sections.map((s) => (
             <li key={s.id}>
-              <button onClick={() => jump(s.id)} className="w-full flex items-center gap-2 text-left text-[12.5px] px-2 py-1.5 rounded-md text-dim hover:text-ink hover:bg-ink/5">
+              <button onClick={() => open(s.id)} className="w-full flex items-center gap-2 text-left text-[12.5px] px-2 py-1.5 rounded-md text-dim hover:text-ink hover:bg-ink/5">
                 {done.has(s.id) ? <CheckCircle2 size={12} className="text-easy shrink-0" /> : <Circle size={12} className="text-faint shrink-0" />}
                 <span className="truncate">{s.title}</span>
               </button>
@@ -305,12 +339,6 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <p className="text-[13.5px] text-dim flex-1 min-w-[220px]"><Inline text={tab.intro} /></p>
           <span className="lg:hidden text-[12px] text-faint">{done.size}/{tab.sections.length} trained</span>
-          <button
-            onClick={() => setOpen(allOpen ? new Set() : new Set(tab.sections.map((s) => s.id)))}
-            className="btn h-8 text-[12.5px]"
-          >
-            {allOpen ? 'Collapse all' : 'Expand all'}
-          </button>
         </div>
         {/* One small next step instead of a wall of sections. */}
         {nextUp ? (
@@ -327,19 +355,24 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
         )}
         <div className="space-y-2.5">
           {tab.sections.map((s) => (
-            <Section
-              key={s.id}
-              s={s}
-              open={open.has(s.id)}
-              done={done.has(s.id)}
-              view={view}
-              onView={setView}
-              onToggle={() => toggle(s.id)}
-              onTrained={() => onTrained(tabKey, s.id)}
-            />
+            <SectionCard key={s.id} s={s} done={done.has(s.id)} onOpen={() => open(s.id)} onTrained={() => onTrained(tabKey, s.id)} />
           ))}
         </div>
       </div>
+      {current && (
+        <SectionDialog
+          s={current}
+          index={openIndex}
+          total={tab.sections.length}
+          done={done.has(current.id)}
+          view={view}
+          onView={setView}
+          onTrained={() => onTrained(tabKey, current.id)}
+          onClose={close}
+          onPrev={openIndex > 0 ? () => open(tab.sections[openIndex - 1].id) : null}
+          onNext={openIndex < tab.sections.length - 1 ? () => open(tab.sections[openIndex + 1].id) : null}
+        />
+      )}
     </div>
   );
 }

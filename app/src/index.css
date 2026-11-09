@@ -89,43 +89,6 @@
  * components/Ambience.jsx. Fonts are Google Fonts (SIL Open Font License).
  */
 
-/* Noir City — night skyline, searchlight, film grain. Sharp, heavy, cinematic. */
-:root[data-theme='noir'] {
-  --font-display: 'Bebas Neue', 'Barlow', sans-serif;
-  --font-sans: 'Barlow', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #07080a;
-  --color-abyss: #0b0c0f;
-  --color-panel: #111215;
-  --color-panel-2: #18191d;
-  --color-line: rgb(255 214 10 / 0.09);
-  --color-line-strong: rgb(255 214 10 / 0.28);
-  --color-ink: #e8e6e3;
-  --color-hi: #ffffff;
-  --color-dim: #a19d97;
-  --color-faint: #716d68;
-  --color-on-accent: #0b0b0b;
-  --color-on-sys: #0b0b0b;
-  --color-sys: #ffd60a;
-  --color-sys-deep: #e0b400;
-  --color-mana: #6b7280;
-  --color-gold: #ffd60a;
-  --color-easy: #4ade80;
-  --color-medium: #fb923c;
-  --color-hard: #f87171;
-  --radius-window: 3px;
-  --radius-btn: 3px;
-  --window-bg: linear-gradient(180deg, rgb(20 21 25 / 0.94), rgb(12 13 15 / 0.96));
-  --surface-card: rgb(16 17 20 / 0.92);
-  --corner: #ffd60a;
-  --text-glow: 0 0 18px rgb(255 214 10 / 0.2);
-  --btn-accent: linear-gradient(180deg, #ffe14d, #f0c000);
-  --heading-case: uppercase;
-  --heading-tracking: 0.06em;
-  --heading-weight: 400;
-  --ease-snap: cubic-bezier(0.7, 0, 0.2, 1);
-  --bg-image: radial-gradient(1000px 520px at 72% -12%, rgb(140 150 170 / 0.12), transparent 62%);
-}
-
 /* Sakura — washi paper, blossoming branch, drifting petals. Soft and slow. */
 :root[data-theme='sakura'] {
   color-scheme: light;
@@ -247,161 +210,44 @@
   --bg-image: linear-gradient(180deg, #5d93c6 0%, #8db6dc 38%, #b7cfe6 70%, #d9cdd8 100%);
 }
 
-/* Lofi Café — rainy window, desk lamp, steaming mug. Warm, low-contrast, cosy. */
+/* Lofi Café — twilight rain on the window, desk lamp, steaming mug. Dusky indigo with a soft rose accent. */
 :root[data-theme='lofi'] {
   --font-display: 'Nunito', 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Nunito', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #15100d;
-  --color-abyss: rgb(24 18 15 / 0.88);
-  --color-panel: #1d1612;
-  --color-panel-2: #271e18;
-  --color-line: rgb(255 196 140 / 0.11);
-  --color-line-strong: rgb(255 196 140 / 0.28);
-  --color-ink: #f2e6da;
-  --color-hi: #fffaf3;
-  --color-dim: #b9a596;
-  --color-faint: #8a786c;
-  --color-on-accent: #2a1408;
-  --color-on-sys: #2a1408;
-  --color-sys: #ffb37a;
-  --color-sys-deep: #e8894a;
-  --color-mana: #c9a4dc;
-  --color-gold: #f5c56b;
-  --color-easy: #9ad48a;
-  --color-medium: #f5c56b;
-  --color-hard: #f28b7a;
+  --color-void: #13121e;
+  --color-abyss: rgb(22 20 34 / 0.88);
+  --color-panel: #1b1a2b;
+  --color-panel-2: #252339;
+  --color-line: rgb(205 190 255 / 0.11);
+  --color-line-strong: rgb(205 190 255 / 0.28);
+  --color-ink: #ece8f6;
+  --color-hi: #fbf9ff;
+  --color-dim: #aca6c4;
+  --color-faint: #7f7a99;
+  --color-on-accent: #2a0f1c;
+  --color-on-sys: #2a0f1c;
+  --color-sys: #f2a7c3;
+  --color-sys-deep: #d77aa0;
+  --color-mana: #a9b8ff;
+  --color-gold: #ffd08f;
+  --color-easy: #9fd8b0;
+  --color-medium: #ffd08f;
+  --color-hard: #f59a9a;
   --radius-window: 18px;
   --radius-btn: 12px;
-  --window-bg: linear-gradient(180deg, rgb(36 27 22 / 0.92), rgb(24 18 15 / 0.94));
-  --surface-card: rgb(29 22 18 / 0.88);
+  --window-bg: linear-gradient(180deg, rgb(33 31 50 / 0.92), rgb(22 20 34 / 0.94));
+  --surface-card: rgb(27 26 43 / 0.88);
   --corner: transparent;
-  --text-glow: 0 0 18px rgb(255 179 122 / 0.22);
-  --accent-glow: rgb(255 179 122 / 0.4);
-  --btn-accent: linear-gradient(180deg, #ffc08f, #f0965a);
+  --text-glow: 0 0 18px rgb(242 167 195 / 0.22);
+  --accent-glow: rgb(242 167 195 / 0.4);
+  --btn-accent: linear-gradient(180deg, #f7bcd2, #e48fb1);
   --heading-tracking: 0;
   --heading-weight: 800;
   --ease-snap: cubic-bezier(0.3, 0.75, 0.3, 1);
   --bg-image:
-    radial-gradient(900px 600px at 88% 108%, rgb(255 170 100 / 0.14), transparent 60%),
-    radial-gradient(800px 500px at 8% -10%, rgb(120 110 200 / 0.1), transparent 60%),
-    linear-gradient(180deg, #1a1420 0%, #15100d 60%);
-}
-
-/* Neon Grid — synthwave sunset over a scrolling grid. Angular, electric; body text stays glow-free. */
-:root[data-theme='neon'] {
-  --font-display: 'Oxanium', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #0a0614;
-  --color-abyss: rgb(14 8 28 / 0.88);
-  --color-panel: #120b24;
-  --color-panel-2: #1a1033;
-  --color-line: rgb(255 92 208 / 0.14);
-  --color-line-strong: rgb(62 232 255 / 0.34);
-  --color-ink: #ece9ff;
-  --color-hi: #ffffff;
-  --color-dim: #aaa4cf;
-  --color-faint: #7a74a0;
-  --color-on-accent: #1a0418;
-  --color-on-sys: #1a0418;
-  --color-sys: #ff5cd0;
-  --color-sys-deep: #c026d3;
-  --color-mana: #3ee8ff;
-  --color-gold: #ffd166;
-  --color-easy: #4dffb4;
-  --color-medium: #ffd166;
-  --color-hard: #ff6b88;
-  --radius-window: 4px;
-  --radius-btn: 4px;
-  --window-bg: linear-gradient(180deg, rgb(24 14 48 / 0.9), rgb(14 8 30 / 0.93));
-  --surface-card: rgb(18 11 36 / 0.88);
-  --corner: rgb(62 232 255 / 0.6);
-  --text-glow: 0 0 14px rgb(255 92 208 / 0.35);
-  --accent-glow: rgb(255 92 208 / 0.55);
-  --btn-accent: linear-gradient(180deg, #ff7ad9, #f04cc4);
-  --heading-case: uppercase;
-  --heading-tracking: 0.06em;
-  --ease-snap: cubic-bezier(0.6, 0, 0.2, 1);
-  --bg-image: linear-gradient(180deg, #06041a 0%, #140a33 38%, #2d0d4a 62%, #0a0614 100%);
-}
-
-/* Desert Dunes — soft daytime dunes, pale sun, distant caravan. Light, sandy, calm. */
-:root[data-theme='dunes'] {
-  color-scheme: light;
-  --font-display: 'Marcellus', Georgia, serif;
-  --color-void: #e2d0b2;
-  --color-abyss: #e9dabf;
-  --color-panel: #f2e8d6;
-  --color-panel-2: #e8dbc4;
-  --color-line: #bb9b74;
-  --color-line-strong: #86663f;
-  --control-border: #86663f;
-  --input-bg: #f8f1e4;
-  --color-ink: #2b1f14;
-  --color-hi: #170f07;
-  --color-dim: #5a4430;
-  --color-faint: #7a5f45;
-  --color-on-accent: #ffffff;
-  --color-on-sys: #ffffff;
-  --color-sys: #9a3b17;
-  --color-sys-deep: #8a3414;
-  --color-mana: #336680;
-  --color-gold: #8a5400;
-  --color-easy: #2c6b3a;
-  --color-medium: #8a5400;
-  --color-hard: #b0261d;
-  --radius-window: 14px;
-  --radius-btn: 10px;
-  --window-bg: #f2e8d6;
-  --surface-card: #f2e8d6;
-  --shadow-window: 0 1px 2px rgb(90 60 30 / 0.08), 0 14px 34px -20px rgb(90 60 30 / 0.4);
-  --shadow-lift: 0 26px 50px -28px rgb(90 60 30 / 0.45);
-  --corner: transparent;
-  --text-glow: none;
-  --accent-glow: rgb(168 67 28 / 0.3);
-  --btn-accent: linear-gradient(180deg, #b84d22, #9c3d18);
-  --heading-tracking: 0.01em;
-  --heading-weight: 400;
-  --ease-snap: cubic-bezier(0.25, 0.8, 0.25, 1);
-  --tone: 70%;
-  --bg-image:
-    var(--grain),
-    linear-gradient(180deg, #e6e0d0 0%, #ecdcc0 45%, #e2cba6 100%);
-}
-
-/* Flight Deck — dusk sky, thin HUD lines, cloud deck far below. Precise and quiet. */
-:root[data-theme='flight'] {
-  --font-display: 'Rajdhani', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-sans: 'IBM Plex Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #070d1a;
-  --color-abyss: rgb(9 16 30 / 0.88);
-  --color-panel: #0c1526;
-  --color-panel-2: #121e34;
-  --color-line: rgb(140 200 255 / 0.12);
-  --color-line-strong: rgb(140 200 255 / 0.3);
-  --color-ink: #e4ecf7;
-  --color-hi: #ffffff;
-  --color-dim: #9aaac2;
-  --color-faint: #6d7d96;
-  --color-on-accent: #04150d;
-  --color-on-sys: #04150d;
-  --color-sys: #6ae3a4;
-  --color-sys-deep: #2fbf7a;
-  --color-mana: #ffc361;
-  --color-gold: #ffc361;
-  --color-easy: #6ae3a4;
-  --color-medium: #ffc361;
-  --color-hard: #ff8080;
-  --radius-window: 6px;
-  --radius-btn: 6px;
-  --window-bg: linear-gradient(180deg, rgb(16 28 50 / 0.9), rgb(10 18 34 / 0.93));
-  --surface-card: rgb(12 21 38 / 0.88);
-  --corner: rgb(106 227 164 / 0.5);
-  --text-glow: none;
-  --accent-glow: rgb(106 227 164 / 0.35);
-  --btn-accent: linear-gradient(180deg, #7aebb0, #4fd08e);
-  --heading-case: uppercase;
-  --heading-tracking: 0.08em;
-  --ease-snap: cubic-bezier(0.4, 0, 0.2, 1);
-  --bg-image: linear-gradient(180deg, #050a16 0%, #0b1730 40%, #1d2b4f 62%, #0b1426 100%);
+    radial-gradient(900px 600px at 88% 108%, rgb(255 180 140 / 0.12), transparent 60%),
+    radial-gradient(800px 500px at 8% -10%, rgb(140 130 230 / 0.16), transparent 60%),
+    linear-gradient(180deg, #1c1a33 0%, #13121e 60%);
 }
 
 /* Night Train — pastel night sky, big moon, a train crossing the sea. Soft and dreamy. */
@@ -439,76 +285,6 @@
   --bg-image: linear-gradient(180deg, #0c0a24 0%, #1e1948 34%, #43397a 52%, #8a6f9e 58%, #d6a5a4 66%);
 }
 
-/* Starry Night — Milky Way, faint constellations, a tent on the hill. Deep, still, wondrous. */
-:root[data-theme='starry'] {
-  --font-display: 'Cinzel', Georgia, serif;
-  --color-void: #04060f;
-  --color-abyss: rgb(6 9 22 / 0.88);
-  --color-panel: #0a0f22;
-  --color-panel-2: #111833;
-  --color-line: rgb(170 190 255 / 0.12);
-  --color-line-strong: rgb(242 207 122 / 0.32);
-  --color-ink: #e9edfb;
-  --color-hi: #ffffff;
-  --color-dim: #9da6c6;
-  --color-faint: #6f7898;
-  --color-on-accent: #1d1505;
-  --color-on-sys: #1d1505;
-  --color-sys: #f2cf7a;
-  --color-sys-deep: #d9a940;
-  --color-mana: #9cc4ff;
-  --color-gold: #f2cf7a;
-  --color-easy: #7fe0b0;
-  --color-medium: #f2cf7a;
-  --color-hard: #ff8f8f;
-  --radius-window: 14px;
-  --radius-btn: 10px;
-  --window-bg: linear-gradient(180deg, rgb(16 22 46 / 0.88), rgb(9 13 30 / 0.92));
-  --surface-card: rgb(10 15 34 / 0.86);
-  --corner: rgb(242 207 122 / 0.45);
-  --text-glow: 0 0 18px rgb(242 207 122 / 0.25);
-  --accent-glow: rgb(242 207 122 / 0.4);
-  --btn-accent: linear-gradient(180deg, #f7da8e, #e8bb55);
-  --heading-tracking: 0.04em;
-  --ease-snap: cubic-bezier(0.3, 0.75, 0.3, 1);
-  --bg-image: linear-gradient(180deg, #03050d 0%, #070b1c 45%, #0e1530 75%, #141c3c 100%);
-}
-
-/* Glow Bay — bioluminescent surf under a crescent moon. Cool, luminous, calm. */
-:root[data-theme='glowbay'] {
-  --font-display: 'Lexend', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #020b14;
-  --color-abyss: rgb(3 14 24 / 0.88);
-  --color-panel: #061724;
-  --color-panel-2: #0a2131;
-  --color-line: rgb(90 240 230 / 0.13);
-  --color-line-strong: rgb(90 240 230 / 0.32);
-  --color-ink: #e2f6f8;
-  --color-hi: #ffffff;
-  --color-dim: #93b7c0;
-  --color-faint: #62868f;
-  --color-on-accent: #02201f;
-  --color-on-sys: #02201f;
-  --color-sys: #4ff0e0;
-  --color-sys-deep: #13b8c8;
-  --color-mana: #7aa8ff;
-  --color-gold: #ffd98a;
-  --color-easy: #5ff0c0;
-  --color-medium: #ffd98a;
-  --color-hard: #ff8a9a;
-  --radius-window: 16px;
-  --radius-btn: 12px;
-  --window-bg: linear-gradient(180deg, rgb(8 32 46 / 0.88), rgb(4 20 32 / 0.92));
-  --surface-card: rgb(6 23 36 / 0.86);
-  --corner: rgb(79 240 224 / 0.45);
-  --text-glow: 0 0 14px rgb(79 240 224 / 0.3);
-  --accent-glow: rgb(79 240 224 / 0.45);
-  --btn-accent: linear-gradient(180deg, #6ff5e8, #22c8d6);
-  --heading-tracking: -0.01em;
-  --ease-snap: cubic-bezier(0.4, 0.1, 0.2, 1);
-  --bg-image: linear-gradient(180deg, #020812 0%, #051426 45%, #0a2338 58%, #020b14 100%);
-}
-
 /* Lantern Festival — warm lanterns rising over still water at dusk. Warm, hopeful, gentle. */
 :root[data-theme='lanterns'] {
   --font-display: 'Alegreya', Georgia, serif;
@@ -543,93 +319,6 @@
   --ease-snap: cubic-bezier(0.3, 0.75, 0.3, 1);
   --bg-image: linear-gradient(180deg, #0c0a1e 0%, #221838 38%, #4f2f4c 56%, #a5584a 68%, #2a1b2e 100%);
 }
-
-/* Snowfall — quiet snowy valley, pale peaks, a lit cabin. Cool, hushed, light. */
-:root[data-theme='snowfall'] {
-  color-scheme: light;
-  --font-display: 'Quicksand', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #d3dde6;
-  --color-abyss: #dde5ec;
-  --color-panel: #eaf0f4;
-  --color-panel-2: #dce5ec;
-  --color-line: #94a8ba;
-  --color-line-strong: #5a6f86;
-  --control-border: #5a6f86;
-  --input-bg: #f2f6f9;
-  --color-ink: #182638;
-  --color-hi: #0b1524;
-  --color-dim: #3e5068;
-  --color-faint: #5f708a;
-  --color-on-accent: #ffffff;
-  --color-on-sys: #ffffff;
-  --color-sys: #1f4f8a;
-  --color-sys-deep: #173d6d;
-  --color-mana: #a3294a;
-  --color-gold: #7d5600;
-  --color-easy: #24683f;
-  --color-medium: #7d5300;
-  --color-hard: #b0262a;
-  --radius-window: 16px;
-  --radius-btn: 12px;
-  --window-bg: #eaf0f4;
-  --surface-card: #eaf0f4;
-  --shadow-window: 0 1px 2px rgb(30 50 80 / 0.08), 0 14px 34px -22px rgb(30 50 80 / 0.38);
-  --shadow-lift: 0 26px 50px -28px rgb(30 50 80 / 0.42);
-  --corner: transparent;
-  --text-glow: none;
-  --accent-glow: rgb(31 79 138 / 0.28);
-  --btn-accent: linear-gradient(180deg, #2a5d9c, #1f4f8a);
-  --heading-tracking: 0;
-  --heading-weight: 700;
-  --ease-snap: cubic-bezier(0.3, 0.7, 0.25, 1);
-  --tone: 70%;
-  --bg-image: linear-gradient(180deg, #b9c8d8 0%, #d3dde6 45%, #e6ebf0 100%);
-}
-
-/* Groovy — 1970s sunburst, flowing mustard-to-chocolate ribbons, daisies. Funky, warm, light. */
-:root[data-theme='groovy'] {
-  color-scheme: light;
-  --font-display: 'Shrikhand', Georgia, serif;
-  --font-sans: 'DM Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --color-void: #f1dfb8;
-  --color-abyss: #f4e6c6;
-  --color-panel: #fbf1dc;
-  --color-panel-2: #f3e3c2;
-  --color-line: #c99a5e;
-  --color-line-strong: #7a4a22;
-  --control-border: #7a4a22;
-  --input-bg: #fdf6e6;
-  --color-ink: #2e1a0e;
-  --color-hi: #1c0f06;
-  --color-dim: #5c3a20;
-  --color-faint: #7f5a3a;
-  --color-on-accent: #ffffff;
-  --color-on-sys: #ffffff;
-  --color-sys: #a8400f;
-  --color-sys-deep: #86320a;
-  --color-mana: #5b6b1c;
-  --color-gold: #845800;
-  --color-easy: #3d6b1e;
-  --color-medium: #8a5000;
-  --color-hard: #b02a1a;
-  --radius-window: 22px;
-  --radius-btn: 999px;
-  --window-bg: #fbf1dc;
-  --surface-card: #fbf1dc;
-  --shadow-window: 0 1px 0 rgb(94 44 20 / 0.12), 0 6px 0 -2px rgb(196 88 28 / 0.18);
-  --shadow-lift: 0 10px 0 -4px rgb(196 88 28 / 0.25);
-  --corner: transparent;
-  --text-glow: none;
-  --accent-glow: rgb(168 64 15 / 0.3);
-  --btn-accent: linear-gradient(180deg, #bc4e17, #a8400f);
-  --heading-tracking: 0.01em;
-  --heading-weight: 400;
-  --ease-snap: cubic-bezier(0.34, 1.4, 0.5, 1);
-  --tone: 70%;
-  --bg-image: linear-gradient(180deg, #f6e7c4 0%, #f1dfb8 60%, #ecd4a6 100%);
-}
-/* The chunky display face is for headings only; small uppercase labels stay in the body font. */
-:root[data-theme='groovy'] .sys-label { font-family: var(--font-sans); font-weight: 800; }
 
 /* Holo — iridescent colour fields behind dark frosted glass. Sleek, cool, futuristic. */
 :root[data-theme='holo'] {
@@ -667,49 +356,10 @@
   --bg-image: none;
 }
 
-/* Pixel Quest — 8-bit dusk world: stepped sky, castle, blocky clouds. Square, chunky, playful. */
-:root[data-theme='pixel'] {
-  --font-display: 'Silkscreen', 'Courier New', monospace;
-  --color-void: #120f2a;
-  --color-abyss: rgb(18 15 42 / 0.92);
-  --color-panel: #1a1638;
-  --color-panel-2: #231e48;
-  --color-line: rgb(170 160 255 / 0.2);
-  --color-line-strong: rgb(255 214 90 / 0.5);
-  --color-ink: #f1eeff;
-  --color-hi: #ffffff;
-  --color-dim: #aaa4d4;
-  --color-faint: #7c76a8;
-  --color-on-accent: #0b1f0c;
-  --color-on-sys: #0b1f0c;
-  --color-sys: #7ae582;
-  --color-sys-deep: #3fbf4a;
-  --color-mana: #ffd65a;
-  --color-gold: #ffd65a;
-  --color-easy: #7ae582;
-  --color-medium: #ffd65a;
-  --color-hard: #ff7a7a;
-  --radius-window: 3px;
-  --radius-btn: 2px;
-  --window-bg: #1a1638;
-  --surface-card: #1a1638;
-  --shadow-window: 4px 4px 0 rgb(0 0 0 / 0.45);
-  --shadow-lift: 6px 6px 0 rgb(0 0 0 / 0.5);
-  --corner: #ffd65a;
-  --text-glow: none;
-  --accent-glow: rgb(122 229 130 / 0.35);
-  --btn-accent: linear-gradient(180deg, #7ae582 0 50%, #4fcf58 50%);
-  --heading-tracking: 0.02em;
-  --ease-snap: steps(4, end);
-  --bg-image: none;
-}
-/* Chunky 2px outlines on the main surfaces and controls. */
-:root[data-theme='pixel'] :is(.sys-window, .card, .btn, .chip, .input) { border-width: 2px; }
-/* Silkscreen, Shrikhand and Syne are wide: small one-line headings that would be cut off with "…"
-   (list cards, sidebars) use the body font, so names like "Top Interview 150" stay whole. */
-:root:is([data-theme='pixel'], [data-theme='groovy'], [data-theme='holo']) .sys-heading.truncate { font-family: var(--font-sans); font-weight: 700; letter-spacing: 0; text-transform: none; }
+/* Syne is wide: small one-line headings that would be cut off with "…" use the body font instead. */
+:root[data-theme='holo'] .sys-heading.truncate { font-family: var(--font-sans); font-weight: 700; letter-spacing: 0; text-transform: none; }
 
-/* ------------------------------------------------------------ components *//* ------------------------------------------------------------ components */
+/* ------------------------------------------------------------ components */
 
 @layer components {
   /* The signature "System window": a panel with corner brackets. */
@@ -760,7 +410,7 @@
     transition: border-color 160ms var(--ease-snap), background-color 160ms var(--ease-snap), transform 160ms var(--ease-snap);
   }
   .card-hover:hover { border-color: var(--color-line-strong); background: var(--color-panel-2); }
-  :root[data-theme='sakura'] .card, :root[data-theme='anime'] .card, :root[data-theme='dunes'] .card, :root[data-theme='snowfall'] .card, :root[data-theme='groovy'] .card { box-shadow: 0 1px 2px rgb(60 20 35 / 0.06); }
+  :root[data-theme='sakura'] .card, :root[data-theme='anime'] .card { box-shadow: 0 1px 2px rgb(60 20 35 / 0.06); }
 
   .btn {
     display: inline-flex;
@@ -1030,9 +680,7 @@
 .amb > * { position: absolute; }
 /* Moving layers get their own GPU layer up front, so nothing is repainted or re-layered mid-animation. */
 .amb-spin, .amb-mote, .amb-beam, .amb-petal, .amb-planet, .amb-comet, .amb-twinkle,
-.amb-cloud, .amb-sparkle, .amb-streak, .amb-steam, .amb-gridline, .amb-dune-haze, .amb-sand,
-.amb-cloudband, .amb-tape-strip, .amb-train, .amb-snow, .amb-bay-wave, .amb-plankton, .amb-lantern,
-.amb-groovy-waves, .amb-daisy, .amb-holo-blob, .amb-pixel-cloud, .amb-pixel-coin {
+.amb-cloud, .amb-sparkle, .amb-streak, .amb-steam, .amb-train, .amb-lantern, .amb-holo-blob {
   will-change: transform;
   backface-visibility: hidden;
 }
@@ -1049,9 +697,6 @@
   8% { opacity: 0.95; }
   100% { transform: translate3d(var(--drift), 110vh, 0) rotate(560deg); opacity: 0.85; }
 }
-@keyframes amb-sway { from { transform: rotate(-7deg); } to { transform: rotate(6deg); } }
-@keyframes amb-wave { to { transform: translate3d(-50%, 0, 0); } }
-@keyframes amb-mist { from { transform: translate3d(-6vw, 0, 0); } to { transform: translate3d(6vw, 0, 0); } }
 
 /* Abyssal Gate */
 .amb-portal { top: -24vh; right: -14vw; width: min(78vh, 900px); height: min(78vh, 900px); opacity: 0.9; }
@@ -1062,16 +707,6 @@
   background: radial-gradient(circle, #bfeaff 0 35%, rgb(76 194 255 / 0.45) 36%, transparent 70%);
   animation: amb-rise var(--d) linear var(--delay) infinite;
 }
-
-/* Noir City */
-.amb-beam {
-  left: 50%; bottom: 18vh; width: 34vw; height: 90vh; transform-origin: 50% 100%;
-  background: no-repeat 0 0 / 100% 100%;
-  animation: amb-sway 16s ease-in-out infinite alternate;
-}
-.amb-cloudglow { top: -14vh; left: 46%; width: 46vw; height: 32vh; border-radius: 50%; background: radial-gradient(closest-side, rgb(255 240 190 / 0.08), transparent); }
-.amb-skyline { left: 0; bottom: 0; width: 100%; height: 36vh; }
-.amb-rain { inset: 0; opacity: 0.55; }
 
 /* Sakura */
 .amb-branch { top: -18px; right: -30px; width: min(620px, 62vw); }
@@ -1153,8 +788,8 @@
 }
 .amb-lofi-desk {
   left: 0; right: 0; bottom: 0; height: 12vh;
-  background: linear-gradient(180deg, #2c1e16, #1a120d);
-  border-top: 1px solid rgb(255 190 130 / 0.16);
+  background: linear-gradient(180deg, #2a2440, #17142a);
+  border-top: 1px solid rgb(242 167 195 / 0.16);
 }
 .amb-lofi-props { right: 3vw; bottom: calc(12vh - 1px); width: min(560px, 62vw); aspect-ratio: 2 / 1; }
 .amb-lofi-props > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -1171,105 +806,6 @@
   opacity: 0;
   animation: amb-steam 6s ease-out var(--delay) infinite;
 }
-
-/* Neon Grid */
-/* Each line rides a perspective curve (screen y ∝ 1/depth), so evenly staggered lines read as a receding floor. */
-@keyframes amb-grid {
-  0% { transform: translate3d(0, 0vh, 0); opacity: 0; }
-  14.29% { transform: translate3d(0, 0.78vh, 0); opacity: 0.57; }
-  28.57% { transform: translate3d(0, 1.81vh, 0); opacity: 1; }
-  42.86% { transform: translate3d(0, 3.26vh, 0); opacity: 1; }
-  57.14% { transform: translate3d(0, 5.43vh, 0); opacity: 1; }
-  71.43% { transform: translate3d(0, 9.05vh, 0); opacity: 1; }
-  78.57% { transform: translate3d(0, 11.94vh, 0); opacity: 1; }
-  85.71% { transform: translate3d(0, 16.29vh, 0); opacity: 1; }
-  89.29% { transform: translate3d(0, 19.39vh, 0); opacity: 1; }
-  92.86% { transform: translate3d(0, 23.52vh, 0); opacity: 1; }
-  96.43% { transform: translate3d(0, 29.31vh, 0); opacity: 1; }
-  100% { transform: translate3d(0, 38vh, 0); opacity: 1; }
-}
-.amb-neon-glow {
-  left: 15%; width: 70%; bottom: 26vh; height: 52vh;
-  background: radial-gradient(50% 50% at 50% 70%, rgb(255 80 180 / 0.22), transparent 70%);
-}
-.amb-neon-sun {
-  left: 50%;
-  width: min(44vh, 480px); height: min(44vh, 480px);
-  margin-left: calc(min(44vh, 480px) / -2);
-  bottom: calc(38vh - min(44vh, 480px) * 0.14);
-}
-.amb-neon-city { left: 0; bottom: 38vh; width: 100%; height: 20vh; }
-.amb-neon-floor {
-  left: 0; right: 0; bottom: 0; height: 38vh; overflow: hidden;
-  background: linear-gradient(180deg, #1c0a36 0%, #0d0619 55%, #07040f 100%);
-  border-top: 1px solid rgb(255 92 208 / 0.75);
-  box-shadow: 0 -8px 28px rgb(255 92 208 / 0.22);
-}
-.amb-neon-floor > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.amb-neon-still { display: none; }
-.amb-gridline {
-  position: absolute;
-  left: 0; top: -1px; width: 100%; height: 2px;
-  background: linear-gradient(90deg, transparent, rgb(255 92 208 / 0.5) 12%, rgb(255 130 225 / 0.7) 50%, rgb(255 92 208 / 0.5) 88%, transparent);
-  opacity: 0;
-  animation: amb-grid 14s linear var(--delay) infinite;
-}
-.amb-scanlines { inset: 0; background: repeating-linear-gradient(180deg, rgb(0 0 0 / 0.2) 0 1px, transparent 1px 4px); opacity: 0.45; }
-
-/* Desert Dunes */
-@keyframes amb-sand {
-  0% { transform: translate3d(0, 0, 0); opacity: 0; }
-  15% { opacity: 0.8; }
-  85% { opacity: 0.6; }
-  100% { transform: translate3d(28vw, -3vh, 0); opacity: 0; }
-}
-.amb-dune-sun {
-  top: 6vh; right: 14vw; width: 18vh; height: 18vh; border-radius: 999px;
-  background: radial-gradient(circle, #fffaf0 0 30%, rgb(255 246 224 / 0.6) 42%, rgb(255 238 204 / 0.18) 62%, transparent 72%);
-}
-.amb-dune-haze {
-  left: -10vw; width: 120vw; bottom: 20vh; height: 20vh;
-  background: radial-gradient(50% 50% at 50% 50%, rgb(255 248 232 / 0.4), transparent 70%);
-  animation: amb-mist 50s ease-in-out infinite alternate;
-}
-.amb-dunes { left: 0; bottom: 0; width: 100%; height: 44vh; }
-.amb-sand {
-  border-radius: 999px;
-  background: rgb(140 100 60 / 0.5);
-  opacity: 0;
-  animation: amb-sand calc(var(--d) * 3) linear var(--delay) infinite;
-}
-
-/* Flight Deck */
-@keyframes amb-tape { to { transform: translate3d(0, 60px, 0); } }
-.amb-flight-below {
-  left: 0; right: 0; bottom: 0; height: 38vh;
-  background: linear-gradient(180deg, #1a2748 0%, #111b33 40%, #0a1224 100%);
-  border-top: 1px solid rgb(160 210 255 / 0.4);
-}
-.amb-cloudband { left: 0; width: 200%; animation: amb-wave linear infinite; }
-.amb-cloudband-1 { bottom: 24vh; height: 7vh; animation-duration: 180s; }
-.amb-cloudband-2 { bottom: 7vh; height: 11vh; animation-duration: 120s; }
-/* Static HUD, centred on the horizon line. */
-.amb-hud { right: 10vw; top: calc(62vh - min(150px, 15vw)); width: min(300px, 30vw); height: min(300px, 30vw); opacity: 0.4; }
-.amb-tape { top: 24vh; height: 50vh; width: 26px; overflow: hidden; opacity: 0.45; }
-.amb-tape-l { left: 7vw; }
-.amb-tape-r { right: 2.5vw; }
-.amb-tape::after {
-  content: ''; position: absolute; left: 0; right: 0; top: calc(50% - 8px); height: 16px;
-  border: 1px solid #6ae3a4; border-radius: 2px;
-}
-.amb-tape-strip {
-  position: absolute; left: 0; right: 0; top: -60px; bottom: 0;
-  background-image:
-    repeating-linear-gradient(180deg, rgb(106 227 164 / 0.6) 0 1px, transparent 1px 12px),
-    repeating-linear-gradient(180deg, rgb(106 227 164 / 0.9) 0 1px, transparent 1px 60px);
-  background-size: 9px 100%, 20px 100%;
-  background-repeat: no-repeat;
-  animation: amb-tape 14s linear infinite;
-}
-.amb-tape-l .amb-tape-strip { background-position: right top, right top; }
-.amb-tape-r .amb-tape-strip { background-position: left top, left top; animation-direction: reverse; animation-duration: 20s; }
 
 /* Night Train */
 @keyframes amb-train {
@@ -1293,42 +829,6 @@
   left: 34vw; width: min(520px, 56vw);
   bottom: calc(24vh - min(520px, 56vw) * 0.0673);
   animation: amb-train 90s linear -30s infinite;
-}
-
-/* Starry Night (twinkles and comets reuse the Deep Space classes) */
-.amb-milkyway { inset: 0; width: 100%; height: 100%; }
-.amb-starry-glow {
-  left: 0; right: 0; bottom: 14vh; height: 34vh;
-  background: radial-gradient(60% 100% at 50% 100%, rgb(90 110 190 / 0.2), transparent 70%);
-}
-.amb-starry-hills { left: 0; bottom: 0; width: 100%; height: 30vh; }
-
-/* Glow Bay */
-@keyframes amb-plankton {
-  0% { transform: translate3d(0, 0, 0); opacity: 0.15; }
-  50% { transform: translate3d(1.5vw, -1.4vh, 0); opacity: 1; }
-  100% { transform: translate3d(3vw, 0, 0); opacity: 0.15; }
-}
-.amb-bay-moon { top: 8vh; right: 16vw; width: 16vh; height: 16vh; }
-.amb-bay-sea {
-  left: 0; right: 0; bottom: 0; height: 42vh;
-  background: linear-gradient(180deg, #0a2a3a 0%, #062030 30%, #031420 100%);
-  border-top: 1px solid rgb(120 230 230 / 0.25);
-}
-.amb-bay-glint { right: 18vw; bottom: 12vh; width: 12vh; height: 30vh; }
-.amb-bay-wave { left: 0; bottom: 0; width: 200%; animation: amb-wave linear infinite; }
-.amb-bay-wave-1 { height: 30vh; animation-duration: 110s; }
-.amb-bay-wave-2 { height: 20vh; animation-duration: 76s; animation-direction: reverse; }
-.amb-bay-wave-3 { height: 10vh; animation-duration: 54s; }
-.amb-bay-palm { right: 0; bottom: 0; height: 52vh; aspect-ratio: 400 / 500; }
-.amb-bay-water { left: 0; right: 0; bottom: 0; height: 32vh; }
-.amb-plankton {
-  position: absolute;
-  border-radius: 999px;
-  background: radial-gradient(circle, #d6fffa 0 30%, rgb(79 240 224 / 0.55) 45%, transparent 70%);
-  box-shadow: 0 0 8px 2px rgb(79 240 224 / 0.3);
-  opacity: 0.15;
-  animation: amb-plankton calc(var(--d) * 2.5) ease-in-out var(--delay) infinite;
 }
 
 /* Lantern Festival */
@@ -1359,36 +859,6 @@
   animation: amb-lantern var(--d) linear var(--delay) infinite;
 }
 
-/* Snowfall */
-@keyframes amb-snow {
-  0% { transform: translate3d(0, 0, 0); opacity: 0; }
-  10% { opacity: 0.95; }
-  30% { transform: translate3d(calc(var(--drift) * 0.15 + 1.5vw), 34vh, 0); }
-  60% { transform: translate3d(calc(var(--drift) * 0.3 - 1.5vw), 68vh, 0); }
-  90% { opacity: 0.9; }
-  100% { transform: translate3d(calc(var(--drift) * 0.4), 112vh, 0); opacity: 0; }
-}
-.amb-snow-sun {
-  top: 6vh; left: 56vw; width: 30vh; height: 30vh; border-radius: 999px;
-  background: radial-gradient(circle, rgb(255 252 244 / 0.75) 0 18%, rgb(250 246 236 / 0.3) 36%, transparent 70%);
-}
-.amb-snow-scene { left: 0; bottom: 0; width: 100%; height: 56vh; }
-.amb-snow {
-  top: -12px;
-  border-radius: 999px;
-  background: #ffffff;
-  box-shadow: 0 0 2px rgb(80 100 130 / 0.4);
-  opacity: 0;
-  animation: amb-snow var(--d) ease-in-out var(--delay) infinite;
-}
-.amb-snow-near { box-shadow: 0 0 3px 1px rgb(80 100 130 / 0.28); }
-
-/* Groovy (daisies reuse amb-spin; they are small) */
-.amb-groovy-sun { top: -26vh; right: -14vw; width: min(80vh, 820px); height: min(80vh, 820px); }
-.amb-groovy-star { width: 20px; }
-.amb-daisy { animation: amb-spin var(--d) linear infinite; }
-.amb-groovy-waves { left: 0; bottom: 0; width: 200%; height: 44vh; animation: amb-wave 120s linear infinite; }
-
 /* Holo */
 @keyframes amb-holo-a { from { transform: translate3d(-6vw, -4vh, 0); } to { transform: translate3d(8vw, 6vh, 0); } }
 @keyframes amb-holo-b { from { transform: translate3d(6vw, 5vh, 0); } to { transform: translate3d(-7vw, -6vh, 0); } }
@@ -1406,24 +876,7 @@
   background-size: 48px 48px;
 }
 
-/* Pixel Quest */
-@keyframes amb-blink { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
-@keyframes amb-coin { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, -12px, 0); } }
-.amb-pixel-world { inset: 0; width: 100%; height: 100%; }
-.amb-pixel-star { background: #f6e7b0; animation: amb-blink var(--d) steps(2, jump-none) var(--delay) infinite; }
-.amb-pixel-cloud { left: 0; height: auto; animation: amb-drift var(--d) linear var(--delay) infinite; }
-.amb-pixel-coin {
-  left: 34vw; bottom: 36vh; width: 14px; height: 18px;
-  background: linear-gradient(90deg, #b8860b 0 25%, #ffd65a 25% 75%, #b8860b 75%);
-  box-shadow: 0 0 0 2px #5a3d00;
-  animation: amb-coin 0.9s steps(3, jump-none) infinite alternate;
-}
-
-/* Ambient motion switched off in Settings: freeze the scenery. *//* Ambient motion switched off in Settings: freeze the scenery. */
+/* Ambient motion switched off in Settings: freeze the scenery. */
 :root[data-still] .amb *, :root[data-still] .amb { animation: none !important; }
 :root[data-still] .amb-mote, :root[data-still] .amb-petal, :root[data-still] .amb-comet,
-:root[data-still] .amb-streak, :root[data-still] .amb-steam, :root[data-still] .amb-gridline,
-:root[data-still] .amb-sand, :root[data-still] .amb-snow, :root[data-still] .amb-plankton,
-:root[data-still] .amb-lantern, :root[data-still] .amb-pixel-coin { display: none; }
-/* The moving grid lines are hidden when still, so draw a fixed set in their place. */
-:root[data-still] .amb-neon-still { display: block; }
+:root[data-still] .amb-streak, :root[data-still] .amb-steam, :root[data-still] .amb-lantern { display: none; }
