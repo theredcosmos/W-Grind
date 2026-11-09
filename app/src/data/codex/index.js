@@ -12,6 +12,7 @@ export const CODEX_TABS = [
   { key: 'sdcheat', label: 'SD Cheat Sheet', group: 'Design', load: () => import('./sdcheat.js') },
   { key: 'lld', label: 'LLD', group: 'Design', load: () => import('./lld.js') },
   { key: 'hld', label: 'HLD', group: 'Design', load: () => import('./hld.js') },
+  { key: 'sdbook', label: 'SD Book Notes', group: 'Design', load: () => import('./sdbook/index.js') },
   { key: 'antiBlank', label: 'Anti-Blank Protocol', group: 'Classic' },
   { key: 'decoder', label: 'Pattern Decoder', group: 'Classic' },
   { key: 'linker', label: 'Element Linker', group: 'Classic' },
@@ -59,5 +60,6 @@ export const sectionText = (s) => [
     b.title, b.text, b.code,
     ...(b.items || []).flatMap((i) => (typeof i === 'string' ? [i] : [i.q, i.a])),
     ...(b.head || []), ...(b.rows || []).flat(),
+    ...(b.cols || []).flat().map((n) => n.replace(/^\w+:/, '')), ...(b.labels || []), b.note,
   ]),
 ].filter(Boolean).join(' ').toLowerCase();

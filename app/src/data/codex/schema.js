@@ -22,6 +22,12 @@
  *   { type: 'code', title?, lang: 'java' | 'text', code }   multi-line, no tabs
  *   { type: 'callout', tone: 'tip' | 'warn' | 'key' | 'drill', title?, text }
  *   { type: 'qa', title?, items: [{ q, a }] }
+ *   { type: 'flow', title?, cols: [[node]], labels?: [string], note? }
+ *       A left-to-right picture: each col is a stack of boxes, arrows run between cols (labels[i]
+ *       sits on the arrow after col i). A node is 'Label' or 'kind:Label', kind one of
+ *       user | svc | lb | db | cache | q | ext | store. Stacks top-to-bottom on phones.
+ *
+ * Optional on a section: source: { label, href } for a "where this came from" link.
  *
  * Run `node src/data/codex/schema.js <file>` from app/ to check a tab file.
  */
@@ -34,6 +40,10 @@ const BLOCKS = {
   code: (b) => typeof b.code === 'string' && ['java', 'text'].includes(b.lang) && !b.code.includes('\t'),
   callout: (b) => typeof b.text === 'string' && ['tip', 'warn', 'key', 'drill'].includes(b.tone),
   qa: (b) => Array.isArray(b.items) && b.items.every((i) => typeof i.q === 'string' && typeof i.a === 'string'),
+  flow: (b) => Array.isArray(b.cols) && b.cols.length > 0
+    && b.cols.every((c) => Array.isArray(c) && c.length > 0 && c.every((n) => typeof n === 'string' && /^((user|svc|lb|db|cache|q|ext|store):)?[^:]/.test(n)))
+    && (b.labels === undefined || (Array.isArray(b.labels) && b.labels.length <= b.cols.length - 1 && b.labels.every((l) => typeof l === 'string')))
+    && (b.note === undefined || typeof b.note === 'string'),
 };
 
 /** Returns a list of problems (empty when the tab is valid). */
@@ -50,6 +60,7 @@ export function validateTab(tab) {
     for (const f of ['title', 'summary']) if (typeof s[f] !== 'string' || !s[f]) errors.push(`${where}: missing ${f}`);
     if (!Array.isArray(s.tags)) errors.push(`${where}: tags must be an array`);
     if (!Array.isArray(s.blocks) || !s.blocks.length) errors.push(`${where}: no blocks`);
+    if (s.source !== undefined && !(typeof s.source?.label === 'string' && /^https:\/\//.test(s.source?.href || ''))) errors.push(`${where}: bad source`);
     (s.blocks || []).forEach((b, j) => {
       const ok = BLOCKS[b?.type];
       if (!ok) errors.push(`${where} block ${j}: unknown type ${b?.type}`);
