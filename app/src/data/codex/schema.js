@@ -22,6 +22,9 @@
  *   { type: 'code', title?, lang: 'java' | 'text', code }   multi-line, no tabs
  *   { type: 'callout', tone: 'tip' | 'warn' | 'key' | 'drill', title?, text }
  *   { type: 'qa', title?, items: [{ q, a }] }
+ *   { type: 'recipes', title?, items: [{ task, code, note?, cost? }] }
+ *       A recipe book: each item is one "how do I…" task with a Java snippet (no tabs), an optional
+ *       one-line note and an optional cost like 'O(1)'. The reading window can filter recipes.
  *   { type: 'flow', title?, cols: [[node]], labels?: [string], note? }
  *       A left-to-right picture: each col is a stack of boxes, arrows run between cols (labels[i]
  *       sits on the arrow after col i). A node is 'Label' or 'kind:Label', kind one of
@@ -40,6 +43,10 @@ const BLOCKS = {
   code: (b) => typeof b.code === 'string' && ['java', 'text'].includes(b.lang) && !b.code.includes('\t'),
   callout: (b) => typeof b.text === 'string' && ['tip', 'warn', 'key', 'drill'].includes(b.tone),
   qa: (b) => Array.isArray(b.items) && b.items.every((i) => typeof i.q === 'string' && typeof i.a === 'string'),
+  recipes: (b) => Array.isArray(b.items) && b.items.length > 0 && b.items.every((r) => typeof r.task === 'string' && r.task
+    && typeof r.code === 'string' && r.code && !r.code.includes('	')
+    && (r.note === undefined || typeof r.note === 'string') && (r.cost === undefined || typeof r.cost === 'string'))
+    && new Set(b.items.map((r) => r.task)).size === b.items.length,
   flow: (b) => Array.isArray(b.cols) && b.cols.length > 0
     && b.cols.every((c) => Array.isArray(c) && c.length > 0 && c.every((n) => typeof n === 'string' && /^((user|svc|lb|db|cache|q|ext|store):)?[^:]/.test(n)))
     && (b.labels === undefined || (Array.isArray(b.labels) && b.labels.length <= b.cols.length - 1 && b.labels.every((l) => typeof l === 'string')))
