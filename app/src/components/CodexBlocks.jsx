@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { matchesFilter, recipeText } from '../lib/recipes';
 import { AlertTriangle, Check, Copy, Dumbbell, KeyRound, Lightbulb, MessageCircleQuestion } from 'lucide-react';
 
 /* Renders the blocks of one Codex section (format: data/codex/schema.js). Code shows no font
@@ -25,7 +26,7 @@ const CALLOUTS = {
   drill: { icon: Dumbbell, label: 'Drill', cls: 'border-easy/40 bg-easy/[0.06]', tone: 'text-easy' },
 };
 
-function CodeBlock({ title, code }) {
+function CopyButton({ code }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
     navigator.clipboard?.writeText(code).then(() => {
@@ -34,14 +35,49 @@ function CodeBlock({ title, code }) {
     }).catch(() => {});
   };
   return (
+    <button onClick={copy} className="ml-auto shrink-0 flex items-center gap-1 text-[11px] text-faint hover:text-ink" aria-label="Copy code">
+      {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
+    </button>
+  );
+}
+
+const Pre = ({ code }) => (
+  <pre className="overflow-x-auto scroll-thin p-3 font-mono text-[12.5px] leading-relaxed text-ink/90 [font-variant-ligatures:none]"><code>{code}</code></pre>
+);
+
+function CodeBlock({ title, code }) {
+  return (
     <div className="rounded-lg border border-line bg-void/60 overflow-hidden">
       <div className="flex items-center gap-2 px-3 h-8 border-b border-line">
         <span className="text-[12px] font-semibold text-faint truncate">{title || 'Code'}</span>
-        <button onClick={copy} className="ml-auto flex items-center gap-1 text-[11px] text-faint hover:text-ink" aria-label="Copy code">
-          {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
-        </button>
+        <CopyButton code={code} />
       </div>
-      <pre className="overflow-x-auto scroll-thin p-3 font-mono text-[12.5px] leading-relaxed text-ink/90 [font-variant-ligatures:none]"><code>{code}</code></pre>
+      <Pre code={code} />
+    </div>
+  );
+}
+
+
+// A recipe book: each card is one "how do I…" task with a copy-ready snippet.
+function Recipes({ title, items, filter }) {
+  const shown = filter ? items.filter((r) => matchesFilter(recipeText(r), filter)) : items;
+  if (!shown.length) return null;
+  return (
+    <div>
+      {title && <BlockTitle>{title}</BlockTitle>}
+      <div className="space-y-2.5">
+        {shown.map((r) => (
+          <div key={r.task} className="rounded-lg border border-line bg-void/60 overflow-hidden">
+            <div className="flex items-start gap-2 px-3 py-2 border-b border-line">
+              <span className="text-[13.5px] font-semibold text-hi leading-snug"><Inline text={r.task} /></span>
+              {r.cost && <span className="pill bg-ink/[0.06] text-dim font-mono shrink-0 mt-px">{r.cost}</span>}
+              <CopyButton code={r.code} />
+            </div>
+            <Pre code={r.code} />
+            {r.note && <p className="px-3 pb-2.5 -mt-1 text-[12.5px] leading-relaxed text-dim"><Inline text={r.note} /></p>}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -111,7 +147,7 @@ function Flow({ title, cols, labels = [], note }) {
   );
 }
 
-function Block({ b }) {
+function Block({ b, filter }) {
   switch (b.type) {
     case 'text':
       return <p className="text-[14px] leading-relaxed text-ink/90"><Inline text={b.text} /></p>;
@@ -151,6 +187,8 @@ function Block({ b }) {
       );
     case 'code':
       return <CodeBlock title={b.title} code={b.code} />;
+    case 'recipes':
+      return <Recipes title={b.title} items={b.items} filter={filter} />;
     case 'flow':
       return <Flow title={b.title} cols={b.cols} labels={b.labels} note={b.note} />;
     case 'callout': {
@@ -183,6 +221,8 @@ function Block({ b }) {
   }
 }
 
-export default function CodexBlocks({ blocks }) {
-  return <div className="space-y-4">{blocks.map((b, i) => <Block key={i} b={b} />)}</div>;
+/** With `filter`, only matching recipe cards are shown (everything else is hidden). */
+export default function CodexBlocks({ blocks, filter = '' }) {
+  const list = filter ? blocks.filter((b) => b.type === 'recipes') : blocks;
+  return <div className="space-y-4">{list.map((b, i) => <Block key={i} b={b} filter={filter} />)}</div>;
 }

@@ -5,6 +5,7 @@ import { useDialog } from '../lib/useDialog';
 import { CODEX_TABS, loadAllTabs, loadTab, sectionText } from '../data/codex';
 import { PageHeader } from './ui';
 import CodexBlocks, { Inline } from './CodexBlocks';
+import { matchesFilter, recipeText } from '../lib/recipes';
 
 /*
  * The Codex: the gym where you train before fighting problems. Every tab (data/codex/*.js, the
@@ -59,6 +60,8 @@ const quickBlocks = (blocks) => {
   const first = (test) => { const i = blocks.findIndex(test); if (i >= 0) pick.add(i); };
   first((b) => b.type === 'text');
   first((b) => b.type === 'flow');
+  // A recipe book is the point of its section, so Quick view shows every recipe.
+  blocks.forEach((b, i) => { if (b.type === 'recipes') pick.add(i); });
   blocks.forEach((b, i) => { if (b.type === 'callout' && b.tone === 'key') pick.add(i); });
   first((b) => b.type === 'steps' || b.type === 'list');
   first((b) => b.type === 'callout' && b.tone === 'drill');
@@ -66,7 +69,7 @@ const quickBlocks = (blocks) => {
   return blocks.filter((_, i) => pick.has(i));
 };
 
-const PART_LABEL = { text: 'The idea', list: 'Key points', steps: 'Steps', table: 'Table', code: 'Code', qa: 'Questions', flow: 'Picture' };
+const PART_LABEL = { text: 'The idea', list: 'Key points', steps: 'Steps', table: 'Table', code: 'Code', qa: 'Questions', flow: 'Picture', recipes: 'Recipes' };
 const CALLOUT_LABEL = { key: 'Remember', tip: 'Tip', warn: 'Trap', drill: 'Drill' };
 const partLabel = (b) => b.title || (b.type === 'callout' ? CALLOUT_LABEL[b.tone] : PART_LABEL[b.type]);
 
@@ -150,12 +153,18 @@ function SectionDialog({ s, index, total, done, view, onView, onTrained, onClose
   const bodyRef = useRef(null);
   const quick = useMemo(() => quickBlocks(s.blocks), [s.blocks]);
   const more = s.blocks.length - quick.length;
+  // Recipe filter ("update", "loop value", "max"): resets when you move to another section.
+  const hasRecipes = s.blocks.some((b) => b.type === 'recipes');
+  const [filter, setFilter] = useState({ id: s.id, q: '' });
+  const q = filter.id === s.id ? filter.q.trim() : '';
+  const hits = useMemo(() => (q ? s.blocks.filter((b) => b.type === 'recipes')
+    .reduce((n, b) => n + b.items.filter((r) => matchesFilter(recipeText(r), q)).length, 0) : 0), [s.blocks, q]);
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
-  useEffect(() => { bodyRef.current?.scrollTo(0, 0); }, [s.id, view]);
+  useEffect(() => { bodyRef.current?.scrollTo(0, 0); }, [s.id, view, q]);
 
   return createPortal(
     <div className="fixed inset-0 z-50 grid place-items-center p-2 sm:p-4">
@@ -179,11 +188,27 @@ function SectionDialog({ s, index, total, done, view, onView, onTrained, onClose
               <v.icon size={12} /> {v.label}
             </button>
           ))}
+          {hasRecipes && (
+            <div className="relative ml-auto w-full sm:w-64">
+              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-faint" />
+              <input
+                value={q ? filter.q : ''}
+                onChange={(e) => setFilter({ id: s.id, q: e.target.value })}
+                onKeyDown={(e) => { if (e.key === 'Escape' && q) { e.stopPropagation(); setFilter({ id: s.id, q: '' }); } }}
+                placeholder="Find a recipe: update, loop, max…"
+                aria-label="Filter recipes in this section"
+                className="input h-7 pl-8 text-[12.5px]"
+              />
+            </div>
+          )}
         </div>
         <div ref={bodyRef} className="flex-1 min-h-0 overflow-y-auto scroll-thin px-4 sm:px-6 py-4">
           <div className="max-w-3xl mx-auto">
-            {view === 'steps' && <StepView key={s.id} blocks={s.blocks} done={done} onTrained={onTrained} />}
-            {view === 'quick' && (
+            {q ? (
+              hits ? <><p className="text-[12px] text-faint mb-3">{hits} recipe{hits === 1 ? '' : 's'} match “{q}”</p><CodexBlocks blocks={s.blocks} filter={q} /></>
+                : <p className="text-[13.5px] text-dim">No recipe here matches “{q}”. Try one word, like “loop” or “remove”.</p>
+            ) : view === 'steps' && <StepView key={s.id} blocks={s.blocks} done={done} onTrained={onTrained} />}
+            {!q && view === 'quick' && (
               <>
                 <CodexBlocks blocks={quick} />
                 {more > 0 && (
@@ -193,7 +218,7 @@ function SectionDialog({ s, index, total, done, view, onView, onTrained, onClose
                 )}
               </>
             )}
-            {view === 'full' && <CodexBlocks blocks={s.blocks} />}
+            {!q && view === 'full' && <CodexBlocks blocks={s.blocks} />}
             {s.source && (
               <a href={s.source.href} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-[12px] text-faint hover:text-sys">
                 <ExternalLink size={12} /> {s.source.label}

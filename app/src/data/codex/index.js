@@ -4,10 +4,10 @@
  */
 export const CODEX_TABS = [
   { key: 'focus', label: 'Unfreeze', group: 'Fight', load: () => import('./focus.js') },
+  { key: 'java', label: 'Java Cheatsheet', group: 'Fight', load: () => import('./java/index.js') },
   { key: 'patterns', label: 'Pick the Pattern', group: 'Fight', load: () => import('./patterns.js') },
   { key: 'structures', label: 'Data Structures', group: 'Fight', load: () => import('./structures.js') },
   { key: 'methods', label: 'Methods', group: 'Fight', load: () => import('./methods.js') },
-  { key: 'java', label: 'Java Collections', group: 'Fight', load: () => import('./java.js') },
   { key: 'followups', label: 'Follow-ups', group: 'Fight', load: () => import('./followups.js') },
   { key: 'sdcheat', label: 'SD Cheat Sheet', group: 'Design', load: () => import('./sdcheat.js') },
   { key: 'lld', label: 'LLD', group: 'Design', load: () => import('./lld.js') },
@@ -35,7 +35,7 @@ export const sectionText = (s) => [
   s.title, s.summary, ...(s.tags || []),
   ...s.blocks.flatMap((b) => [
     b.title, b.text, b.code,
-    ...(b.items || []).flatMap((i) => (typeof i === 'string' ? [i] : [i.q, i.a])),
+    ...(b.items || []).flatMap((i) => (typeof i === 'string' ? [i] : [i.q, i.a, i.task, i.note, i.code])),
     ...(b.head || []), ...(b.rows || []).flat(),
     ...(b.cols || []).flat().map((n) => n.replace(/^\w+:/, '')), ...(b.labels || []), b.note,
   ]),

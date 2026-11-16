@@ -4,7 +4,7 @@
 export default {
   key: "structures",
   label: "Data Structures",
-  intro: "Your weapon rack. Each structure is fast at a few moves and slow at the rest; pick the one whose fast moves match what the problem keeps asking for.",
+  intro: "Which structure to pick: each is fast at a few moves and slow at the rest, so pick the one whose fast moves match what the problem keeps asking for. For the actual code (update, loop, remove, sort), open the **Java Cheatsheet** tab.",
   sections: [
     // ------------------------------------------------------------------ overview
     {
