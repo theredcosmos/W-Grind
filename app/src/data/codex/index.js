@@ -1,8 +1,28 @@
 /*
  * Codex tabs, in display order. Content tabs live in their own files (format: schema.js) and load
  * only when opened; the three "Classic" tabs are built from the original manual.json (./classic.js).
+ * "Visual" tabs (with `frame`) show an interactive page from public/resources/ in an iframe; their
+ * sections come from visual-index.json (scripts/index-resources.mjs) so search can reach them.
  */
+const visualTab = (key, label, intro) => () => import('./visual-index.json').then(({ default: index }) => ({
+  default: {
+    key, label, intro,
+    sections: index[key].map((s) => ({
+      id: s.id, title: s.title, summary: s.text.slice(0, 140) || 'Interactive section', tags: ['visual', 'interactive'],
+      blocks: [{ type: 'text', text: s.text || s.title }],
+    })),
+  },
+}));
+
 export const CODEX_TABS = [
+  {
+    key: 'dsaVisual', label: 'DSA Visual', group: 'Visual', frame: '/resources/dsa-visual.html',
+    load: visualTab('dsaVisual', 'DSA Visual', 'Animated data structures and patterns in Java, with a pattern playbook and a LeetCode roadmap.'),
+  },
+  {
+    key: 'sdVisual', label: 'LLD & HLD Visual', group: 'Visual', frame: '/resources/lld-hld-visual.html',
+    load: visualTab('sdVisual', 'LLD & HLD Visual', 'Interactive LLD labs, HLD visual labs, worked designs and an estimation calculator.'),
+  },
   { key: 'focus', label: 'Unfreeze', group: 'Fight', load: () => import('./focus.js') },
   { key: 'java', label: 'Java Cheatsheet', group: 'Fight', load: () => import('./java/index.js') },
   { key: 'patterns', label: 'Pick the Pattern', group: 'Fight', load: () => import('./patterns.js') },
