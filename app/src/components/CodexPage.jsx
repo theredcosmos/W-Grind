@@ -1,6 +1,6 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ExternalLink, Footprints, Layers, Loader2, Maximize2, Play, Search, X, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, ExternalLink, Footprints, Layers, Loader2, Maximize2, Minimize2, Play, Search, X, Zap } from 'lucide-react';
 import { useDialog } from '../lib/useDialog';
 import { CODEX_TABS, loadAllTabs, loadTab, sectionText } from '../data/codex';
 import { PageHeader } from './ui';
@@ -316,23 +316,55 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
 
 // ---------------------------------------------------------------- visual tabs (interactive pages)
 // The page runs as-is in an iframe (its own menu, animations and progress ticks). A Codex link with
-// ?s=<section> opens that section; the page reads it from its own #hash.
-function FrameTab({ tab, section }) {
-  const src = `${tab.frame}${section ? `#${section}` : ''}`;
-  const [loaded, setLoaded] = useState(false);
+// ?s=<section> opens that section; the page reads it from its own #hash. The frame takes exactly
+// the space left under the tabs (one scrollbar: the page's own), and Expand gives it the whole
+// window until Esc.
+const frameSrc = (tab, section) => `${tab.frame}${section ? `#${section}` : ''}`;
+
+// Expand / New tab buttons for a visual tab (shown next to the search box, and in the expanded view).
+function FrameButtons({ tab, section, expanded, onExpanded }) {
   return (
-    <div className="flex flex-col h-full min-h-[70dvh]">
-      <div className="flex flex-wrap items-center gap-2 mb-2 text-[12.5px] text-dim">
-        <span className="min-w-0 flex-1">Interactive page: use its own menu on the left. Codex search also finds its sections.</span>
-        <a href={src} target="_blank" rel="noreferrer" className="btn h-8 text-[12.5px]"><ExternalLink size={13} /> Open full screen</a>
-      </div>
+    <div className="flex items-center gap-2 shrink-0">
+      <button onClick={() => onExpanded(!expanded)} className="btn h-9 text-[12.5px]" aria-pressed={expanded}>
+        {expanded ? <><Minimize2 size={14} /> Exit · Esc</> : <><Maximize2 size={14} /> Expand</>}
+      </button>
+      <a href={frameSrc(tab, section)} target="_blank" rel="noreferrer" className="btn h-9 text-[12.5px]" title="Open in a new browser tab"><ExternalLink size={14} /> New tab</a>
+    </div>
+  );
+}
+
+function FrameTab({ tab, section, expanded, onExpanded }) {
+  const src = frameSrc(tab, section);
+  const [loaded, setLoaded] = useState(false);
+  const frameRef = useRef(null);
+  useEffect(() => {
+    if (!expanded) return undefined;
+    const onKey = (e) => e.key === 'Escape' && onExpanded(false);
+    window.addEventListener('keydown', onKey);
+    // Esc pressed while the page inside has focus.
+    let inner;
+    try { inner = frameRef.current?.contentWindow; inner?.addEventListener('keydown', onKey); } catch { inner = null; }
+    return () => { window.removeEventListener('keydown', onKey); inner?.removeEventListener('keydown', onKey); };
+  }, [expanded, onExpanded]);
+
+  return (
+    <div className={expanded
+      ? 'fixed inset-0 z-50 flex flex-col gap-2 p-2 sm:p-3 bg-void anim-fade'
+      : 'flex flex-col gap-2 h-[calc(100dvh-140px)] md:h-full'}
+    >
+      {expanded && (
+        <div className="flex items-center gap-2">
+          <span className="sys-heading text-[15px] truncate mr-auto">{tab.label}</span>
+          <FrameButtons tab={tab} section={section} expanded onExpanded={onExpanded} />
+        </div>
+      )}
       <div className="relative flex-1 min-h-0 rounded-[var(--radius-window)] overflow-hidden border border-line bg-white">
         {!loaded && (
           <p className="absolute inset-0 grid place-items-center text-dim text-sm bg-panel">
             <span className="flex items-center gap-2"><Loader2 size={15} className="animate-spin" /> Loading {tab.label}…</span>
           </p>
         )}
-        <iframe src={src} title={tab.label} onLoad={() => setLoaded(true)} className="w-full h-full block" />
+        <iframe ref={frameRef} src={src} title={tab.label} onLoad={() => setLoaded(true)} className="w-full h-full block" />
       </div>
     </div>
   );
@@ -378,6 +410,9 @@ export default function CodexPage({ tab, section }) {
   const [query, setQuery] = useState('');
   const q = useDeferredValue(query.trim());
   const searching = q.length >= 2;
+  // A visual tab is a full interactive page: give it the height (no big title, buttons beside search).
+  const framed = !searching && !!active.frame;
+  const [expanded, setExpanded] = useState(false);
 
   // Opening a search result (or another tab) changes the route: leave search mode.
   const route = `${active.key}?${section || ''}`;
@@ -385,6 +420,7 @@ export default function CodexPage({ tab, section }) {
   if (route !== lastRoute) {
     setLastRoute(route);
     setQuery('');
+    if (route.split('?')[0] !== lastRoute.split('?')[0]) setExpanded(false);
   }
 
   const groups = useMemo(() => {
@@ -398,9 +434,10 @@ export default function CodexPage({ tab, section }) {
 
   return (
     <div className="flex flex-col md:h-full min-h-0">
-      <PageHeader kicker="Hunter's Codex · the gym" title={searching ? 'Search' : active.label} />
-      <div className="shrink-0 anim-rise space-y-3 mb-5">
-        <div className="relative max-w-xl">
+      {!framed && <PageHeader kicker="Hunter's Codex · the gym" title={searching ? 'Search' : active.label} />}
+      <div className={`shrink-0 anim-rise space-y-3 ${framed ? 'mb-3' : 'mb-5'}`}>
+        <div className="flex flex-wrap items-center gap-2">
+        <div className="relative max-w-xl flex-1 min-w-[240px]">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-faint" />
           <input
             value={query}
@@ -414,6 +451,8 @@ export default function CodexPage({ tab, section }) {
               <X size={15} />
             </button>
           )}
+        </div>
+        {framed && <div className="ml-auto"><FrameButtons tab={active} section={section} expanded={expanded} onExpanded={setExpanded} /></div>}
         </div>
         {/* Wraps instead of scrolling sideways, so every tab (LLD, HLD, Classic) is always in view. */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -433,9 +472,9 @@ export default function CodexPage({ tab, section }) {
           ))}
         </div>
       </div>
-      <div className="anim-fade flex-1 min-h-0 overflow-y-auto scroll-thin -mx-1 px-1 pb-2" key={searching ? 'search' : active.key}>
+      <div className={`anim-fade flex-1 min-h-0 -mx-1 px-1 pb-2 ${!searching && active.frame ? 'md:overflow-hidden' : 'overflow-y-auto scroll-thin'}`} key={searching ? 'search' : active.key}>
         {searching ? <SearchResults query={q} />
-          : active.frame ? <FrameTab key={active.key} tab={active} section={section} />
+          : active.frame ? <FrameTab key={active.key} tab={active} section={section} expanded={expanded} onExpanded={setExpanded} />
           : <ContentTab key={active.key} tabKey={active.key} focusId={section} trained={trained} onTrained={toggleTrained} />}
       </div>
     </div>
