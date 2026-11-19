@@ -316,16 +316,18 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
 
 // ---------------------------------------------------------------- visual tabs (interactive pages)
 // The page runs as-is in an iframe (its own menu, animations and progress ticks). A Codex link with
-// ?s=<section> opens that section; the page reads it from its own #hash. The frame takes exactly
-// the space left under the tabs (one scrollbar: the page's own), and Expand gives it the whole
-// window until Esc.
+// ?s=<section> opens that section; the page reads it from its own #hash.
+//
+// Visual tabs open expanded. Both pages cap their layout at ~1300px wide, so the expanded view
+// keeps the app sidebar (232px) when the window is at least 1532px wide (the page still gets its
+// full layout) and covers the whole window below that. Exit / Esc shows it under the Codex tabs.
 const frameSrc = (tab, section) => `${tab.frame}${section ? `#${section}` : ''}`;
 
 // Expand / New tab buttons for a visual tab (shown next to the search box, and in the expanded view).
 function FrameButtons({ tab, section, expanded, onExpanded }) {
   return (
     <div className="flex items-center gap-2 shrink-0">
-      <button onClick={() => onExpanded(!expanded)} className="btn h-9 text-[12.5px]" aria-pressed={expanded}>
+      <button onClick={() => onExpanded(!expanded)} className="btn h-9 text-[12.5px]" aria-pressed={expanded} title={expanded ? 'Show it under the Codex tabs' : 'Give the page the whole screen'}>
         {expanded ? <><Minimize2 size={14} /> Exit · Esc</> : <><Maximize2 size={14} /> Expand</>}
       </button>
       <a href={frameSrc(tab, section)} target="_blank" rel="noreferrer" className="btn h-9 text-[12.5px]" title="Open in a new browser tab"><ExternalLink size={14} /> New tab</a>
@@ -349,12 +351,17 @@ function FrameTab({ tab, section, expanded, onExpanded }) {
 
   return (
     <div className={expanded
-      ? 'fixed inset-0 z-50 flex flex-col gap-2 p-2 sm:p-3 bg-void anim-fade'
+      ? 'fixed inset-0 min-[1532px]:left-[232px] z-50 flex flex-col gap-2 p-2 sm:p-3 bg-void anim-fade'
       : 'flex flex-col gap-2 h-[calc(100dvh-140px)] md:h-full'}
     >
       {expanded && (
-        <div className="flex items-center gap-2">
-          <span className="sys-heading text-[15px] truncate mr-auto">{tab.label}</span>
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Jump between the visual pages without leaving the expanded view. */}
+          <div className="flex items-center gap-1.5 mr-auto min-w-0" role="tablist" aria-label="Visual pages">
+            {CODEX_TABS.filter((t) => t.frame).map((t) => (
+              <a key={t.key} href={`#/codex/${t.key}`} role="tab" aria-selected={t.key === tab.key} className="chip h-8" data-on={t.key === tab.key}>{t.label}</a>
+            ))}
+          </div>
           <FrameButtons tab={tab} section={section} expanded onExpanded={onExpanded} />
         </div>
       )}
@@ -412,7 +419,7 @@ export default function CodexPage({ tab, section }) {
   const searching = q.length >= 2;
   // A visual tab is a full interactive page: give it the height (no big title, buttons beside search).
   const framed = !searching && !!active.frame;
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(!!active.frame);   // visual tabs open expanded
 
   // Opening a search result (or another tab) changes the route: leave search mode.
   const route = `${active.key}?${section || ''}`;
@@ -420,7 +427,8 @@ export default function CodexPage({ tab, section }) {
   if (route !== lastRoute) {
     setLastRoute(route);
     setQuery('');
-    if (route.split('?')[0] !== lastRoute.split('?')[0]) setExpanded(false);
+    // Arriving at a visual tab (or a section of one, from search) opens it expanded.
+    setExpanded(!!active.frame);
   }
 
   const groups = useMemo(() => {
