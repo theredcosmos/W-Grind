@@ -314,6 +314,30 @@ function ContentTab({ tabKey, focusId, trained, onTrained }) {
   );
 }
 
+// ---------------------------------------------------------------- visual tabs (interactive pages)
+// The page runs as-is in an iframe (its own menu, animations and progress ticks). A Codex link with
+// ?s=<section> opens that section; the page reads it from its own #hash.
+function FrameTab({ tab, section }) {
+  const src = `${tab.frame}${section ? `#${section}` : ''}`;
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="flex flex-col h-full min-h-[70dvh]">
+      <div className="flex flex-wrap items-center gap-2 mb-2 text-[12.5px] text-dim">
+        <span className="min-w-0 flex-1">Interactive page: use its own menu on the left. Codex search also finds its sections.</span>
+        <a href={src} target="_blank" rel="noreferrer" className="btn h-8 text-[12.5px]"><ExternalLink size={13} /> Open full screen</a>
+      </div>
+      <div className="relative flex-1 min-h-0 rounded-[var(--radius-window)] overflow-hidden border border-line bg-white">
+        {!loaded && (
+          <p className="absolute inset-0 grid place-items-center text-dim text-sm bg-panel">
+            <span className="flex items-center gap-2"><Loader2 size={15} className="animate-spin" /> Loading {tab.label}…</span>
+          </p>
+        )}
+        <iframe src={src} title={tab.label} onLoad={() => setLoaded(true)} className="w-full h-full block" />
+      </div>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------- search across every tab
 function SearchResults({ query }) {
   const [tabs, setTabs] = useState(null);
@@ -411,6 +435,7 @@ export default function CodexPage({ tab, section }) {
       </div>
       <div className="anim-fade flex-1 min-h-0 overflow-y-auto scroll-thin -mx-1 px-1 pb-2" key={searching ? 'search' : active.key}>
         {searching ? <SearchResults query={q} />
+          : active.frame ? <FrameTab key={active.key} tab={active} section={section} />
           : <ContentTab key={active.key} tabKey={active.key} focusId={section} trained={trained} onTrained={toggleTrained} />}
       </div>
     </div>

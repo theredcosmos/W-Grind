@@ -1,7 +1,7 @@
 // W-Grind service worker: makes the app installable and lets it open without a connection.
 // Pages load network-first (always the newest build when online); built assets are cached
 // on first use. API calls are never cached.
-const CACHE = 'wgrind-v1';
+const CACHE = 'wgrind-v2';
 const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg', '/icon-192.png'];
 
 self.addEventListener('install', (event) => {
@@ -20,6 +20,23 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin || url.pathname.startsWith('/api')) return;
+
+  // Codex Visual pages (public/resources/, shown in an iframe): network-first, cached for offline.
+  // Checked before the app navigation below, so they never replace the cached app shell.
+  if (url.pathname.startsWith('/resources/')) {
+    event.respondWith(
+      fetch(request)
+        .then((res) => {
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(url.pathname, copy));
+          }
+          return res;
+        })
+        .catch(() => caches.match(url.pathname)),
+    );
+    return;
+  }
 
   if (request.mode === 'navigate') {
     event.respondWith(
